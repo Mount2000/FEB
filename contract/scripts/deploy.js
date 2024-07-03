@@ -1,25 +1,21 @@
 const { ethers } = require("hardhat");
 
 async function main() {
-    const signers = await ethers.getSigners();
-    const deployer = signers[0]; 
-    const StorageContract = await ethers.getContractFactory("NodeManager");
-    const defaultAdmin = deployer.address;
-    const pauser = deployer.address;
-    const storageContract = await StorageContract.deploy(defaultAdmin, pauser);
+const StorageContract = await ethers.getContractFactory("NodeManager");
+const storageContract = await StorageContract.deploy();
 
-    await storageContract.waitForDeployment();
-    const tx = await storageContract.deploymentTransaction();
+await storageContract.waitForDeployment();
+const tx = await storageContract.deploymentTransaction();
 
-    console.log("Contract deployed successfully.");
-    console.log(`Deployer: ${storageContract.runner.address}`);
-    console.log(`Deployed to: ${storageContract.target}`);
-    console.log(`Transaction hash: ${tx.hash}`);
+console.log("Contract deployed successfully.");
+console.log(`Deployer: ${storageContract.runner.address}`);
+console.log(`Deployed to: ${storageContract.target}`);
+console.log(`Transaction hash: ${tx.hash}`);
 }
 
 main()
-    .then(() => process.exit(0))
-    .catch(error => {
-        console.error(error);
-        process.exit(1);
-    });
+.then(() => process.exit(0))
+.catch(error => {
+    console.error(error);
+    process.exit(1);
+});

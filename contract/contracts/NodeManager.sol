@@ -14,16 +14,54 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     struct NodeInformation {
+        bool exists;
         bool status;
         string name;
         string metadata;
     }
-
+    uint64 public nodeId;
+    mapping(uint64 => NodeInformation) public nodeInformations;
 
     struct DiscountCoupon {
         bool status;
-        uint256 discountPercent;
+        uint8 discountPercent;
     }
+    uint64 public couponId;
+    mapping(uint64 => DiscountCoupon) public discountCoupons;
+
+    // Events
+    event AddedNode(
+        address indexed user,
+        uint64 nodeId,
+        bool status,
+        string name,
+        string metadata
+    );
+    event UpdatedNode(
+        address indexed user,
+        uint64 nodeId,
+        bool status,
+        string name,
+        string metadata
+    );
+
+    event DeletedNode(address indexed user, uint64 nodeId);
+
+    event AddCoupon(
+        address indexed user,
+        uint64 couponId,
+        bool status,
+        uint8 discountPercent
+    );
+
+    event UpdateCoupon(
+        address indexed user,
+        uint64 couponId,
+        bool status,
+        uint8 discountPercent
+    );
+
+    event DeleteCoupon(address indexed user, uint64 couponId);
 
     function pause() public onlyOwner {
         _pause();
@@ -33,71 +71,116 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         _unpause();
     }
 
-    function setAdmin(address newAdmin) public onlyOwner {
-        grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
-    }
+    // NODE INFORMATION MANAGEMENT
 
-    function checkAdmin(address admin) public view returns (bool) {
-        return hasRole(DEFAULT_ADMIN_ROLE, admin);
-    }
-
-    mapping(uint64 => NodeInformation) public nodeInformations;
-    mapping(uint64 => DiscountCoupon) public discountCoupons;
-    uint64 public nodeId;
-    uint64 public couponId;
-
-    function addNodeInfor( string memory name, string memory metadata) public returns (uint64) {
+    function addNodeInfor(
+        string memory name,
+        string memory metadata
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         nodeId++;
-        nodeInformations[nodeId] = NodeInformation(false, name, metadata);
-        return nodeId;
+        nodeInformations[nodeId] = NodeInformation(true, false, name, metadata);
+        emit AddedNode(
+            msg.sender,
+            nodeId,
+            nodeInformations[nodeId].status,
+            name,
+            metadata
+        );
     }
-    
 
- function getNodeInformation(uint64 id) public view returns (bool status, string memory name, string memory metadata) {
-   
-    return (nodeInformations[id].status, nodeInformations[id].name, nodeInformations[id].metadata);
-  }
+    function getNodeInformation(
+        uint64 _nodeId
+    )
+        public
+        view
+        returns (bool status, string memory name, string memory metadata)
+    {
+        return (
+            nodeInformations[_nodeId].status,
+            nodeInformations[_nodeId].name,
+            nodeInformations[_nodeId].metadata
+        );
+    }
 
-function updateNodeInformation(uint64 id, string memory newName, string memory newMetadata, bool newStatus) public {
-    require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Caller is not an admin");
+    function updateNodeInformation(
+        uint64 _nodeId,
+        string memory newName,
+        string memory newMetadata,
+        bool newStatus
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+        require(nodeInformations[_nodeId].exists, "Node does not exist");
+        nodeInformations[_nodeId].name = newName;
+        nodeInformations[_nodeId].metadata = newMetadata;
+        nodeInformations[_nodeId].status = newStatus;
+        emit UpdatedNode(
+            msg.sender,
+            _nodeId,
+            nodeInformations[_nodeId].status,
+            nodeInformations[_nodeId].name,
+            nodeInformations[_nodeId].metadata
+        );
+    }
 
-    nodeInformations[id].name = newName;
-    nodeInformations[id].metadata = newMetadata;
-    nodeInformations[id].status = newStatus;
-}
+    function deleteNodeInformation(
+        uint64 _nodeId
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+        require(nodeInformations[_nodeId].exists, "Node does not exist");
+        delete nodeInformations[_nodeId];
+        emit DeletedNode(msg.sender, _nodeId);
+    }
 
-function deleteNodeInformation(uint64 id) public {
-    require(nodeInformations[id].status, "Node does not exist");
-    require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Caller is not an admin");
+    // COUPON MANAGEMENT
 
-    delete nodeInformations[id];
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////
-
-function addDiscountCoupon(uint256 discountPercent) public returns (uint64) {
+    function addDiscountCoupon(
+        uint8 discountPercent
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+        require(discountPercent > 0, "Discount percent must be greater than 0");
         couponId++;
         discountCoupons[couponId] = DiscountCoupon(false, discountPercent);
-        return couponId;
+        emit AddCoupon(
+            msg.sender,
+            couponId,
+            discountCoupons[couponId].status,
+            discountCoupons[couponId].discountPercent
+        );
     }
 
-    function getDiscountCoupon(uint64 id) public view returns (bool status, uint256 discountPercent) {
-        return (discountCoupons[id].status, discountCoupons[id].discountPercent);
+    function getDiscountCoupon(
+        uint64 _couponId
+    ) public view returns (bool status, uint8 discountPercent) {
+        return (
+            discountCoupons[_couponId].status,
+            discountCoupons[_couponId].discountPercent
+        );
     }
 
-    function updateDiscountCoupon(uint64 id, uint256 newDiscountPercent, bool newStatus) public {
-    require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Caller is not an admin");
-    discountCoupons[id].discountPercent = newDiscountPercent;
-    discountCoupons[id].status = newStatus;
+    function updateDiscountCoupon(
+        uint64 _couponId,
+        uint8 newDiscountPercent,
+        bool newStatus
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+        require(
+            discountCoupons[_couponId].discountPercent > 0,
+            "Coupon does not exist"
+        );
+        discountCoupons[_couponId].discountPercent = newDiscountPercent;
+        discountCoupons[_couponId].status = newStatus;
+        emit UpdateCoupon(
+            msg.sender,
+            _couponId,
+            discountCoupons[_couponId].status,
+            discountCoupons[_couponId].discountPercent
+        );
+    }
+
+    function deleteDiscountCoupon(
+        uint64 _couponId
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+        require(
+            discountCoupons[_couponId].discountPercent > 0,
+            "Coupon does not exist"
+        );
+        delete discountCoupons[_couponId];
+        emit DeleteCoupon(msg.sender, _couponId);
+    }
 }
-
-
-    function deleteDiscountCoupon(uint64 id) public {
-        require(discountCoupons[id].status, "Coupon does not exist");
-        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Caller is not an admin");
-
-        delete discountCoupons[id];
-    }
-}
-
-

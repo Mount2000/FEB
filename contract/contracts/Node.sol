@@ -18,7 +18,7 @@ contract Node is ERC721, ERC721Burnable, AccessControl, Ownable {
           _grantRole(MINTER_ROLE, msg.sender);
     }
 
-   function safeMint(address to, uint256 tokenId) public onlyRole(MINTER_ROLE) {
+   function safeMint(address to, uint256 tokenId) public{
         _safeMint(to, tokenId);
     }
 

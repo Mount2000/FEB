@@ -9,21 +9,33 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Node is ERC721, ERC721Burnable, AccessControl, Ownable {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    address private _nodeManagerAddress;
 
-    constructor(string memory name, string memory symbol)
+    constructor(string memory name, string memory symbol, address nodeManagerAddress)
         ERC721(name, symbol)
         Ownable(msg.sender)
     {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
+        _nodeManagerAddress = nodeManagerAddress;
     }
 
-    //minter address
+    modifier onlyNodeManager() {
+        require(_nodeManagerAddress == msg.sender, "Unauthorized: Only node manager");
+        _;
+    }
 
-   function safeMint(address to, uint256 tokenId) public onlyRole(MINTER_ROLE) {
+    function setNodeManagerAddress(address newAddress) public onlyOwner {
+        _nodeManagerAddress = newAddress;
+    }
+
+    function getNodeManagerAddress() public view returns (address) {
+        return _nodeManagerAddress;
+    }
+
+    function safeMint(address to, uint256 tokenId) public onlyNodeManager {
         _safeMint(to, tokenId);
     }
-
 
     function supportsInterface(bytes4 interfaceId)
         public

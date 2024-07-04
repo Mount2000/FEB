@@ -15,15 +15,14 @@ contract Node is ERC721, ERC721Burnable, AccessControl, Ownable {
         Ownable(msg.sender)
     {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-          _grantRole(MINTER_ROLE, msg.sender);
+        _grantRole(MINTER_ROLE, msg.sender);
     }
 
-   function safeMint(address to, uint256 tokenId) public{
+    //minter address
+
+   function safeMint(address to, uint256 tokenId) public onlyRole(MINTER_ROLE) {
+        require(msg.sender == to, "Only the sender's address can be generated");
         _safeMint(to, tokenId);
-    }
-
-    function mint(address to, uint256 tokenId) public onlyRole(MINTER_ROLE) {
-        _mint(to, tokenId);
     }
 
 

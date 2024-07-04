@@ -21,7 +21,6 @@ contract Node is ERC721, ERC721Burnable, AccessControl, Ownable {
     //minter address
 
    function safeMint(address to, uint256 tokenId) public onlyRole(MINTER_ROLE) {
-        require(msg.sender == to, "Only the sender's address can be generated");
         _safeMint(to, tokenId);
     }
 

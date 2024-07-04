@@ -201,7 +201,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         emit DeleteCoupon(msg.sender, _couponId);
     }
 
-     function buyNode(uint64 _nodeId) public payable onlyRole(MINTER_ROLE) whenNotPaused {
+     function buyNode(uint64 _nodeId) public payable whenNotPaused {
         require(nodeInformations[_nodeId].exists, "Node does not exist");
         require(msg.value >= nodeInformations[_nodeId].price, "Insufficient funds");
 

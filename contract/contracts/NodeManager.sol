@@ -13,12 +13,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     Node public nodeContract;
 
-    constructor(address _nodeContract) Ownable(msg.sender) {
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
-        nodeContract = Node(_nodeContract);
-    }
-
     struct NodeTier {
         bool status;
         string name;
@@ -26,21 +20,21 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price;
     }
 
-    uint64 public nodeId;
-    mapping(uint64 => NodeTier) public nodeTiers;
+    uint256 public nodeId;
+    mapping(uint256 => NodeTier) public nodeTiers;
 
     struct DiscountCoupon {
         bool status;
         uint8 discountPercent;
     }
 
-    uint64 public couponId;
-    mapping(uint64 => DiscountCoupon) public discountCoupons;
+    uint256 public couponId;
+    mapping(uint256 => DiscountCoupon) public discountCoupons;
 
     // Events
     event NodeAdded(
         address indexed user,
-        uint64 nodeId,
+        uint256 nodeId,
         bool status,
         string name,
         string metadata,
@@ -48,31 +42,38 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     );
     event NodeUpdated(
         address indexed user,
-        uint64 nodeId,
+        uint256 nodeId,
         bool status,
         string name,
         string metadata,
         uint256 price
     );
-    event NodeDeleted(address indexed user, uint64 nodeId);
+    event NodeDeleted(address indexed user, uint256 nodeId);
 
     event CouponAdded(
         address indexed user,
-        uint64 couponId,
+        uint256 couponId,
         bool status,
         uint8 discountPercent
     );
     event CouponUpdated(
         address indexed user,
-        uint64 couponId,
+        uint256 couponId,
         bool status,
         uint8 discountPercent
     );
-    event CouponDeleted(address indexed user, uint64 couponId);
+    event CouponDeleted(address indexed user, uint256 couponId);
 
     event FundsWithdrawn(address indexed to, uint256 value);
 
-    event Buy(uint64 indexed nodeId, address indexed nodeOwner);
+    event Buy(uint256 indexed nodeId, address indexed nodeOwner);
+
+    //CONTRUCTOR
+     constructor(address _nodeContract) Ownable(msg.sender) {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(MINTER_ROLE, msg.sender);
+        nodeContract = Node(_nodeContract);
+    }
 
     function pause() public onlyOwner {
         _pause();
@@ -102,7 +103,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getNodeTierDetails(uint64 _nodeId)
+    function getNodeTierDetails(uint256 _nodeId)
         public
         view
         returns (NodeTier memory)
@@ -111,7 +112,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     function updateNodeTier(
-        uint64 _nodeId,
+        uint256 _nodeId,
         string memory newName,
         string memory newMetadata,
         bool newStatus,
@@ -152,7 +153,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getDiscountCoupon(uint64 _couponId)
+    function getDiscountCoupon(uint256 _couponId)
         public
         view
         returns (DiscountCoupon memory)
@@ -161,7 +162,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     function updateDiscountCoupon(
-        uint64 _couponId,
+        uint256 _couponId,
         uint8 newDiscountPercent,
         bool newStatus
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
@@ -179,7 +180,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function buyNode(uint64 _nodeId) public payable whenNotPaused {
+    function buyNode(uint256 _nodeId) public payable whenNotPaused {
         require(nodeTiers[_nodeId].price > 0, "Node does not exist");
         require(msg.value >= nodeTiers[_nodeId].price, "Insufficient funds");
 
@@ -187,7 +188,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         emit Buy(_nodeId, msg.sender);
     }
 
-    function buyAdmin(uint64 _nodeId, address nodeOwner)
+    function buyAdmin(uint256 _nodeId, address nodeOwner)
         public
         onlyRole(ADMIN_ROLE)
         whenNotPaused

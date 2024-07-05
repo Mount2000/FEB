@@ -69,7 +69,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     event Buy(uint256 indexed nodeId, address indexed nodeOwner);
 
     //CONTRUCTOR
-     constructor(address _nodeContract) Ownable(msg.sender) {
+    constructor(address _nodeContract) Ownable(msg.sender) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
         nodeContract = Node(_nodeContract);
@@ -83,8 +83,15 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         _unpause();
     }
 
-    // NODE Tier MANAGEMENT
+    function getNodeContract() public view returns (address) {
+        return address(nodeContract);
+    }
 
+    function setNodeContract(address _nodeContract) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        nodeContract = Node(_nodeContract);
+    }
+
+    // NODE Tier MANAGEMENT
     function addNodeTier(
         string memory name,
         string memory metadata,
@@ -92,7 +99,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(price > 0, "Price must be greater than 0");
         nodeId++;
-        nodeTiers[nodeId] = NodeTier(false, name, metadata, price);
+        NodeTier memory newNode = NodeTier(false, name, metadata, price);
+        nodeTiers[nodeId] = newNode;
         emit NodeAdded(
             msg.sender,
             nodeId,
@@ -103,11 +111,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getNodeTierDetails(uint256 _nodeId)
-        public
-        view
-        returns (NodeTier memory)
-    {
+    function getNodeTierDetails(
+        uint256 _nodeId
+    ) public view returns (NodeTier memory) {
         return nodeTiers[_nodeId];
     }
 
@@ -120,44 +126,42 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(nodeTiers[_nodeId].price > 0, "Node does not exist");
         require(newPrice > 0, "Price must be greater than 0");
-        nodeTiers[_nodeId].name = newName;
-        nodeTiers[_nodeId].metadata = newMetadata;
-        nodeTiers[_nodeId].status = newStatus;
-        nodeTiers[_nodeId].price = newPrice;
+         NodeTier memory updatedNode = NodeTier(newStatus, newName, newMetadata, newPrice);
+        
+        // Cập nhật nodeTiers với biến mới
+        nodeTiers[_nodeId] = updatedNode;
 
         emit NodeUpdated(
             msg.sender,
             _nodeId,
-            nodeTiers[_nodeId].status,
-            nodeTiers[_nodeId].name,
-            nodeTiers[_nodeId].metadata,
-            nodeTiers[_nodeId].price
+            updatedNode.status,
+            updatedNode.name,
+            updatedNode.metadata,
+            updatedNode.price
         );
     }
 
     // COUPON MANAGEMENT
 
-    function addDiscountCoupon(uint8 discountPercent)
-        public
-        onlyRole(ADMIN_ROLE)
-        whenNotPaused
-    {
+    function addDiscountCoupon(
+        uint8 discountPercent
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(discountPercent > 0, "Discount percent must be greater than 0");
         couponId++;
-        discountCoupons[couponId] = DiscountCoupon(false, discountPercent);
+        DiscountCoupon memory newCoupon = DiscountCoupon(false, discountPercent);
+        discountCoupons[couponId] = newCoupon;
+        
         emit CouponAdded(
             msg.sender,
             couponId,
-            discountCoupons[couponId].status,
-            discountCoupons[couponId].discountPercent
+            newCoupon.status,
+            newCoupon.discountPercent
         );
     }
 
-    function getDiscountCoupon(uint256 _couponId)
-        public
-        view
-        returns (DiscountCoupon memory)
-    {
+    function getDiscountCoupon(
+        uint256 _couponId
+    ) public view returns (DiscountCoupon memory) {
         return discountCoupons[_couponId];
     }
 
@@ -170,13 +174,13 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             discountCoupons[_couponId].discountPercent > 0,
             "Coupon does not exist"
         );
-        discountCoupons[_couponId].discountPercent = newDiscountPercent;
-        discountCoupons[_couponId].status = newStatus;
+        DiscountCoupon memory updatedCoupon = DiscountCoupon(newStatus, newDiscountPercent);
+        discountCoupons[_couponId] = updatedCoupon;
         emit CouponUpdated(
             msg.sender,
             _couponId,
-            discountCoupons[_couponId].status,
-            discountCoupons[_couponId].discountPercent
+            updatedCoupon.status,
+            updatedCoupon.discountPercent
         );
     }
 
@@ -188,11 +192,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         emit Buy(_nodeId, msg.sender);
     }
 
-    function buyAdmin(uint256 _nodeId, address nodeOwner)
-        public
-        onlyRole(ADMIN_ROLE)
-        whenNotPaused
-    {
+    function buyAdmin(
+        uint256 _nodeId,
+        address nodeOwner
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(nodeTiers[_nodeId].price > 0, "Node does not exist");
         nodeContract.safeMint(nodeOwner, _nodeId);
         emit Buy(_nodeId, nodeOwner);

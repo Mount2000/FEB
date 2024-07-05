@@ -72,10 +72,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     event FundsWithdrawn(address indexed to, uint256 value);
 
-    event BuyNode(address indexed user, uint64 nodeId);
-
-    event BuyAdmin(uint64 nodeId,address nodeOwner);
-
+    event Buy(uint64 indexed nodeId, address indexed nodeOwner);
 
     function pause() public onlyOwner {
         _pause();
@@ -155,7 +152,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-     function getDiscountCoupon(uint64 _couponId)
+    function getDiscountCoupon(uint64 _couponId)
         public
         view
         returns (DiscountCoupon memory)
@@ -187,7 +184,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         require(msg.value >= nodeTiers[_nodeId].price, "Insufficient funds");
 
         nodeContract.safeMint(msg.sender, _nodeId);
-        emit BuyNode(msg.sender, _nodeId);
+        emit Buy(_nodeId, msg.sender);
     }
 
     function buyAdmin(uint64 _nodeId, address nodeOwner)
@@ -197,7 +194,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     {
         require(nodeTiers[_nodeId].price > 0, "Node does not exist");
         nodeContract.safeMint(nodeOwner, _nodeId);
-         emit BuyAdmin( _nodeId ,nodeOwner);
+        emit Buy(_nodeId, nodeOwner);
     }
 
     function withdraw(address payable to, uint256 value) public onlyOwner {

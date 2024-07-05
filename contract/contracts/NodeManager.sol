@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Compatible with OpenZeppelin Contracts ^5.0.0
 pragma solidity ^0.8.20;
-import "Node.sol"; // Chỉnh sửa đường dẫn tới file Node.sol nếu cần
-import "@openzeppelin/contracts/utils/Pausable.sol";
+import "./Node.sol"; // Ensure the correct path to the Node.sol file
+import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -12,13 +12,13 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     Node public nodeContract;
 
-    constructor(address _nodeContract) Ownable(msg.sender) {
+    constructor(address _nodeContract)Ownable(msg.sender) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
         nodeContract = Node(_nodeContract);
     }
 
-    struct NodeTier {
+    struct NodeInformation {
         bool exists;
         bool status;
         string name;
@@ -27,7 +27,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     uint64 public nodeId;
-    mapping(uint64 => NodeTier) public nodeTiers;
+    mapping(uint64 => NodeInformation) public nodeInformations;
 
     struct DiscountCoupon {
         bool status;
@@ -81,7 +81,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         _unpause();
     }
 
-    // NODE Tier MANAGEMENT
+    // NODE INFORMATION MANAGEMENT
 
     function addNodeInfo(
         string memory name,
@@ -89,7 +89,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         nodeId++;
-        nodeTiers[nodeId] = NodeTier(
+        nodeInformations[nodeId] = NodeInformation(
             true,
             false,
             name,
@@ -99,14 +99,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         emit AddedNode(
             msg.sender,
             nodeId,
-            nodeTiers[nodeId].status,
+            nodeInformations[nodeId].status,
             name,
             metadata,
             price
         );
     }
 
-    function getNodeTier(uint64 _nodeId)
+    function getNodeInformation(uint64 _nodeId)
         public
         view
         returns (
@@ -117,43 +117,43 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         )
     {
         return (
-            nodeTiers[_nodeId].status,
-            nodeTiers[_nodeId].name,
-            nodeTiers[_nodeId].metadata,
-            nodeTiers[_nodeId].price
+            nodeInformations[_nodeId].status,
+            nodeInformations[_nodeId].name,
+            nodeInformations[_nodeId].metadata,
+            nodeInformations[_nodeId].price
         );
     }
 
-    function updateNodeTier(
+    function updateNodeInformation(
         uint64 _nodeId,
         string memory newName,
         string memory newMetadata,
         bool newStatus,
         uint256 newPrice
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(nodeTiers[_nodeId].exists, "Node does not exist");
-        nodeTiers[_nodeId].name = newName;
-        nodeTiers[_nodeId].metadata = newMetadata;
-        nodeTiers[_nodeId].status = newStatus;
-        nodeTiers[_nodeId].price = newPrice;
+        require(nodeInformations[_nodeId].exists, "Node does not exist");
+        nodeInformations[_nodeId].name = newName;
+        nodeInformations[_nodeId].metadata = newMetadata;
+        nodeInformations[_nodeId].status = newStatus;
+        nodeInformations[_nodeId].price = newPrice;
 
         emit UpdatedNode(
             msg.sender,
             _nodeId,
-            nodeTiers[_nodeId].status,
-            nodeTiers[_nodeId].name,
-            nodeTiers[_nodeId].metadata,
-            nodeTiers[_nodeId].price
+            nodeInformations[_nodeId].status,
+            nodeInformations[_nodeId].name,
+            nodeInformations[_nodeId].metadata,
+            nodeInformations[_nodeId].price
         );
     }
 
-    function deleteNodeTier(uint64 _nodeId)
+    function deleteNodeInformation(uint64 _nodeId)
         public
         onlyRole(ADMIN_ROLE)
         whenNotPaused
     {
-        require(nodeTiers[_nodeId].exists, "Node does not exist");
-        delete nodeTiers[_nodeId];
+        require(nodeInformations[_nodeId].exists, "Node does not exist");
+        delete nodeInformations[_nodeId];
         emit DeletedNode(msg.sender, _nodeId);
     }
 
@@ -218,10 +218,18 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         emit DeleteCoupon(msg.sender, _couponId);
     }
 
-     function buyNode(uint64 _nodeId) public payable whenNotPaused {
-        require(nodeTiers[_nodeId].exists, "Node does not exist");
-        require(msg.value >= nodeTiers[_nodeId].price, "Insufficient funds");
+    function buyNode(uint64 _nodeId) public payable whenNotPaused {
+        require(nodeInformations[_nodeId].exists, "Node does not exist");
+        require(msg.value >= nodeInformations[_nodeId].price, "Insufficient funds");
 
         nodeContract.safeMint(msg.sender, _nodeId);
+    }
+
+    function buyAdmin(
+        uint64 _nodeId,
+        address nodeOwner
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+        require(nodeInformations[_nodeId].exists, "Node does not exist");
+        nodeContract.safeMint(nodeOwner, _nodeId);
     }
 }

@@ -18,7 +18,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         nodeContract = Node(_nodeContract);
     }
 
-    struct NodeInformation {
+    struct NodeTier {
         bool exists;
         bool status;
         string name;
@@ -27,7 +27,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     uint64 public nodeId;
-    mapping(uint64 => NodeInformation) public nodeInformations;
+    mapping(uint64 => NodeTier) public nodeTiers;
 
     struct DiscountCoupon {
         bool status;
@@ -81,7 +81,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         _unpause();
     }
 
-    // NODE INFORMATION MANAGEMENT
+    // NODE Tier MANAGEMENT
 
     function addNodeInfo(
         string memory name,
@@ -89,7 +89,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         nodeId++;
-        nodeInformations[nodeId] = NodeInformation(
+        nodeTiers[nodeId] = NodeTier(
             true,
             false,
             name,
@@ -99,14 +99,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         emit AddedNode(
             msg.sender,
             nodeId,
-            nodeInformations[nodeId].status,
+            nodeTiers[nodeId].status,
             name,
             metadata,
             price
         );
     }
 
-    function getNodeInformation(uint64 _nodeId)
+    function getNodeTier(uint64 _nodeId)
         public
         view
         returns (
@@ -117,43 +117,43 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         )
     {
         return (
-            nodeInformations[_nodeId].status,
-            nodeInformations[_nodeId].name,
-            nodeInformations[_nodeId].metadata,
-            nodeInformations[_nodeId].price
+            nodeTiers[_nodeId].status,
+            nodeTiers[_nodeId].name,
+            nodeTiers[_nodeId].metadata,
+            nodeTiers[_nodeId].price
         );
     }
 
-    function updateNodeInformation(
+    function updateNodeTier(
         uint64 _nodeId,
         string memory newName,
         string memory newMetadata,
         bool newStatus,
         uint256 newPrice
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(nodeInformations[_nodeId].exists, "Node does not exist");
-        nodeInformations[_nodeId].name = newName;
-        nodeInformations[_nodeId].metadata = newMetadata;
-        nodeInformations[_nodeId].status = newStatus;
-        nodeInformations[_nodeId].price = newPrice;
+        require(nodeTiers[_nodeId].exists, "Node does not exist");
+        nodeTiers[_nodeId].name = newName;
+        nodeTiers[_nodeId].metadata = newMetadata;
+        nodeTiers[_nodeId].status = newStatus;
+        nodeTiers[_nodeId].price = newPrice;
 
         emit UpdatedNode(
             msg.sender,
             _nodeId,
-            nodeInformations[_nodeId].status,
-            nodeInformations[_nodeId].name,
-            nodeInformations[_nodeId].metadata,
-            nodeInformations[_nodeId].price
+            nodeTiers[_nodeId].status,
+            nodeTiers[_nodeId].name,
+            nodeTiers[_nodeId].metadata,
+            nodeTiers[_nodeId].price
         );
     }
 
-    function deleteNodeInformation(uint64 _nodeId)
+    function deleteNodeTier(uint64 _nodeId)
         public
         onlyRole(ADMIN_ROLE)
         whenNotPaused
     {
-        require(nodeInformations[_nodeId].exists, "Node does not exist");
-        delete nodeInformations[_nodeId];
+        require(nodeTiers[_nodeId].exists, "Node does not exist");
+        delete nodeTiers[_nodeId];
         emit DeletedNode(msg.sender, _nodeId);
     }
 
@@ -219,8 +219,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     function buyNode(uint64 _nodeId) public payable whenNotPaused {
-        require(nodeInformations[_nodeId].exists, "Node does not exist");
-        require(msg.value >= nodeInformations[_nodeId].price, "Insufficient funds");
+        require(nodeTiers[_nodeId].exists, "Node does not exist");
+        require(msg.value >= nodeTiers[_nodeId].price, "Insufficient funds");
 
         nodeContract.safeMint(msg.sender, _nodeId);
     }
@@ -229,7 +229,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint64 _nodeId,
         address nodeOwner
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(nodeInformations[_nodeId].exists, "Node does not exist");
+        require(nodeTiers[_nodeId].exists, "Node does not exist");
         nodeContract.safeMint(nodeOwner, _nodeId);
     }
 }

@@ -147,15 +147,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function deleteNodeTier(uint64 _nodeId)
-        public
-        onlyRole(ADMIN_ROLE)
-        whenNotPaused
-    {
-        require(nodeTiers[_nodeId].exists, "Node does not exist");
-        delete nodeTiers[_nodeId];
-        emit DeletedNode(msg.sender, _nodeId);
-    }
+   
 
     // COUPON MANAGEMENT
 
@@ -205,18 +197,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function deleteDiscountCoupon(uint64 _couponId)
-        public
-        onlyRole(ADMIN_ROLE)
-        whenNotPaused
-    {
-        require(
-            discountCoupons[_couponId].discountPercent > 0,
-            "Coupon does not exist"
-        );
-        delete discountCoupons[_couponId];
-        emit DeleteCoupon(msg.sender, _couponId);
-    }
+    
 
     function buyNode(uint64 _nodeId) public payable whenNotPaused {
         require(nodeTiers[_nodeId].exists, "Node does not exist");

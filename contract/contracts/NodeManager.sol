@@ -1,73 +1,63 @@
 // SPDX-License-Identifier: MIT
 // Compatible with OpenZeppelin Contracts ^5.0.0
 pragma solidity ^0.8.20;
-
-import "Node.sol"; // Ensure the correct path to the Node.sol file
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "./Node.sol"; // Ensure the correct path to the Node.sol file
+import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 contract NodeManager is Pausable, AccessControl, Ownable {
+    using EnumerableSet for EnumerableSet.UintSet;
+    using EnumerableSet for EnumerableSet.AddressSet;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     Node public nodeContract;
 
     struct NodeTier {
         bool status;
         string name;
-        string metadata;
         uint256 price;
     }
 
-    uint256 public nodeTierId;
+    uint256 private nodeId;
     mapping(uint256 => NodeTier) public nodeTiers;
-
-    
-    mapping(address => string) public userReferralCodes;
-    mapping(string => address) public referralOwners;
-    mapping(string => bool) usedReferralCodes;
+    mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks;
+    mapping(uint256 => address) private nodeTiersIdUserLinks;
 
     struct DiscountCoupon {
         bool status;
         uint8 discountPercent;
     }
 
-    struct ReferralInformation{
-        string code;
-        uint256 TotalSales;
-        uint256 commissionRate;
-    }
-
     uint256 private couponId;
     mapping(uint256 => DiscountCoupon) public discountCoupons;
-  
+
+    // Referral
+    uint256 private referenceId;
+    uint256 private referenceRate;
+    struct ReferralInformation {
+        string code;
+        uint256 totalSales;
+    }
+    mapping(uint256 => ReferralInformation) private referrals;
+    mapping(address => uint256) private userReferralIdLinks;
+    mapping(uint256 => address) private referralIdUserLinks;
+
     // Events
-    event NodeAdded(
+    event AddedNode(
         address indexed user,
-        uint256 nodeTierId,
+        uint256 nodeId,
         bool status,
         string name,
-        string metadata,
         uint256 price
     );
-    event NodeUpdated(
+    event UpdatedNode(
         address indexed user,
-        uint256 nodeTierId,
+        uint256 nodeId,
         bool status,
         string name,
-        string metadata,
         uint256 price
-    );
-    event NodeDeleted(address indexed user, uint256 nodeTierId);
-
-    event FundsWithdrawn(address indexed to, uint256 value);
-
-    event Buy(
-        uint256 indexed nodeTierId,
-        address indexed buyer,
-        string indexed referralCode,
-        uint256 referralAmount
     );
 
     event AddCoupon(
@@ -83,11 +73,17 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         bool status,
         uint8 discountPercent
     );
+    event Sale(address indexed user, uint256 nodeId);
+    event FundsWithdrawn(address indexed to, uint256 value);
 
-    // Constructor
-    constructor(address _nodeContract) Ownable(msg.sender) {
+    constructor(
+        address _nodeContract,
+        uint256 _referenceRate
+    ) Ownable(msg.sender) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
+        _grantRole(ADMIN_ROLE, msg.sender);
+        require(_referenceRate <= 100, "Invalid input");
+        referenceRate = _referenceRate;
         nodeContract = Node(_nodeContract);
     }
 
@@ -99,67 +95,81 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         _unpause();
     }
 
-    function getNodeContract() public view returns (address) {
+    function getNodeContractAddress() public view returns (address) {
         return address(nodeContract);
     }
 
-    function setNodeContract(
-        address _nodeContract
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setNodeContractAddress(address _nodeContract) public {
         nodeContract = Node(_nodeContract);
     }
 
     // NODE Tier MANAGEMENT
+
     function addNodeTier(
         string memory name,
-        string memory metadata,
         uint256 price
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(price > 0, "Price must be greater than 0");
-        nodeTierId++;
-        NodeTier memory newNode = NodeTier(false, name, metadata, price);
-        nodeTiers[nodeTierId] = newNode;
-        emit NodeAdded(
+        nodeId++;
+        NodeTier memory newNode = NodeTier(false, name, price);
+        nodeTiers[nodeId] = newNode;
+        emit AddedNode(
             msg.sender,
-            nodeTierId,
-            nodeTiers[nodeTierId].status,
+            nodeId,
+            nodeTiers[nodeId].status,
             name,
-            metadata,
             price
         );
     }
 
+    function getNodeIdByIndex(
+        address user,
+        uint256 index
+    ) public view returns (uint256) {
+        require(
+            index < userNodeTiersIdLinks[user].length(),
+            "Index out of bounds"
+        );
+        uint256 nodeTierId = userNodeTiersIdLinks[user].at(index);
+        return nodeTierId;
+    }
+
+    function getOwnerByNodeId(uint256 _nodeId) public view returns (address) {
+        return nodeTiersIdUserLinks[_nodeId];
+    }
+
+    function getUserTotalNode(address user) public view returns (uint256) {
+        return userNodeTiersIdLinks[user].length();
+    }
+
     function getNodeTierDetails(
-        uint256 _nodeTierId
+        uint256 _nodeId
     ) public view returns (NodeTier memory) {
-        return nodeTiers[_nodeTierId];
+        return nodeTiers[_nodeId];
+    }
+
+    function getLastNodeId() public view returns (uint256) {
+        return nodeId;
     }
 
     function updateNodeTier(
-        uint256 _nodeTierId,
+        uint256 _nodeId,
         string memory newName,
-        string memory newMetadata,
         bool newStatus,
         uint256 newPrice
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
+        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
         require(newPrice > 0, "Price must be greater than 0");
-        NodeTier memory updatedNode = NodeTier(
-            newStatus,
-            newName,
-            newMetadata,
-            newPrice
-        );
+        nodeTiers[_nodeId].name = newName;
+        nodeTiers[_nodeId].status = newStatus;
+        nodeTiers[_nodeId].price = newPrice;
 
-        nodeTiers[_nodeTierId] = updatedNode;
-
-        emit NodeUpdated(
+        emit UpdatedNode(
             msg.sender,
-            _nodeTierId,
-            updatedNode.status,
-            updatedNode.name,
-            updatedNode.metadata,
-            updatedNode.price
+            _nodeId,
+            nodeTiers[_nodeId].status,
+            nodeTiers[_nodeId].name,
+            nodeTiers[_nodeId].price
         );
     }
 
@@ -216,55 +226,114 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    // Referral management
-    function generateReferralCode(
-        address user
-    ) internal returns (string memory) {
+    function buyNode(
+        uint256 _nodeId,
+        uint256 referralId,
+        string memory metadata
+    ) public payable whenNotPaused {
+        uint256 price = nodeTiers[_nodeId].price;
+        address caller = msg.sender;
+        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
+        require(msg.value >= price, "Insufficient funds");
         require(
-            bytes(userReferralCodes[user]).length == 0,
-            "Referral code already generated for this user"
+            nodeTiersIdUserLinks[_nodeId] == address(0),
+            "Node tier already owned"
         );
 
-        string memory newReferralCode = string(
-            abi.encodePacked(
-                "BachiSwap_",
-                toAsciiString(user),
-                "_",
-                uint2str(block.timestamp)
-            )
-        );
-        userReferralCodes[user] = newReferralCode;
-        referralOwners[newReferralCode] = user;
-
-        return newReferralCode;
-    }
-
-    function getReferralCode(address user) public view returns (string memory) {
-        return userReferralCodes[user];
-    }
-
-    function toAsciiString(address x) internal pure returns (string memory) {
-        bytes memory s = new bytes(40);
-        for (uint256 i = 0; i < 20; i++) {
-            bytes1 b = bytes1(
-                uint8(uint256(uint160(x)) / (2 ** (8 * (19 - i))))
-            );
-            bytes1 hi = bytes1(uint8(b) / 16);
-            bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
-            s[2 * i] = char(hi);
-            s[2 * i + 1] = char(lo);
+        // Referral code can only be used once per person
+        if (
+            referralId > 0 &&
+            referralIdUserLinks[referralId] != address(0) &&
+            referralIdUserLinks[referralId] != caller
+        ) {
+            address referralsOwner = referralIdUserLinks[referralId];
+            uint256 totalSales = (price * referenceRate) / 100;
+            require(address(this).balance >= totalSales, "Not enough balance");
+            (bool sent, ) = referralsOwner.call{value: totalSales}("");
+            require(sent, "Failed to send Ether");
+            referrals[referralId].totalSales += totalSales;
         }
-        return string(s);
+
+        nodeContract.safeMint(caller, _nodeId, metadata);
+        userNodeTiersIdLinks[caller].add(_nodeId);
+        nodeTiersIdUserLinks[_nodeId] = caller;
+
+        // add Referral for user
+        if (userReferralIdLinks[caller] == 0) {
+            referenceId++;
+            uint256 currentTimestamp = block.timestamp;
+            string memory _code = string(
+                abi.encodePacked(
+                    "BachiSwap_",
+                    uint256str(referenceId),
+                    "_",
+                    uint256str(currentTimestamp)
+                )
+            );
+            userReferralIdLinks[caller] = referenceId;
+            referralIdUserLinks[referenceId] = caller;
+            referrals[referenceId].code = _code;
+        }
+        emit Sale(caller, _nodeId);
     }
 
-    function char(bytes1 b) internal pure returns (bytes1 c) {
-        if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
-        else return bytes1(uint8(b) + 0x57);
+    function getReferralIdByOwner(address owner) public view returns (uint256) {
+        return userReferralIdLinks[owner];
     }
 
-    function uint2str(
-        uint256 _i
-    ) internal pure returns (string memory _uintAsString) {
+    function getOwnerByReferralId(
+        uint256 referralId
+    ) public view returns (address) {
+        return referralIdUserLinks[referralId];
+    }
+
+    function getReferralInfo(
+        uint256 referralId
+    ) public view returns (string memory code, uint256 totalSales) {
+        return (referrals[referralId].code, referrals[referralId].totalSales);
+    }
+
+    function getReferenceRate() public view returns (uint256) {
+        return referenceRate;
+    }
+
+    function setReferenceRate(
+        uint256 _referenceRate
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+        require(_referenceRate <= 100, "Invalid input");
+        referenceRate = _referenceRate;
+    }
+
+    function buyAdmin(
+        uint256 _nodeId,
+        address nodeOwner,
+        string memory metadata
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
+        require(
+            nodeTiersIdUserLinks[_nodeId] == address(0),
+            "Node tier already owned"
+        );
+        nodeContract.safeMint(nodeOwner, _nodeId, metadata);
+        userNodeTiersIdLinks[msg.sender].add(_nodeId);
+        nodeTiersIdUserLinks[_nodeId] = msg.sender;
+        emit Sale(msg.sender, _nodeId);
+    }
+
+    function withdraw(address payable to, uint256 value) public onlyOwner {
+        require(
+            address(this).balance >= value,
+            "Insufficient contract balance"
+        );
+
+        (bool sent, ) = to.call{value: value}("");
+        require(sent, "Failed to send Ether");
+
+        emit FundsWithdrawn(to, value);
+    }
+
+    // Helper function to convert uint256 to string
+    function uint256str(uint256 _i) internal pure returns (string memory) {
         if (_i == 0) {
             return "0";
         }
@@ -284,64 +353,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             _i /= 10;
         }
         return string(bstr);
-    }
-
-    function buyNode(
-        uint256 _nodeTierId,
-        uint256 referralCode
-        
-    ) public payable whenNotPaused {
-        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
-        require(msg.value = nodeTiers[_nodeTierId].price, "Insufficient funds");
-
-        uint256 referralFee = 0;
-        if (bytes(referralCode).length > 0) {
-            address referrer = referralOwners[referralCode];
-            require(referrer != address(0), "Invalid referral code");
-            require(
-                !usedReferralCodes[referralCode],
-                "Referral code already used"
-            );
-
-            referralFee = msg.value / 10;
-            (bool sent, ) = referrer.call{value: referralFee}("");
-            require(address(this).balance >= price, "Not enough balance");
-            require(sent, "Failed to send referral fee");
-            usedReferralCodes[referralCode] = true; 
-
-            emit Buy(_nodeTierId, msg.sender, referralCode, referralFee);
-        }
-
-        if (bytes(userReferralCodes[msg.sender]).length == 0) {
-            string memory newReferralCode = generateReferralCode(msg.sender);
-            referralOwners[newReferralCode] = msg.sender;
-        }
-
-        nodeContract.safeMint(msg.sender, _nodeTierId);
-    }
-
-    function buyAdmin(
-        uint256 _nodeTierId,
-        address nodeOwner
-    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
-        nodeContract.safeMint(nodeOwner, _nodeTierId);
-        if (bytes(userReferralCodes[nodeOwner]).length == 0) {
-            string memory newReferralCode = generateReferralCode(nodeOwner);
-            referralOwners[newReferralCode] = nodeOwner;
-        }
-    }
-
-    function withdraw(address payable to, uint256 value) public onlyOwner {
-        require(
-            address(this).balance >= value,
-            "Insufficient contract balance"
-        );
-
-        (bool sent, ) = to.call{value: value}("");
-        require(sent, "Failed to send Ether");
-
-        emit FundsWithdrawn(to, value);
     }
 
     // Fallback function to receive Ether

@@ -11,13 +11,12 @@ contract Node is ERC721, ERC721Burnable, AccessControl, Ownable {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     address private _nodeManagerAddress;
 
-    constructor(string memory name, string memory symbol, address nodeManagerAddress)
+    constructor(string memory name, string memory symbol)
         ERC721(name, symbol)
         Ownable(msg.sender)
     {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
-        _nodeManagerAddress = nodeManagerAddress;
     }
 
     modifier onlyNodeManager() {

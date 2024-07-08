@@ -30,6 +30,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     mapping(address => string) public userReferralCodes;
     mapping(string => address) public referralOwners;
+    mapping(string => bool) usedReferralCodes;
 
     // Events
     event NodeAdded(
@@ -192,9 +193,13 @@ function buyNode(uint256 _nodeId, string memory referralCode) public payable whe
     if (bytes(referralCode).length > 0) {
         address referrer = referralOwners[referralCode];
         require(referrer != address(0), "Invalid referral code");
+        require(!usedReferralCodes[referralCode], "Referral code already used");
+        
         referralFee = msg.value / 10; 
         (bool sent, ) = referrer.call{value: referralFee}("");
         require(sent, "Failed to send referral fee");
+
+        usedReferralCodes[referralCode] = true; // Mark referral code as used
 
         // Emit the referral amount event
         emit Buy(_nodeId, msg.sender, referralCode, referralFee);
@@ -206,7 +211,6 @@ function buyNode(uint256 _nodeId, string memory referralCode) public payable whe
     }
 
     nodeContract.safeMint(msg.sender, _nodeId);
-    emit Buy(_nodeId, msg.sender, userReferralCodes[msg.sender], 0); // 0 referral amount if no referral
 }
 
 

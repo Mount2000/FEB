@@ -2,7 +2,7 @@
 // Compatible with OpenZeppelin Contracts ^5.0.0
 pragma solidity ^0.8.20;
 
-import "./Node.sol"; // Ensure the correct path to the Node.sol file
+import "Node.sol"; // Ensure the correct path to the Node.sol file
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -32,6 +32,13 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     mapping(string => address) public referralOwners;
     mapping(string => bool) usedReferralCodes;
 
+    struct DiscountCoupon {
+        bool status;
+        uint8 discountPercent;
+    }
+
+    uint256 private couponId;
+    mapping(uint256 => DiscountCoupon) public discountCoupons;
     // Events
     event NodeAdded(
         address indexed user,
@@ -53,8 +60,26 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     event FundsWithdrawn(address indexed to, uint256 value);
 
-event Buy(uint256 indexed nodeId, address indexed buyer, string referralCode, uint256 referralAmount);
+    event Buy(
+        uint256 indexed nodeId,
+        address indexed buyer,
+        string indexed referralCode,
+        uint256 referralAmount
+    );
 
+    event AddCoupon(
+        address indexed user,
+        uint256 couponId,
+        bool status,
+        uint8 discountPercent
+    );
+
+    event UpdateCoupon(
+        address indexed user,
+        uint256 couponId,
+        bool status,
+        uint8 discountPercent
+    );
 
     // Constructor
     constructor(address _nodeContract) Ownable(msg.sender) {
@@ -75,7 +100,10 @@ event Buy(uint256 indexed nodeId, address indexed buyer, string referralCode, ui
         return address(nodeContract);
     }
 
-    function setNodeContract(address _nodeContract) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setNodeContract(address _nodeContract)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
         nodeContract = Node(_nodeContract);
     }
 
@@ -99,9 +127,11 @@ event Buy(uint256 indexed nodeId, address indexed buyer, string referralCode, ui
         );
     }
 
-    function getNodeTierDetails(
-        uint256 _nodeId
-    ) public view returns (NodeTier memory) {
+    function getNodeTierDetails(uint256 _nodeId)
+        public
+        view
+        returns (NodeTier memory)
+    {
         return nodeTiers[_nodeId];
     }
 
@@ -114,8 +144,13 @@ event Buy(uint256 indexed nodeId, address indexed buyer, string referralCode, ui
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(nodeTiers[_nodeId].price > 0, "Node does not exist");
         require(newPrice > 0, "Price must be greater than 0");
-         NodeTier memory updatedNode = NodeTier(newStatus, newName, newMetadata, newPrice);
-        
+        NodeTier memory updatedNode = NodeTier(
+            newStatus,
+            newName,
+            newMetadata,
+            newPrice
+        );
+
         nodeTiers[_nodeId] = updatedNode;
 
         emit NodeUpdated(
@@ -128,11 +163,81 @@ event Buy(uint256 indexed nodeId, address indexed buyer, string referralCode, ui
         );
     }
 
-    // Referral management
-    function generateReferralCode(address user) public returns (string memory) {
-        require(bytes(userReferralCodes[user]).length == 0, "Referral code already generated for this user");
+    // COUPON MANAGEMENT
 
-        string memory newReferralCode = string(abi.encodePacked("BachiSwap_", toAsciiString(user), "_", uint2str(block.timestamp)));
+    function addDiscountCoupon(uint8 discountPercent)
+        public
+        onlyRole(ADMIN_ROLE)
+        whenNotPaused
+    {
+        require(discountPercent > 0, "Discount percent must be greater than 0");
+        couponId++;
+        DiscountCoupon memory newCoupon = DiscountCoupon(
+            false,
+            discountPercent
+        );
+        discountCoupons[couponId] = newCoupon;
+        emit AddCoupon(
+            msg.sender,
+            couponId,
+            discountCoupons[couponId].status,
+            discountCoupons[couponId].discountPercent
+        );
+    }
+
+    function getDiscountCoupon(uint256 _couponId)
+        public
+        view
+        returns (DiscountCoupon memory)
+    {
+        return discountCoupons[_couponId];
+    }
+
+    function getLastCouponId() public view returns (uint256) {
+        return couponId;
+    }
+
+    function updateDiscountCoupon(
+        uint256 _couponId,
+        uint8 newDiscountPercent,
+        bool newStatus
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+        require(
+            discountCoupons[_couponId].discountPercent > 0,
+            "Coupon does not exist"
+        );
+        require(
+            newDiscountPercent > 0,
+            "Discount percent must be greater than 0"
+        );
+        discountCoupons[_couponId].discountPercent = newDiscountPercent;
+        discountCoupons[_couponId].status = newStatus;
+        emit UpdateCoupon(
+            msg.sender,
+            _couponId,
+            discountCoupons[_couponId].status,
+            discountCoupons[_couponId].discountPercent
+        );
+    }
+
+    // Referral management
+    function generateReferralCode(address user)
+        internal
+        returns (string memory)
+    {
+        require(
+            bytes(userReferralCodes[user]).length == 0,
+            "Referral code already generated for this user"
+        );
+
+        string memory newReferralCode = string(
+            abi.encodePacked(
+                "BachiSwap_",
+                toAsciiString(user),
+                "_",
+                uint2str(block.timestamp)
+            )
+        );
         userReferralCodes[user] = newReferralCode;
         referralOwners[newReferralCode] = user;
 
@@ -145,8 +250,8 @@ event Buy(uint256 indexed nodeId, address indexed buyer, string referralCode, ui
 
     function toAsciiString(address x) internal pure returns (string memory) {
         bytes memory s = new bytes(40);
-        for (uint i = 0; i < 20; i++) {
-            bytes1 b = bytes1(uint8(uint(uint160(x)) / (2 ** (8 * (19 - i)))));
+        for (uint256 i = 0; i < 20; i++) {
+            bytes1 b = bytes1(uint8(uint256(uint160(x)) / (2**(8 * (19 - i)))));
             bytes1 hi = bytes1(uint8(b) / 16);
             bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
             s[2 * i] = char(hi);
@@ -160,21 +265,25 @@ event Buy(uint256 indexed nodeId, address indexed buyer, string referralCode, ui
         else return bytes1(uint8(b) + 0x57);
     }
 
-    function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
+    function uint2str(uint256 _i)
+        internal
+        pure
+        returns (string memory _uintAsString)
+    {
         if (_i == 0) {
             return "0";
         }
-        uint j = _i;
-        uint len;
+        uint256 j = _i;
+        uint256 len;
         while (j != 0) {
             len++;
             j /= 10;
         }
         bytes memory bstr = new bytes(len);
-        uint k = len;
+        uint256 k = len;
         while (_i != 0) {
             k = k - 1;
-            uint8 temp = (48 + uint8(_i - _i / 10 * 10));
+            uint8 temp = (48 + uint8(_i - (_i / 10) * 10));
             bytes1 b1 = bytes1(temp);
             bstr[k] = b1;
             _i /= 10;
@@ -184,42 +293,76 @@ event Buy(uint256 indexed nodeId, address indexed buyer, string referralCode, ui
 
     // event Buy(uint256 indexed nodeId, address indexed buyer, string referralCode, uint256 referralAmount);
 
+    function buyNode(uint256 _nodeId, string memory referralCode)
+        public
+        payable
+        whenNotPaused
+    {
+        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
+        require(msg.value >= nodeTiers[_nodeId].price, "Insufficient funds");
 
-function buyNode(uint256 _nodeId, string memory referralCode) public payable whenNotPaused {
-    require(nodeTiers[_nodeId].price > 0, "Node does not exist");
-    require(msg.value >= nodeTiers[_nodeId].price, "Insufficient funds");
+        uint256 referralFee = 0;
+        if (bytes(referralCode).length > 0) {
+            address referrer = referralOwners[referralCode];
+            require(referrer != address(0), "Invalid referral code");
+            require(
+                !usedReferralCodes[referralCode],
+                "Referral code already used"
+            );
 
-    uint256 referralFee = 0;
-    if (bytes(referralCode).length > 0) {
-        address referrer = referralOwners[referralCode];
-        require(referrer != address(0), "Invalid referral code");
-        require(!usedReferralCodes[referralCode], "Referral code already used");
-        
-        referralFee = msg.value / 10; 
-        (bool sent, ) = referrer.call{value: referralFee}("");
-        require(sent, "Failed to send referral fee");
+            referralFee = msg.value / 10;
+            (bool sent, ) = referrer.call{value: referralFee}("");
+            require(sent, "Failed to send referral fee");
 
-        usedReferralCodes[referralCode] = true; // Mark referral code as used
+            usedReferralCodes[referralCode] = true; // Mark referral code as used
 
-        // Emit the referral amount event
+            // Emit the referral amount event
+            emit Buy(_nodeId, msg.sender, referralCode, referralFee);
+        }
+
+        if (bytes(userReferralCodes[msg.sender]).length == 0) {
+            string memory newReferralCode = generateReferralCode(msg.sender);
+            referralOwners[newReferralCode] = msg.sender;
+        }
+
+        nodeContract.safeMint(msg.sender, _nodeId);
+    }
+
+    function buyNode(uint256 _nodeId) public payable whenNotPaused {
+        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
+        require(msg.value >= nodeTiers[_nodeId].price, "Insufficient funds");
+
+        // Lấy mã giới thiệu của người dùng
+        string memory referralCode = userReferralCodes[msg.sender];
+
+        uint256 referralFee = 0;
+        if (bytes(referralCode).length == 0) {
+            referralCode = generateReferralCode(msg.sender); // Tạo mã giới thiệu nếu chưa có
+        } else {
+            address referrer = referralOwners[referralCode];
+            require(referrer != address(0), "Invalid referral code");
+            require(
+                !usedReferralCodes[referralCode],
+                "Referral code already used"
+            );
+
+            referralFee = msg.value / 10;
+            (bool sent, ) = referrer.call{value: referralFee}("");
+            require(sent, "Failed to send referral fee");
+
+            usedReferralCodes[referralCode] = true; // Đánh dấu mã giới thiệu đã được sử dụng
+        }
+
+        nodeContract.safeMint(msg.sender, _nodeId);
+
         emit Buy(_nodeId, msg.sender, referralCode, referralFee);
     }
 
-    if (bytes(userReferralCodes[msg.sender]).length == 0) {
-        string memory newReferralCode = generateReferralCode(msg.sender);
-        referralOwners[newReferralCode] = msg.sender;
-    }
-
-    nodeContract.safeMint(msg.sender, _nodeId);
-}
-
-
-
-
-    function buyAdmin(
-        uint256 _nodeId,
-        address nodeOwner
-    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+    function buyAdmin(uint256 _nodeId, address nodeOwner)
+        public
+        onlyRole(ADMIN_ROLE)
+        whenNotPaused
+    {
         require(nodeTiers[_nodeId].price > 0, "Node does not exist");
         nodeContract.safeMint(nodeOwner, _nodeId);
         if (bytes(userReferralCodes[nodeOwner]).length == 0) {

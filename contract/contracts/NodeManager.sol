@@ -20,7 +20,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price;
     }
 
-    uint256 private nodeId;
+    uint256 private nodeTierId;
     mapping(uint256 => NodeTier) public nodeTiers;
     mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks;
     mapping(uint256 => address) private nodeTiersIdUserLinks;
@@ -47,14 +47,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     // Events
     event AddedNode(
         address indexed user,
-        uint256 nodeId,
+        uint256 nodeTierId,
         bool status,
         string name,
         uint256 price
     );
     event UpdatedNode(
         address indexed user,
-        uint256 nodeId,
+        uint256 nodeTierId,
         bool status,
         string name,
         uint256 price
@@ -73,7 +73,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         bool status,
         uint8 discountPercent
     );
-    event Sale(address indexed user, uint256 nodeId);
+    event Sale(address indexed user, uint256 nodeTierId);
     event FundsWithdrawn(address indexed to, uint256 value);
 
     constructor(
@@ -110,19 +110,19 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(price > 0, "Price must be greater than 0");
-        nodeId++;
+        nodeTierId++;
         NodeTier memory newNode = NodeTier(false, name, price);
-        nodeTiers[nodeId] = newNode;
+        nodeTiers[nodeTierId] = newNode;
         emit AddedNode(
             msg.sender,
-            nodeId,
-            nodeTiers[nodeId].status,
+            nodeTierId,
+            nodeTiers[nodeTierId].status,
             name,
             price
         );
     }
 
-    function getNodeIdByIndex(
+    function getNodeTierIdByIndex(
         address user,
         uint256 index
     ) public view returns (uint256) {
@@ -134,8 +134,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return nodeTierId;
     }
 
-    function getOwnerByNodeId(uint256 _nodeId) public view returns (address) {
-        return nodeTiersIdUserLinks[_nodeId];
+    function getOwnerByNodeTierId(uint256 _nodeTierId) public view returns (address) {
+        return nodeTiersIdUserLinks[_nodeTierId];
     }
 
     function getUserTotalNode(address user) public view returns (uint256) {
@@ -143,33 +143,33 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     function getNodeTierDetails(
-        uint256 _nodeId
+        uint256 _nodeTierId
     ) public view returns (NodeTier memory) {
-        return nodeTiers[_nodeId];
+        return nodeTiers[_nodeTierId];
     }
 
-    function getLastNodeId() public view returns (uint256) {
-        return nodeId;
+    function getLastNodeTierId() public view returns (uint256) {
+        return nodeTierId;
     }
 
     function updateNodeTier(
-        uint256 _nodeId,
+        uint256 _nodeTierId,
         string memory newName,
         bool newStatus,
         uint256 newPrice
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
+        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
         require(newPrice > 0, "Price must be greater than 0");
-        nodeTiers[_nodeId].name = newName;
-        nodeTiers[_nodeId].status = newStatus;
-        nodeTiers[_nodeId].price = newPrice;
+        nodeTiers[_nodeTierId].name = newName;
+        nodeTiers[_nodeTierId].status = newStatus;
+        nodeTiers[_nodeTierId].price = newPrice;
 
         emit UpdatedNode(
             msg.sender,
-            _nodeId,
-            nodeTiers[_nodeId].status,
-            nodeTiers[_nodeId].name,
-            nodeTiers[_nodeId].price
+            _nodeTierId,
+            nodeTiers[_nodeTierId].status,
+            nodeTiers[_nodeTierId].name,
+            nodeTiers[_nodeTierId].price
         );
     }
 
@@ -227,16 +227,16 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     function buyNode(
-        uint256 _nodeId,
+        uint256 _nodeTierId,
         uint256 referralId,
         string memory metadata
     ) public payable whenNotPaused {
-        uint256 price = nodeTiers[_nodeId].price;
+        uint256 price = nodeTiers[_nodeTierId].price;
         address caller = msg.sender;
-        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
+        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
         require(msg.value >= price, "Insufficient funds");
         require(
-            nodeTiersIdUserLinks[_nodeId] == address(0),
+            nodeTiersIdUserLinks[_nodeTierId] == address(0),
             "Node tier already owned"
         );
 
@@ -254,9 +254,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referrals[referralId].totalSales += totalSales;
         }
 
-        nodeContract.safeMint(caller, _nodeId, metadata);
-        userNodeTiersIdLinks[caller].add(_nodeId);
-        nodeTiersIdUserLinks[_nodeId] = caller;
+        nodeContract.safeMint(caller, _nodeTierId, metadata);
+        userNodeTiersIdLinks[caller].add(_nodeTierId);
+        nodeTiersIdUserLinks[_nodeTierId] = caller;
 
         // add Referral for user
         if (userReferralIdLinks[caller] == 0) {
@@ -274,7 +274,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referralIdUserLinks[referenceId] = caller;
             referrals[referenceId].code = _code;
         }
-        emit Sale(caller, _nodeId);
+        emit Sale(caller, _nodeTierId);
     }
 
     function getReferralIdByOwner(address owner) public view returns (uint256) {
@@ -305,19 +305,19 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     function buyAdmin(
-        uint256 _nodeId,
+        uint256 _nodeTierId,
         address nodeOwner,
         string memory metadata
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
+        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
         require(
-            nodeTiersIdUserLinks[_nodeId] == address(0),
+            nodeTiersIdUserLinks[_nodeTierId] == address(0),
             "Node tier already owned"
         );
-        nodeContract.safeMint(nodeOwner, _nodeId, metadata);
-        userNodeTiersIdLinks[msg.sender].add(_nodeId);
-        nodeTiersIdUserLinks[_nodeId] = msg.sender;
-        emit Sale(msg.sender, _nodeId);
+        nodeContract.safeMint(nodeOwner, _nodeTierId, metadata);
+        userNodeTiersIdLinks[msg.sender].add(_nodeTierId);
+        nodeTiersIdUserLinks[_nodeTierId] = msg.sender;
+        emit Sale(msg.sender, _nodeTierId);
     }
 
     function withdraw(address payable to, uint256 value) public onlyOwner {

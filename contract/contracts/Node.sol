@@ -3,43 +3,83 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Node is ERC721, ERC721Burnable, AccessControl, Ownable {
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    address private _nodeManagerAddress;
+contract Node is
+    ERC721,
+    ERC721Enumerable,
+    ERC721URIStorage,
+    AccessControl,
+    Ownable
+{
+    address private nodeManagerAddress;
 
-    constructor(string memory name, string memory symbol)
-        ERC721(name, symbol)
-        Ownable(msg.sender)
-    {
+    constructor(
+        string memory name,
+        string memory symbol,
+        address _nodeManagerAddress
+    ) ERC721(name, symbol) Ownable(msg.sender) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
+        nodeManagerAddress = _nodeManagerAddress;
     }
 
     modifier onlyNodeManager() {
-        require(_nodeManagerAddress == msg.sender, "Unauthorized: Only node manager");
+        require(
+            nodeManagerAddress == msg.sender,
+            "Unauthorized: Only node manager"
+        );
         _;
     }
 
     function setNodeManagerAddress(address newAddress) public onlyOwner {
-        _nodeManagerAddress = newAddress;
+        nodeManagerAddress = newAddress;
     }
 
     function getNodeManagerAddress() public view returns (address) {
-        return _nodeManagerAddress;
+        return nodeManagerAddress;
     }
 
-    function safeMint(address to, uint256 tokenId) public onlyNodeManager {
+    function safeMint(
+        address to,
+        uint256 tokenId,
+        string memory uri
+    ) public onlyNodeManager {
         _safeMint(to, tokenId);
+        _setTokenURI(tokenId, uri);
     }
 
-    function supportsInterface(bytes4 interfaceId)
+    // The following functions are overrides required by Solidity.
+
+    function _update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) internal override(ERC721, ERC721Enumerable) returns (address) {
+        return super._update(to, tokenId, auth);
+    }
+
+    function _increaseBalance(
+        address account,
+        uint128 value
+    ) internal override(ERC721, ERC721Enumerable) {
+        super._increaseBalance(account, value);
+    }
+
+    function tokenURI(
+        uint256 tokenId
+    ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
+        return super.tokenURI(tokenId);
+    }
+
+    function supportsInterface(
+        bytes4 interfaceId
+    )
         public
         view
-        override(ERC721, AccessControl)
+        override(ERC721, ERC721Enumerable, ERC721URIStorage, AccessControl)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);

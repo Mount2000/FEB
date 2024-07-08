@@ -20,14 +20,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price;
     }
 
-    uint256 public nodeId;
+    uint256 public nodeTierId;
     mapping(uint256 => NodeTier) public nodeTiers;
 
-    struct Referral {
-        address referrer;
-        uint256 amount;
-    }
-
+    
     mapping(address => string) public userReferralCodes;
     mapping(string => address) public referralOwners;
     mapping(string => bool) usedReferralCodes;
@@ -37,12 +33,19 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint8 discountPercent;
     }
 
+    struct ReferralInformation{
+        string code;
+        uint256 TotalSales;
+        uint256 commissionRate;
+    }
+
     uint256 private couponId;
     mapping(uint256 => DiscountCoupon) public discountCoupons;
+  
     // Events
     event NodeAdded(
         address indexed user,
-        uint256 nodeId,
+        uint256 nodeTierId,
         bool status,
         string name,
         string metadata,
@@ -50,18 +53,18 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     );
     event NodeUpdated(
         address indexed user,
-        uint256 nodeId,
+        uint256 nodeTierId,
         bool status,
         string name,
         string metadata,
         uint256 price
     );
-    event NodeDeleted(address indexed user, uint256 nodeId);
+    event NodeDeleted(address indexed user, uint256 nodeTierId);
 
     event FundsWithdrawn(address indexed to, uint256 value);
 
     event Buy(
-        uint256 indexed nodeId,
+        uint256 indexed nodeTierId,
         address indexed buyer,
         string indexed referralCode,
         uint256 referralAmount
@@ -113,13 +116,13 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(price > 0, "Price must be greater than 0");
-        nodeId++;
+        nodeTierId++;
         NodeTier memory newNode = NodeTier(false, name, metadata, price);
-        nodeTiers[nodeId] = newNode;
+        nodeTiers[nodeTierId] = newNode;
         emit NodeAdded(
             msg.sender,
-            nodeId,
-            nodeTiers[nodeId].status,
+            nodeTierId,
+            nodeTiers[nodeTierId].status,
             name,
             metadata,
             price
@@ -127,19 +130,19 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     function getNodeTierDetails(
-        uint256 _nodeId
+        uint256 _nodeTierId
     ) public view returns (NodeTier memory) {
-        return nodeTiers[_nodeId];
+        return nodeTiers[_nodeTierId];
     }
 
     function updateNodeTier(
-        uint256 _nodeId,
+        uint256 _nodeTierId,
         string memory newName,
         string memory newMetadata,
         bool newStatus,
         uint256 newPrice
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
+        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
         require(newPrice > 0, "Price must be greater than 0");
         NodeTier memory updatedNode = NodeTier(
             newStatus,
@@ -148,11 +151,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             newPrice
         );
 
-        nodeTiers[_nodeId] = updatedNode;
+        nodeTiers[_nodeTierId] = updatedNode;
 
         emit NodeUpdated(
             msg.sender,
-            _nodeId,
+            _nodeTierId,
             updatedNode.status,
             updatedNode.name,
             updatedNode.metadata,
@@ -284,11 +287,12 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     function buyNode(
-        uint256 _nodeId,
-        string memory referralCode
+        uint256 _nodeTierId,
+        uint256 referralCode
+        
     ) public payable whenNotPaused {
-        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
-        require(msg.value >= nodeTiers[_nodeId].price, "Insufficient funds");
+        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
+        require(msg.value = nodeTiers[_nodeTierId].price, "Insufficient funds");
 
         uint256 referralFee = 0;
         if (bytes(referralCode).length > 0) {
@@ -301,12 +305,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
             referralFee = msg.value / 10;
             (bool sent, ) = referrer.call{value: referralFee}("");
+            require(address(this).balance >= price, "Not enough balance");
             require(sent, "Failed to send referral fee");
+            usedReferralCodes[referralCode] = true; 
 
-            usedReferralCodes[referralCode] = true; // Mark referral code as used
-
-            // Emit the referral amount event
-            emit Buy(_nodeId, msg.sender, referralCode, referralFee);
+            emit Buy(_nodeTierId, msg.sender, referralCode, referralFee);
         }
 
         if (bytes(userReferralCodes[msg.sender]).length == 0) {
@@ -314,20 +317,19 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referralOwners[newReferralCode] = msg.sender;
         }
 
-        nodeContract.safeMint(msg.sender, _nodeId);
+        nodeContract.safeMint(msg.sender, _nodeTierId);
     }
 
     function buyAdmin(
-        uint256 _nodeId,
+        uint256 _nodeTierId,
         address nodeOwner
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(nodeTiers[_nodeId].price > 0, "Node does not exist");
-        nodeContract.safeMint(nodeOwner, _nodeId);
+        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
+        nodeContract.safeMint(nodeOwner, _nodeTierId);
         if (bytes(userReferralCodes[nodeOwner]).length == 0) {
             string memory newReferralCode = generateReferralCode(nodeOwner);
             referralOwners[newReferralCode] = nodeOwner;
         }
-        // emit Buy(_nodeId, nodeOwner, userReferralCodes[nodeOwner]);
     }
 
     function withdraw(address payable to, uint256 value) public onlyOwner {

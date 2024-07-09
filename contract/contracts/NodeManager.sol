@@ -22,8 +22,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     uint256 private nodeTierId;
     mapping(uint256 => NodeTier) public nodeTiers;
-    mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks;
-    mapping(uint256 => address) private nodeTiersIdUserLinks;
+    mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks; //xem node tier đó được sở hữu bởi address nào
+    mapping(uint256 => address) private nodeTiersIdUserLinks; //xem chủ sở hữu của nodetier
 
     struct DiscountCoupon {
         bool status;
@@ -73,13 +73,22 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         bool status,
         uint8 discountPercent
     );
-    event Sale(address indexed user, uint256 nodeTierId);
+    event Sale(
+        address indexed user,
+        uint256 nodeTierId,
+        uint256 referralId,
+         uint256 totalSales
+    );
     event FundsWithdrawn(address indexed to, uint256 value);
 
-    constructor(
-        address _nodeContract,
-        uint256 _referenceRate
-    ) Ownable(msg.sender) {
+    event GeneratedReferralCode(
+        address indexed user,
+        string code
+    );
+
+    constructor(address _nodeContract, uint256 _referenceRate)
+        Ownable(msg.sender)
+    {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
         require(_referenceRate <= 100, "Invalid input");
@@ -105,10 +114,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     // NODE Tier MANAGEMENT
 
-    function addNodeTier(
-        string memory name,
-        uint256 price
-    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+    function addNodeTier(string memory name, uint256 price)
+        public
+        onlyRole(ADMIN_ROLE)
+        whenNotPaused
+    {
         require(price > 0, "Price must be greater than 0");
         nodeTierId++;
         NodeTier memory newNode = NodeTier(false, name, price);
@@ -122,19 +132,20 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getNodeTierIdByIndex(
-        address user,
-        uint256 index
-    ) public view returns (uint256) {
+    function getNodeIdByIndex(address user, uint256 index)
+        public
+        view
+        returns (uint256)
+    {
         require(
             index < userNodeTiersIdLinks[user].length(),
             "Index out of bounds"
         );
-        uint256 nodeTierId = userNodeTiersIdLinks[user].at(index);
+        // uint256 nodeTierId = userNodeTiersIdLinks[user].at(index);
         return nodeTierId;
     }
 
-    function getOwnerByNodeTierId(uint256 _nodeTierId) public view returns (address) {
+    function getOwnerByNodeId(uint256 _nodeTierId) public view returns (address) {
         return nodeTiersIdUserLinks[_nodeTierId];
     }
 
@@ -142,9 +153,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return userNodeTiersIdLinks[user].length();
     }
 
-    function getNodeTierDetails(
-        uint256 _nodeTierId
-    ) public view returns (NodeTier memory) {
+    function getNodeTierDetails(uint256 _nodeTierId)
+        public
+        view
+        returns (NodeTier memory)
+    {
         return nodeTiers[_nodeTierId];
     }
 
@@ -175,9 +188,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     // COUPON MANAGEMENT
 
-    function addDiscountCoupon(
-        uint8 discountPercent
-    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+    function addDiscountCoupon(uint8 discountPercent)
+        public
+        onlyRole(ADMIN_ROLE)
+        whenNotPaused
+    {
         require(discountPercent > 0, "Discount percent must be greater than 0");
         couponId++;
         DiscountCoupon memory newCoupon = DiscountCoupon(
@@ -193,9 +208,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getDiscountCoupon(
-        uint256 _couponId
-    ) public view returns (DiscountCoupon memory) {
+    function getDiscountCoupon(uint256 _couponId)
+        public
+        view
+        returns (DiscountCoupon memory)
+    {
         return discountCoupons[_couponId];
     }
 
@@ -226,20 +243,20 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function buyNode(
+   function buyNode(
         uint256 _nodeTierId,
         uint256 referralId,
         string memory metadata
-    ) public payable whenNotPaused {
+    ) public payable whenNotPaused returns (string memory) {
         uint256 price = nodeTiers[_nodeTierId].price;
         address caller = msg.sender;
-        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
+        require(price > 0, "Node does not exist");
         require(msg.value >= price, "Insufficient funds");
         require(
             nodeTiersIdUserLinks[_nodeTierId] == address(0),
             "Node tier already owned"
         );
-
+        uint256 totalSales = 0;
         // Referral code can only be used once per person
         if (
             referralId > 0 &&
@@ -247,7 +264,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referralIdUserLinks[referralId] != caller
         ) {
             address referralsOwner = referralIdUserLinks[referralId];
-            uint256 totalSales = (price * referenceRate) / 100;
+            totalSales = (price * referenceRate) / 100;
             require(address(this).balance >= totalSales, "Not enough balance");
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");
@@ -258,11 +275,12 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         userNodeTiersIdLinks[caller].add(_nodeTierId);
         nodeTiersIdUserLinks[_nodeTierId] = caller;
 
-        // add Referral for user
+        // Add Referral for user
+        string memory _code;
         if (userReferralIdLinks[caller] == 0) {
             referenceId++;
             uint256 currentTimestamp = block.timestamp;
-            string memory _code = string(
+            _code = string(
                 abi.encodePacked(
                     "BachiSwap_",
                     uint256str(referenceId),
@@ -273,23 +291,31 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             userReferralIdLinks[caller] = referenceId;
             referralIdUserLinks[referenceId] = caller;
             referrals[referenceId].code = _code;
-        }
-        emit Sale(caller, _nodeTierId);
+
+            emit GeneratedReferralCode (caller,_code);
+        } 
+        emit Sale(caller, _nodeTierId, referralId, totalSales);
+        return _code;
     }
+
 
     function getReferralIdByOwner(address owner) public view returns (uint256) {
         return userReferralIdLinks[owner];
     }
 
-    function getOwnerByReferralId(
-        uint256 referralId
-    ) public view returns (address) {
+    function getOwnerByReferralId(uint256 referralId)
+        public
+        view
+        returns (address)
+    {
         return referralIdUserLinks[referralId];
     }
 
-    function getReferralInfo(
-        uint256 referralId
-    ) public view returns (string memory code, uint256 totalSales) {
+    function getReferralInfo(uint256 referralId)
+        public
+        view
+        returns (string memory code, uint256 totalSales)
+    {
         return (referrals[referralId].code, referrals[referralId].totalSales);
     }
 
@@ -297,9 +323,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return referenceRate;
     }
 
-    function setReferenceRate(
-        uint256 _referenceRate
-    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
+    function setReferenceRate(uint256 _referenceRate)
+        public
+        onlyRole(ADMIN_ROLE)
+        whenNotPaused
+    {
         require(_referenceRate <= 100, "Invalid input");
         referenceRate = _referenceRate;
     }
@@ -317,7 +345,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         nodeContract.safeMint(nodeOwner, _nodeTierId, metadata);
         userNodeTiersIdLinks[msg.sender].add(_nodeTierId);
         nodeTiersIdUserLinks[_nodeTierId] = msg.sender;
-        emit Sale(msg.sender, _nodeTierId);
+        emit Sale(msg.sender,_nodeTierId,0,0);
     }
 
     function withdraw(address payable to, uint256 value) public onlyOwner {
@@ -358,3 +386,5 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     // Fallback function to receive Ether
     receive() external payable {}
 }
+
+// apply discount(discount persent(random),commitsionpersent)

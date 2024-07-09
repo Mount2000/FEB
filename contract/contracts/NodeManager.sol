@@ -22,9 +22,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     uint256 private nodeTierId;
     mapping(uint256 => NodeTier) public nodeTiers;
-    mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks; //xem node tier đó được sở hữu bởi address nào
-    mapping(uint256 => address) private nodeTiersIdUserLinks; //xem chủ sở hữu của nodetier
-    mapping(address => uint256) private userDiscountCouponIdLinks;
+    mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks; 
+    mapping(uint256 => address) private nodeTiersIdUserLinks; 
+    mapping(address => EnumerableSet.UintSet) private discountCouponsOfOwner; 
+
     struct DiscountCoupon {
         bool status;
         uint8 discountPercent;
@@ -263,16 +264,16 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function setDiscountCouponForUser(address user, uint256 _couponId)
+    function setDiscountOwner(uint256 _couponId, address owner)
         public
         onlyRole(ADMIN_ROLE)
         whenNotPaused
     {
         require(
-            discountCoupons[_couponId].discountPercent > 0,
-            "Coupon does not exist"
+            discountCoupons[_couponId].status,
+            "Discount coupon does not exist"
         );
-        userDiscountCouponIdLinks[user] = _couponId;
+        discountCouponsOfOwner[owner].add(_couponId);
     }
 
     function buyNode(
@@ -291,10 +292,12 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
 
         uint8 discountPercent = 0;
+        uint8 commissionPercent = 0;
         if (discountCouponId != 0) {
             DiscountCoupon memory coupon = discountCoupons[discountCouponId];
             require(coupon.status, "Discount coupon does not exist");
             discountPercent = coupon.discountPercent;
+            commissionPercent = coupon.commissionPercent;
             uint256 discountValue = (price * discountPercent) / 100;
             require(
                 address(this).balance >= discountValue,
@@ -302,12 +305,24 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             );
             (bool sent, ) = caller.call{value: discountValue}("");
             require(sent, "Failed to send discount Ether");
+
+            address discountOwner = getOwnerByDiscountCouponId(
+                discountCouponId
+            );
+            uint256 remainingValue = price - discountValue; 
+            uint256 commissionValue = (remainingValue * commissionPercent) /
+                100;
+            require(
+                address(this).balance >= commissionValue,
+                "Not enough balance for commission"
+            );
+            (bool commissionSent, ) = discountOwner.call{
+                value: commissionValue
+            }("");
+            require(commissionSent, "Failed to send commission Ether");
         }
 
-        require(msg.value >= price, "Insufficient funds after discount");
-
         uint256 totalSales = 0;
-        // Referral code can only be used once per person
         if (
             referralId > 0 &&
             referralIdUserLinks[referralId] != address(0) &&
@@ -346,6 +361,18 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         }
         emit Sale(caller, _nodeTierId, referralId, totalSales);
         return _code;
+    }
+
+    function getOwnerByDiscountCouponId(uint256 _couponId)
+        public
+        view
+        returns (address)
+    {
+        require(
+            discountCoupons[_couponId].discountPercent > 0,
+            "Coupon does not exist"
+        );
+        return nodeTiersIdUserLinks[_couponId];
     }
 
     function getReferralIdByOwner(address owner) public view returns (uint256) {
@@ -436,11 +463,3 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     receive() external payable {}
 }
 
-// apply discount(discount persent(random),commitsionpersent)
-
-// a buyer,chudiscoutb, referralcode c
-//100        3%             10%
-
-//mã giảm giá 10%
-
-// user sử dụng 100  cho contract thì contract sẽ bắn lại 10 cho user và chủ discount sẽ nhận được 10 đ,

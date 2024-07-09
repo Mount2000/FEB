@@ -24,12 +24,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     mapping(uint256 => NodeTier) public nodeTiers;
     mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks; //xem node tier đó được sở hữu bởi address nào
     mapping(uint256 => address) private nodeTiersIdUserLinks; //xem chủ sở hữu của nodetier
-
+    mapping(address => uint256) private userDiscountCouponIdLinks;
     struct DiscountCoupon {
         bool status;
         uint8 discountPercent;
+        string name;
+        uint8 commissionPercent;
+        string code;
     }
-
     uint256 private couponId;
     mapping(uint256 => DiscountCoupon) public discountCoupons;
 
@@ -43,7 +45,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     mapping(uint256 => ReferralInformation) private referrals;
     mapping(address => uint256) private userReferralIdLinks;
     mapping(uint256 => address) private referralIdUserLinks;
-
     // Events
     event AddedNode(
         address indexed user,
@@ -77,14 +78,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         address indexed user,
         uint256 nodeTierId,
         uint256 referralId,
-         uint256 totalSales
+        uint256 totalSales
     );
     event FundsWithdrawn(address indexed to, uint256 value);
 
-    event GeneratedReferralCode(
-        address indexed user,
-        string code
-    );
+    event GeneratedReferralCode(address indexed user, string code);
 
     constructor(address _nodeContract, uint256 _referenceRate)
         Ownable(msg.sender)
@@ -145,7 +143,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return nodeTierId;
     }
 
-    function getOwnerByNodeId(uint256 _nodeTierId) public view returns (address) {
+    function getOwnerByNodeId(uint256 _nodeTierId)
+        public
+        view
+        returns (address)
+    {
         return nodeTiersIdUserLinks[_nodeTierId];
     }
 
@@ -188,18 +190,26 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     // COUPON MANAGEMENT
 
-    function addDiscountCoupon(uint8 discountPercent)
-        public
-        onlyRole(ADMIN_ROLE)
-        whenNotPaused
-    {
+    function addDiscountCoupon(
+        uint8 discountPercent,
+        string memory name,
+        uint8 commissionPercent,
+        string memory code
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(discountPercent > 0, "Discount percent must be greater than 0");
+        require(bytes(name).length > 0, "Coupon name must not be empty");
+        require(bytes(code).length > 0, "Coupon code must not be empty");
+
         couponId++;
         DiscountCoupon memory newCoupon = DiscountCoupon(
             false,
-            discountPercent
+            discountPercent,
+            name,
+            commissionPercent,
+            code
         );
         discountCoupons[couponId] = newCoupon;
+
         emit AddCoupon(
             msg.sender,
             couponId,
@@ -223,7 +233,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     function updateDiscountCoupon(
         uint256 _couponId,
         uint8 newDiscountPercent,
-        bool newStatus
+        bool newStatus,
+        string memory newName,
+        uint8 newCommissionPercent,
+        string memory newCode
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(
             discountCoupons[_couponId].discountPercent > 0,
@@ -233,8 +246,15 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             newDiscountPercent > 0,
             "Discount percent must be greater than 0"
         );
+        require(bytes(newName).length > 0, "Coupon name must not be empty");
+        require(bytes(newCode).length > 0, "Coupon code must not be empty");
+
         discountCoupons[_couponId].discountPercent = newDiscountPercent;
         discountCoupons[_couponId].status = newStatus;
+        discountCoupons[_couponId].name = newName;
+        discountCoupons[_couponId].commissionPercent = newCommissionPercent;
+        discountCoupons[_couponId].code = newCode;
+
         emit UpdateCoupon(
             msg.sender,
             _couponId,
@@ -243,10 +263,23 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-   function buyNode(
+    function setDiscountCouponForUser(address user, uint256 _couponId)
+        public
+        onlyRole(ADMIN_ROLE)
+        whenNotPaused
+    {
+        require(
+            discountCoupons[_couponId].discountPercent > 0,
+            "Coupon does not exist"
+        );
+        userDiscountCouponIdLinks[user] = _couponId;
+    }
+
+    function buyNode(
         uint256 _nodeTierId,
         uint256 referralId,
-        string memory metadata
+        string memory metadata,
+        uint256 discountCouponId
     ) public payable whenNotPaused returns (string memory) {
         uint256 price = nodeTiers[_nodeTierId].price;
         address caller = msg.sender;
@@ -256,6 +289,23 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             nodeTiersIdUserLinks[_nodeTierId] == address(0),
             "Node tier already owned"
         );
+
+        uint8 discountPercent = 0;
+        if (discountCouponId != 0) {
+            DiscountCoupon memory coupon = discountCoupons[discountCouponId];
+            require(coupon.status, "Discount coupon does not exist");
+            discountPercent = coupon.discountPercent;
+            uint256 discountValue = (price * discountPercent) / 100;
+            require(
+                address(this).balance >= discountValue,
+                "Not enough balance for discount"
+            );
+            (bool sent, ) = caller.call{value: discountValue}("");
+            require(sent, "Failed to send discount Ether");
+        }
+
+        require(msg.value >= price, "Insufficient funds after discount");
+
         uint256 totalSales = 0;
         // Referral code can only be used once per person
         if (
@@ -292,12 +342,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referralIdUserLinks[referenceId] = caller;
             referrals[referenceId].code = _code;
 
-            emit GeneratedReferralCode (caller,_code);
-        } 
+            emit GeneratedReferralCode(caller, _code);
+        }
         emit Sale(caller, _nodeTierId, referralId, totalSales);
         return _code;
     }
-
 
     function getReferralIdByOwner(address owner) public view returns (uint256) {
         return userReferralIdLinks[owner];
@@ -345,7 +394,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         nodeContract.safeMint(nodeOwner, _nodeTierId, metadata);
         userNodeTiersIdLinks[msg.sender].add(_nodeTierId);
         nodeTiersIdUserLinks[_nodeTierId] = msg.sender;
-        emit Sale(msg.sender,_nodeTierId,0,0);
+        emit Sale(msg.sender, _nodeTierId, 0, 0);
     }
 
     function withdraw(address payable to, uint256 value) public onlyOwner {
@@ -388,3 +437,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 }
 
 // apply discount(discount persent(random),commitsionpersent)
+
+// a buyer,chudiscoutb, referralcode c
+//100        3%             10%
+
+//mã giảm giá 10%
+
+// user sử dụng 100  cho contract thì contract sẽ bắn lại 10 cho user và chủ discount sẽ nhận được 10 đ,

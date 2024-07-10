@@ -283,31 +283,33 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             require(coupon.status, "Discount coupon does not exist");
             discountPercent = coupon.discountPercent;
             commissionPercent = coupon.commissionPercent;
-            discountValue = price/100 * discountPercent;
-        }
-        uint256 expectedvalue = price - discountValue;
-        require(msg.value == expectedvalue, "Insufficient funds");
-        require(
-            nodeTiersIdUserLinks[_nodeTierId] == address(0),
-            "Node tier already owned"
-        );
+            discountValue = (price / 100) * discountPercent;
 
-        if (discountCouponId != 0) {
             address discountOwner = getOwnerByDiscountCouponId(
                 discountCouponId
             );
-
-            uint256 commissionValue = price/100 * commissionPercent;
-            require(commissionValue > 0, "Commission value must be greater than 0");
+            uint256 commissionValue = (price / 100) * commissionPercent;
+            require(
+                commissionValue > 0,
+                "Commission value must be greater than 0"
+            );
             require(
                 address(this).balance >= commissionValue,
                 "Not enough balance for commission"
             );
+
             (bool commissionSent, ) = discountOwner.call{
                 value: commissionValue
             }("");
             require(commissionSent, "Failed to send commission Ether");
         }
+
+        uint256 expectedValue = price - discountValue;
+        require(msg.value == expectedValue, "Insufficient funds");
+        require(
+            nodeTiersIdUserLinks[_nodeTierId] == address(0),
+            "Node tier already owned"
+        );
 
         uint256 totalSales = 0;
         if (
@@ -316,7 +318,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referralIdUserLinks[referralId] != caller
         ) {
             address referralsOwner = referralIdUserLinks[referralId];
-            totalSales = expectedvalue/100 * referenceRate;
+            totalSales = (expectedValue / 100) * referenceRate;
             require(address(this).balance >= totalSales, "Not enough balance");
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");
@@ -349,32 +351,41 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return _code;
     }
 
-   function setDiscountOwner(uint256 _couponId, address owner)
-    public
-    onlyRole(ADMIN_ROLE)
-    whenNotPaused
-{
-    require(discountCoupons[_couponId].status, "Discount coupon does not exist");
-    require(!discountCouponsOfOwner[owner].contains(_couponId), "Coupon already owned");
+    function setDiscountOwner(uint256 _couponId, address owner)
+        public
+        onlyRole(ADMIN_ROLE)
+        whenNotPaused
+    {
+        require(
+            discountCoupons[_couponId].status,
+            "Discount coupon does not exist"
+        );
+        require(
+            !discountCouponsOfOwner[owner].contains(_couponId),
+            "Coupon already owned"
+        );
 
-    discountCouponsOfOwner[owner].add(_couponId);
-    owners.push(owner);
-}
-
-function getOwnerByDiscountCouponId(uint256 _couponId)
-    public
-    view
-    returns (address)
-{
-    require(discountCoupons[_couponId].discountPercent > 0, "Coupon does not exist");
-
-    for (uint256 i = 0; i < owners.length; i++) {
-        if (discountCouponsOfOwner[owners[i]].contains(_couponId)) {
-            return owners[i];
-        }
+        discountCouponsOfOwner[owner].add(_couponId);
+        owners.push(owner);
     }
-    revert("Owner not found for this coupon");
-}
+
+    function getOwnerByDiscountCouponId(uint256 _couponId)
+        public
+        view
+        returns (address)
+    {
+        require(
+            discountCoupons[_couponId].discountPercent > 0,
+            "Coupon does not exist"
+        );
+
+        for (uint256 i = 0; i < owners.length; i++) {
+            if (discountCouponsOfOwner[owners[i]].contains(_couponId)) {
+                return owners[i];
+            }
+        }
+        revert("Owner not found for this coupon");
+    }
 
     function getReferralIdByOwner(address owner) public view returns (uint256) {
         return userReferralIdLinks[owner];

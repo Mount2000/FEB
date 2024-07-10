@@ -323,12 +323,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referrals[referralId].totalSales += totalSales;
         }
 
-        // Mint node cho người dùng
         nodeContract.safeMint(caller, _nodeTierId, metadata);
         userNodeTiersIdLinks[caller].add(_nodeTierId);
         nodeTiersIdUserLinks[_nodeTierId] = caller;
 
-        // Tạo mã giới thiệu cho người dùng nếu chưa có
         string memory _code;
         if (userReferralIdLinks[caller] == 0) {
             referenceId++;

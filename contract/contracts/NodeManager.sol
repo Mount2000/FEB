@@ -24,7 +24,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     mapping(uint256 => NodeTier) public nodeTiers;
     mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks;
     mapping(uint256 => address) private nodeTiersIdUserLinks;
-    mapping(address => EnumerableSet.UintSet) private userdiscountCouponsIdLinks;
+    mapping(address => EnumerableSet.UintSet) private userdiscountCouponsId;
     mapping(uint256 => address) private discountCouponsIdUserLinks;
 
     struct DiscountCoupon {
@@ -141,8 +141,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             index < userNodeTiersIdLinks[user].length(),
             "Index out of bounds"
         );
-        // uint256 nodeTierId = userNodeTiersIdLinks[user].at(index);
-        return nodeTierId;
+        return userNodeTiersIdLinks[user].at(index);
     }
 
     function getOwnerByNodeId(uint256 _nodeTierId)
@@ -285,9 +284,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             commissionPercent = coupon.commissionPercent;
             discountValue = (price / 100) * discountPercent;
 
-            address discountOwner = getOwnerByDiscountCouponId(
+            address discountOwner = discountCouponsIdUserLinks[
                 discountCouponId
-            );
+            ];
             uint256 commissionValue = (price / 100) * commissionPercent;
             require(
                 commissionValue > 0,
@@ -351,37 +350,31 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return _code;
     }
 
-   
-    function setOwnerByDiscountCouponId(address owner, uint256 couponIdentifier)
-       public
+    function setOwnerByDiscountCouponId(address owner, uint256 _couponId)
+        public
         onlyRole(ADMIN_ROLE)
         whenNotPaused
     {
         require(
-            discountCoupons[couponIdentifier].status,
+            discountCoupons[_couponId].status,
             "Discount coupon does not exist"
         );
-        discountCouponsIdUserLinks[couponIdentifier] = owner;
+        discountCouponsIdUserLinks[_couponId] = owner;
     }
 
-    function getOwnerByDiscountCouponId(uint256 CouponId)
+    function getOwnerByDiscountCouponId(uint256 _couponId)
         public
         view
         returns (address)
     {
         require(
-            discountCoupons[CouponId].status,
+            discountCoupons[_couponId].status,
             "Discount coupon does not exist"
         );
-        return discountCouponsIdUserLinks[CouponId];
+        return discountCouponsIdUserLinks[_couponId];
     }
 
-    function getDiscountCouponIdByOwner(address owner)
-    public 
-    view 
-    returns(uint256){
-    //   return discountCouponsIdUserLinks[owner];
-    }
+   
 
     function getReferralIdByOwner(address owner) public view returns (uint256) {
         return userReferralIdLinks[owner];
@@ -470,4 +463,5 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     // Fallback function to receive Ether
     receive() external payable {}
 }
+
 

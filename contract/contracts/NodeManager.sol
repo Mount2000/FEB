@@ -24,7 +24,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     mapping(uint256 => NodeTier) public nodeTiers;
     mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks;
     mapping(uint256 => address) private nodeTiersIdUserLinks;
-    mapping(address => EnumerableSet.UintSet) private userdiscountCouponsId;
+    mapping(address => EnumerableSet.UintSet) private userdiscountCouponsIdLinks;
     mapping(uint256 => address) private discountCouponsIdUserLinks;
 
     struct DiscountCoupon {
@@ -86,9 +86,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     event GeneratedReferralCode(address indexed user, string code);
 
-    constructor(address _nodeContract, uint256 _referenceRate)
-        Ownable(msg.sender)
-    {
+    constructor(
+        address _nodeContract,
+        uint256 _referenceRate
+    ) Ownable(msg.sender) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
         require(_referenceRate <= 100, "Invalid input");
@@ -114,11 +115,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     // NODE Tier MANAGEMENT
 
-    function addNodeTier(string memory name, uint256 price)
-        public
-        onlyRole(ADMIN_ROLE)
-        whenNotPaused
-    {
+    function addNodeTier(
+        string memory name,
+        uint256 price
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(price > 0, "Price must be greater than 0");
         nodeTierId++;
         NodeTier memory newNode = NodeTier(false, name, price);
@@ -132,11 +132,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getNodeIdByIndex(address user, uint256 index)
-        public
-        view
-        returns (uint256)
-    {
+    function getNodeIdByIndex(
+        address user,
+        uint256 index
+    ) public view returns (uint256) {
         require(
             index < userNodeTiersIdLinks[user].length(),
             "Index out of bounds"
@@ -144,11 +143,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return userNodeTiersIdLinks[user].at(index);
     }
 
-    function getOwnerByNodeId(uint256 _nodeTierId)
-        public
-        view
-        returns (address)
-    {
+    function getOwnerByNodeId(
+        uint256 _nodeTierId
+    ) public view returns (address) {
         return nodeTiersIdUserLinks[_nodeTierId];
     }
 
@@ -156,11 +153,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return userNodeTiersIdLinks[user].length();
     }
 
-    function getNodeTierDetails(uint256 _nodeTierId)
-        public
-        view
-        returns (NodeTier memory)
-    {
+    function getNodeTierDetails(
+        uint256 _nodeTierId
+    ) public view returns (NodeTier memory) {
         return nodeTiers[_nodeTierId];
     }
 
@@ -219,11 +214,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getDiscountCoupon(uint256 _couponId)
-        public
-        view
-        returns (DiscountCoupon memory)
-    {
+    function getDiscountCoupon(
+        uint256 _couponId
+    ) public view returns (DiscountCoupon memory) {
         return discountCoupons[_couponId];
     }
 
@@ -350,11 +343,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return _code;
     }
 
-    function setOwnerByDiscountCouponId(address owner, uint256 _couponId)
-        public
-        onlyRole(ADMIN_ROLE)
-        whenNotPaused
-    {
+    function setOwnerByDiscountCouponId(
+        address owner,
+        uint256 _couponId
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(
             discountCoupons[_couponId].status,
             "Discount coupon does not exist"
@@ -362,11 +354,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         discountCouponsIdUserLinks[_couponId] = owner;
     }
 
-    function getOwnerByDiscountCouponId(uint256 _couponId)
-        public
-        view
-        returns (address)
-    {
+    function getOwnerByDiscountCouponId(
+        uint256 _couponId
+    ) public view returns (address) {
         require(
             discountCoupons[_couponId].status,
             "Discount coupon does not exist"
@@ -374,25 +364,36 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return discountCouponsIdUserLinks[_couponId];
     }
 
-   
+    function getDiscountIdByIndex(
+        address user,
+        uint256 index
+    ) public view returns (uint256) {
+        require(
+            index < userdiscountCouponsIdLinks[user].length(),
+            "Index out of bounds"
+        );
+        return userdiscountCouponsIdLinks[user].at(index);
+    }
+
+    function getTotalDiscountByOwner(
+        address owner
+    ) public view returns (uint256) {
+        return userdiscountCouponsIdLinks[owner].length();
+    }
 
     function getReferralIdByOwner(address owner) public view returns (uint256) {
         return userReferralIdLinks[owner];
     }
 
-    function getOwnerByReferralId(uint256 referralId)
-        public
-        view
-        returns (address)
-    {
+    function getOwnerByReferralId(
+        uint256 referralId
+    ) public view returns (address) {
         return referralIdUserLinks[referralId];
     }
 
-    function getReferralInfo(uint256 referralId)
-        public
-        view
-        returns (string memory code, uint256 totalSales)
-    {
+    function getReferralInfo(
+        uint256 referralId
+    ) public view returns (string memory code, uint256 totalSales) {
         return (referrals[referralId].code, referrals[referralId].totalSales);
     }
 
@@ -400,11 +401,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return referenceRate;
     }
 
-    function setReferenceRate(uint256 _referenceRate)
-        public
-        onlyRole(ADMIN_ROLE)
-        whenNotPaused
-    {
+    function setReferenceRate(
+        uint256 _referenceRate
+    ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(_referenceRate <= 100, "Invalid input");
         referenceRate = _referenceRate;
     }
@@ -463,5 +462,3 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     // Fallback function to receive Ether
     receive() external payable {}
 }
-
-

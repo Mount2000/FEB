@@ -21,11 +21,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     uint256 private nodeTierId;
-    address[] private owners;
     mapping(uint256 => NodeTier) public nodeTiers;
     mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks;
     mapping(uint256 => address) private nodeTiersIdUserLinks;
     mapping(address => EnumerableSet.UintSet) private discountCouponsOfOwner;
+    mapping(uint256 => address) private discountCouponOwners;
 
     struct DiscountCoupon {
         bool status;
@@ -351,40 +351,30 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return _code;
     }
 
-    function setDiscountOwner(uint256 _couponId, address owner)
-        public
+   
+    function setOwnerByDiscountCouponId(address owner, uint256 couponIdentifier)
+       public
         onlyRole(ADMIN_ROLE)
         whenNotPaused
     {
         require(
-            discountCoupons[_couponId].status,
+            discountCoupons[couponIdentifier].status,
             "Discount coupon does not exist"
         );
-        require(
-            !discountCouponsOfOwner[owner].contains(_couponId),
-            "Coupon already owned"
-        );
-
-        discountCouponsOfOwner[owner].add(_couponId);
-        owners.push(owner);
+        discountCouponOwners[couponIdentifier] = owner;
     }
 
-    function getOwnerByDiscountCouponId(uint256 _couponId)
+    // Hàm truy xuất chủ sở hữu của mã giảm giá
+    function getOwnerByDiscountCouponId(uint256 CouponId)
         public
         view
         returns (address)
     {
         require(
-            discountCoupons[_couponId].discountPercent > 0,
-            "Coupon does not exist"
+            discountCoupons[CouponId].status,
+            "Discount coupon does not exist"
         );
-
-        for (uint256 i = 0; i < owners.length; i++) {
-            if (discountCouponsOfOwner[owners[i]].contains(_couponId)) {
-                return owners[i];
-            }
-        }
-        revert("Owner not found for this coupon");
+        return discountCouponOwners[CouponId];
     }
 
     function getReferralIdByOwner(address owner) public view returns (uint256) {

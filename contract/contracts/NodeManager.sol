@@ -24,8 +24,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     mapping(uint256 => NodeTier) public nodeTiers;
     mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks;
     mapping(uint256 => address) private nodeTiersIdUserLinks;
-    mapping(address => EnumerableSet.UintSet) private discountCouponsOfOwner;
-    mapping(uint256 => address) private discountCouponOwners;
+    mapping(address => EnumerableSet.UintSet) private userdiscountCouponsId;
+    mapping(uint256 => address) private discountCouponsIdUserLinks;
 
     struct DiscountCoupon {
         bool status;
@@ -361,10 +361,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             discountCoupons[couponIdentifier].status,
             "Discount coupon does not exist"
         );
-        discountCouponOwners[couponIdentifier] = owner;
+        discountCouponsIdUserLinks[couponIdentifier] = owner;
     }
 
-    // Hàm truy xuất chủ sở hữu của mã giảm giá
     function getOwnerByDiscountCouponId(uint256 CouponId)
         public
         view
@@ -374,7 +373,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             discountCoupons[CouponId].status,
             "Discount coupon does not exist"
         );
-        return discountCouponOwners[CouponId];
+        return discountCouponsIdUserLinks[CouponId];
+    }
+
+    function getDiscountCouponIdByOwner(address owner)
+    public 
+    view 
+    returns(uint256){
+    //   return discountCouponsIdUserLinks[owner];
     }
 
     function getReferralIdByOwner(address owner) public view returns (uint256) {

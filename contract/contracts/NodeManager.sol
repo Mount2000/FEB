@@ -24,7 +24,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     mapping(uint256 => NodeTier) public nodeTiers;
     mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks;
     mapping(uint256 => address) private nodeTiersIdUserLinks;
-    mapping(address => EnumerableSet.UintSet) private userdiscountCouponsId;
+    mapping(address => EnumerableSet.UintSet) private userdiscountCouponsIdLinks;
     mapping(uint256 => address) private discountCouponsIdUserLinks;
 
     struct DiscountCoupon {

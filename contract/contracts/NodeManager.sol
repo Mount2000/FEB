@@ -295,11 +295,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             require(coupon.status, "Discount coupon does not exist");
             discountPercent = coupon.discountPercent;
             commissionPercent = coupon.commissionPercent;
-            discountValue = (price * discountPercent) / 100;
+            discountValue = price/100 * discountPercent;
         }
-
-        require(msg.value == price - discountValue, "Insufficient funds");
-
+        uint256 expectedvalue = price - discountValue;
+        require(msg.value == expectedvalue, "Insufficient funds");
         require(
             nodeTiersIdUserLinks[_nodeTierId] == address(0),
             "Node tier already owned"
@@ -309,9 +308,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             address discountOwner = getOwnerByDiscountCouponId(
                 discountCouponId
             );
-            uint256 remainingValue = price - discountValue;
-            uint256 commissionValue = (remainingValue * commissionPercent) /
-                100;
+
+            uint256 commissionValue = expectedvalue/100 * commissionPercent;
+            require(commissionValue > 0, "Not enough balance for commission");
             require(
                 address(this).balance >= commissionValue,
                 "Not enough balance for commission"
@@ -329,7 +328,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referralIdUserLinks[referralId] != caller
         ) {
             address referralsOwner = referralIdUserLinks[referralId];
-            totalSales = (price * referenceRate) / 100;
+            totalSales = price/100 * referenceRate;
             require(address(this).balance >= totalSales, "Not enough balance");
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");
@@ -468,5 +467,3 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     // Fallback function to receive Ether
     receive() external payable {}
 }
-
-

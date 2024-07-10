@@ -21,10 +21,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     uint256 private nodeTierId;
+    address[] private owners;
     mapping(uint256 => NodeTier) public nodeTiers;
-    mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks; 
-    mapping(uint256 => address) private nodeTiersIdUserLinks; 
-    mapping(address => EnumerableSet.UintSet) private discountCouponsOfOwner; 
+    mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks;
+    mapping(uint256 => address) private nodeTiersIdUserLinks;
+    mapping(address => EnumerableSet.UintSet) private discountCouponsOfOwner;
 
     struct DiscountCoupon {
         bool status;
@@ -283,33 +284,32 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 discountCouponId
     ) public payable whenNotPaused returns (string memory) {
         uint256 price = nodeTiers[_nodeTierId].price;
+        uint8 discountPercent = 0;
+        uint256 discountValue = 0;
         address caller = msg.sender;
         require(price > 0, "Node does not exist");
-        require(msg.value >= price, "Insufficient funds");
-        require(
-            nodeTiersIdUserLinks[_nodeTierId] == address(0),
-            "Node tier already owned"
-        );
 
-        uint8 discountPercent = 0;
         uint8 commissionPercent = 0;
         if (discountCouponId != 0) {
             DiscountCoupon memory coupon = discountCoupons[discountCouponId];
             require(coupon.status, "Discount coupon does not exist");
             discountPercent = coupon.discountPercent;
             commissionPercent = coupon.commissionPercent;
-            uint256 discountValue = (price * discountPercent) / 100;
-            require(
-                address(this).balance >= discountValue,
-                "Not enough balance for discount"
-            );
-            (bool sent, ) = caller.call{value: discountValue}("");
-            require(sent, "Failed to send discount Ether");
+            discountValue = (price * discountPercent) / 100;
+        }
 
+        require(msg.value == price - discountValue, "Insufficient funds");
+
+        require(
+            nodeTiersIdUserLinks[_nodeTierId] == address(0),
+            "Node tier already owned"
+        );
+
+        if (discountCouponId != 0) {
             address discountOwner = getOwnerByDiscountCouponId(
                 discountCouponId
             );
-            uint256 remainingValue = price - discountValue; 
+            uint256 remainingValue = price - discountValue;
             uint256 commissionValue = (remainingValue * commissionPercent) /
                 100;
             require(
@@ -336,11 +336,12 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referrals[referralId].totalSales += totalSales;
         }
 
+        // Mint node cho người dùng
         nodeContract.safeMint(caller, _nodeTierId, metadata);
         userNodeTiersIdLinks[caller].add(_nodeTierId);
         nodeTiersIdUserLinks[_nodeTierId] = caller;
 
-        // Add Referral for user
+        // Tạo mã giới thiệu cho người dùng nếu chưa có
         string memory _code;
         if (userReferralIdLinks[caller] == 0) {
             referenceId++;
@@ -372,7 +373,12 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             discountCoupons[_couponId].discountPercent > 0,
             "Coupon does not exist"
         );
-        return nodeTiersIdUserLinks[_couponId];
+        for (uint256 i = 0; i < owners.length; i++) {
+            if (discountCouponsOfOwner[owners[i]].contains(_couponId)) {
+                return owners[i];
+            }
+        }
+        revert("Owner not found for this coupon");
     }
 
     function getReferralIdByOwner(address owner) public view returns (uint256) {
@@ -462,4 +468,5 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     // Fallback function to receive Ether
     receive() external payable {}
 }
+
 

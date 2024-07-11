@@ -215,7 +215,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             )
         );
         DiscountCoupon memory newCoupon = DiscountCoupon(
-            false,
+            true,
             discountPercent,
             name,
             commissionPercent,
@@ -286,6 +286,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint8 discountPercent = 0;
         uint256 discountValue = 0;
         uint8 commissionPercent = 0;
+        uint256 totalSales = 0;
         address caller = msg.sender;
         require(price > 0, "Node does not exist");
         if (
@@ -293,15 +294,19 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             discountCouponsIdUserLinks[discountCouponId] != caller
         ) {
             DiscountCoupon memory coupon = discountCoupons[discountCouponId];
-            require(coupon.status, "Discount coupon does not exist");
+            require(
+                coupon.discountPercent > 0,
+                "Discount coupon does not exist"
+            );
+            require(coupon.status, "Discount coupon is not active");
             discountPercent = coupon.discountPercent;
             commissionPercent = coupon.commissionPercent;
-            discountValue = (price / 100) * discountPercent;
+           discountValue = (price * discountPercent) / 100;
 
             address discountOwner = discountCouponsIdUserLinks[
                 discountCouponId
             ];
-            uint256 commissionValue = (price / 100) * commissionPercent;
+            uint256 commissionValue = (price  * commissionPercent)/100;
             require(
                 commissionValue > 0,
                 "Commission value must be greater than 0"
@@ -324,14 +329,13 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             "Node tier already owned"
         );
 
-        uint256 totalSales = 0;
         if (
             referralId > 0 &&
             referralIdUserLinks[referralId] != address(0) &&
             referralIdUserLinks[referralId] != caller
         ) {
             address referralsOwner = referralIdUserLinks[referralId];
-            totalSales = (expectedValue / 100) * referenceRate;
+            totalSales = (expectedValue * referenceRate)/100;
             require(address(this).balance >= totalSales, "Not enough balance");
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");
@@ -364,14 +368,15 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return _code;
     }
 
+
     function setOwnerByDiscountCouponId(address owner, uint256 _couponId)
         public
         onlyRole(ADMIN_ROLE)
         whenNotPaused
     {
         require(
-            discountCoupons[_couponId].status,
-            "Discount coupon does not exist"
+            discountCoupons[_couponId].discountPercent > 0,
+            "Discount coupon does not exist or is invalid"
         );
         discountCouponsIdUserLinks[_couponId] = owner;
     }
@@ -382,8 +387,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         returns (address)
     {
         require(
-            discountCoupons[_couponId].status,
-            "Discount coupon does not exist"
+            discountCoupons[_couponId].discountPercent > 0,
+            "Discount coupon does not exist or is invalid"
         );
         return discountCouponsIdUserLinks[_couponId];
     }

@@ -24,8 +24,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     mapping(uint256 => NodeTier) public nodeTiers;
     mapping(address => EnumerableSet.UintSet) private userNodeTiersIdLinks;
     mapping(uint256 => address) private nodeTiersIdUserLinks;
-    mapping(address => EnumerableSet.UintSet)
-        private userdiscountCouponsIdLinks;
+    mapping(address => EnumerableSet.UintSet)private userdiscountCouponsIdLinks;
     mapping(uint256 => address) private discountCouponsIdUserLinks;
 
     struct DiscountCoupon {
@@ -195,10 +194,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     // COUPON MANAGEMENT
 
-    function addDiscountCoupon(
+   function addDiscountCoupon(
         uint8 discountPercent,
         string memory name,
-        uint8 commissionPercent
+        uint8 commissionPercent,
+        address owner
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(discountPercent > 0, "Discount percent must be greater than 0");
         require(bytes(name).length > 0, "Coupon name must not be empty");
@@ -222,15 +222,17 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             _code
         );
         discountCoupons[couponId] = newCoupon;
+        discountCouponsIdUserLinks[couponId] = owner;
+        userdiscountCouponsIdLinks[owner].add(couponId);
 
         emit AddCoupon(
-            msg.sender,
+            owner,
             couponId,
-            discountCoupons[couponId].status,
-            discountCoupons[couponId].discountPercent,
-            discountCoupons[couponId].name,
-            discountCoupons[couponId].commissionPercent,
-            discountCoupons[couponId].code
+            newCoupon.status,
+            newCoupon.discountPercent,
+            newCoupon.name,
+            newCoupon.commissionPercent,
+            newCoupon.code
         );
     }
 
@@ -368,18 +370,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return _code;
     }
 
-
-    function setOwnerByDiscountCouponId(address owner, uint256 _couponId)
-        public
-        onlyRole(ADMIN_ROLE)
-        whenNotPaused
-    {
-        require(
-            discountCoupons[_couponId].discountPercent > 0,
-            "Discount coupon does not exist or is invalid"
-        );
-        discountCouponsIdUserLinks[_couponId] = owner;
-    }
 
     function getOwnerByDiscountCouponId(uint256 _couponId)
         public

@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Node is
+contract BachiNode is
     ERC721,
     ERC721Enumerable,
     ERC721URIStorage,
@@ -19,11 +19,14 @@ contract Node is
 
     constructor(
         string memory name,
-        string memory symbol,
-        address _nodeManagerAddress
-    ) ERC721(name, symbol) Ownable(msg.sender) {
+        string memory symbol
+    )
+        // address _nodeManagerAddress
+        ERC721(name, symbol)
+        Ownable(msg.sender)
+    {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        nodeManagerAddress = _nodeManagerAddress;
+        // nodeManagerAddress = _nodeManagerAddress;
     }
 
     modifier onlyNodeManager() {

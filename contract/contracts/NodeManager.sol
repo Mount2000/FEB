@@ -12,7 +12,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    Node public nodeContract;
+    BachiNode public bachinodeContract;
 
     struct NodeTier {
         bool status;
@@ -89,14 +89,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     event GeneratedReferralCode(address indexed user, string code);
 
-    constructor(address _nodeContract, uint256 _referenceRate)
+    constructor(address _bachinodeContract, uint256 _referenceRate)
         Ownable(msg.sender)
     {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
         require(_referenceRate <= 100, "Invalid input");
         referenceRate = _referenceRate;
-        nodeContract = Node(_nodeContract);
+        bachinodeContract = BachiNode(_bachinodeContract);
     }
 
     function pause() public onlyOwner {
@@ -107,12 +107,12 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         _unpause();
     }
 
-    function getNodeContractAddress() public view returns (address) {
-        return address(nodeContract);
+    function getBachiNodeContractAddress() public view returns (address) {
+        return address(bachinodeContract);
     }
 
-    function setNodeContractAddress(address _nodeContract) public {
-        nodeContract = Node(_nodeContract);
+    function setBachiNodeContractAddress(address _bachinodeContract) public {
+        bachinodeContract = BachiNode(_bachinodeContract);
     }
 
     // NODE Tier MANAGEMENT
@@ -208,7 +208,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 currentTimestamp = block.timestamp;
         _code = string(
             abi.encodePacked(
-                "BachiSwap_",
+                "BachiSwapCP_",
                 uint256str(referenceId),
                 "_",
                 uint256str(currentTimestamp)
@@ -344,7 +344,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referrals[referralId].totalSales += totalSales;
         }
 
-        nodeContract.safeMint(caller, _nodeTierId, metadata);
+        bachinodeContract.safeMint(caller, _nodeTierId, metadata);
         userNodeTiersIdLinks[caller].add(_nodeTierId);
         nodeTiersIdUserLinks[_nodeTierId] = caller;
 
@@ -446,7 +446,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             nodeTiersIdUserLinks[_nodeTierId] == address(0),
             "Node tier already owned"
         );
-        nodeContract.safeMint(nodeOwner, _nodeTierId, metadata);
+        bachinodeContract.safeMint(nodeOwner, _nodeTierId, metadata);
         userNodeTiersIdLinks[msg.sender].add(_nodeTierId);
         nodeTiersIdUserLinks[_nodeTierId] = msg.sender;
         emit Sale(msg.sender, _nodeTierId, 0, 0);

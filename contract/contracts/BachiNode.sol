@@ -17,16 +17,11 @@ contract BachiNode is
 {
     address private nodeManagerAddress;
 
-    constructor(
-        string memory name,
-        string memory symbol
-    )
-        // address _nodeManagerAddress
+    constructor(string memory name, string memory symbol)
         ERC721(name, symbol)
         Ownable(msg.sender)
     {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        // nodeManagerAddress = _nodeManagerAddress;
     }
 
     modifier onlyNodeManager() {
@@ -64,22 +59,23 @@ contract BachiNode is
         return super._update(to, tokenId, auth);
     }
 
-    function _increaseBalance(
-        address account,
-        uint128 value
-    ) internal override(ERC721, ERC721Enumerable) {
+    function _increaseBalance(address account, uint128 value)
+        internal
+        override(ERC721, ERC721Enumerable)
+    {
         super._increaseBalance(account, value);
     }
 
-    function tokenURI(
-        uint256 tokenId
-    ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (string memory)
+    {
         return super.tokenURI(tokenId);
     }
 
-    function supportsInterface(
-        bytes4 interfaceId
-    )
+    function supportsInterface(bytes4 interfaceId)
         public
         view
         override(ERC721, ERC721Enumerable, ERC721URIStorage, AccessControl)

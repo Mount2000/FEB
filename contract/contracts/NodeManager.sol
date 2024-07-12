@@ -89,14 +89,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     event GeneratedReferralCode(address indexed user, string code);
 
-    constructor(address _bachinodeContract, uint256 _referenceRate)
+    constructor(address _bachiNodeContract, uint256 _referenceRate)
         Ownable(msg.sender)
     {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
         require(_referenceRate <= 100, "Invalid input");
         referenceRate = _referenceRate;
-        bachiNodeContract = BachiNode(_bachinodeContract);
+        bachiNodeContract = BachiNode(_bachiNodeContract);
     }
 
     function pause() public onlyOwner {
@@ -111,8 +111,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return address(bachiNodeContract);
     }
 
-    function setBachiNodeContractAddress(address _bachinodeContract) public {
-        bachiNodeContract = BachiNode(_bachinodeContract);
+    function setBachiNodeContractAddress(address _bachiNodeContract) public {
+        bachiNodeContract = BachiNode(_bachiNodeContract);
     }
 
     // NODE Tier MANAGEMENT

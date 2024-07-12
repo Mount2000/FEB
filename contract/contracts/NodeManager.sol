@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Compatible with OpenZeppelin Contracts ^5.0.0
 pragma solidity ^0.8.20;
-import "./Node.sol"; // Ensure the correct path to the Node.sol file
+import "./BachiNode.sol"; 
 import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";

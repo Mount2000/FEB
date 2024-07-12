@@ -12,7 +12,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    BachiNode public bachinodeContract;
+    BachiNode public bachiNodeContract;
 
     struct NodeTier {
         bool status;
@@ -96,7 +96,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         _grantRole(ADMIN_ROLE, msg.sender);
         require(_referenceRate <= 100, "Invalid input");
         referenceRate = _referenceRate;
-        bachinodeContract = BachiNode(_bachinodeContract);
+        bachiNodeContract = BachiNode(_bachinodeContract);
     }
 
     function pause() public onlyOwner {
@@ -108,11 +108,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     function getBachiNodeContractAddress() public view returns (address) {
-        return address(bachinodeContract);
+        return address(bachiNodeContract);
     }
 
     function setBachiNodeContractAddress(address _bachinodeContract) public {
-        bachinodeContract = BachiNode(_bachinodeContract);
+        bachiNodeContract = BachiNode(_bachinodeContract);
     }
 
     // NODE Tier MANAGEMENT
@@ -344,7 +344,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referrals[referralId].totalSales += totalSales;
         }
 
-        bachinodeContract.safeMint(caller, _nodeTierId, metadata);
+        bachiNodeContract.safeMint(caller, _nodeTierId, metadata);
         userNodeTiersIdLinks[caller].add(_nodeTierId);
         nodeTiersIdUserLinks[_nodeTierId] = caller;
 
@@ -446,7 +446,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             nodeTiersIdUserLinks[_nodeTierId] == address(0),
             "Node tier already owned"
         );
-        bachinodeContract.safeMint(nodeOwner, _nodeTierId, metadata);
+        bachiNodeContract.safeMint(nodeOwner, _nodeTierId, metadata);
         userNodeTiersIdLinks[msg.sender].add(_nodeTierId);
         nodeTiersIdUserLinks[_nodeTierId] = msg.sender;
         emit Sale(msg.sender, _nodeTierId, 0, 0);

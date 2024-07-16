@@ -372,12 +372,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             discountCouponsIdUserLinks[discountCouponId] != caller
         ) {
             DiscountCoupon memory coupon = discountCoupons[discountCouponId];
+            NodeTier memory nodetier = nodeTiers[_nodeTierId];
             require(
                 coupon.discountPercent > 0,
                 "Discount coupon does not exist"
             );
+            
             require(coupon.status, "Discount coupon is not active");
-
+            require(nodetier.status, "Node is not active");
             discountPercent = coupon.discountPercent;
             discountValue = (price * discountPercent) / 100;
         

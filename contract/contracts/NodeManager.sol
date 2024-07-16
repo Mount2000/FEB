@@ -21,8 +21,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         bool status;
         string name;
         uint256 price;
-        uint256 hashrate;
+        uint8 hashrate;
         uint256 farmSpeed;
+        uint8 ReferralRate;
     }
 
     uint256 public nodeTierId;
@@ -62,7 +63,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         string name,
         uint256 price,
         uint256 hashrate,
-        uint256 farmSpeed
+        uint256 farmSpeed,
+        uint8 ReferralRate
     );
 
     event UpdatedNode(
@@ -71,8 +73,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         bool status,
         string name,
         uint256 price,
-        uint256 hashrate,
-        uint256 farmSpeed
+        uint8 hashrate,
+        uint256 farmSpeed,
+        uint8 ReferralRate
     );
 
     event AddCoupon(
@@ -165,8 +168,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     function addNodeTier(
         string memory name,
         uint256 price,
-        uint256 hashrate,
-        uint256 farmSpeed
+        uint8 hashrate,
+        uint256 farmSpeed,
+        uint8 ReferralRate
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(
             price > 0 && hashrate > 0 && farmSpeed > 0,
@@ -178,7 +182,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             name,
             price,
             hashrate,
-            farmSpeed
+            farmSpeed,
+            ReferralRate
         );
         nodeTiers[nodeTierId] = newNode;
         emit AddedNode(
@@ -188,7 +193,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             name,
             price,
             hashrate,
-            farmSpeed
+            farmSpeed,
+            ReferralRate
         );
     }
 
@@ -197,27 +203,33 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         string memory name,
         bool status,
         uint256 price,
-        uint256 hashrate,
-        uint256 farmSpeed
+        uint8 hashrate,
+        uint256 farmSpeed,
+        uint8 ReferralRate
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        require(nodeTiers[_nodeTierId].price > 0, "Node does not exist");
+        NodeTier storage nodetier = nodeTiers[_nodeTierId];
+        require(nodetier.price > 0, "Node does not exist");
         require(
             price > 0 && hashrate > 0 && farmSpeed > 0,
             "Price, Hashrate and FarmSpeed must be greater than 0"
         );
-        nodeTiers[_nodeTierId].name = name;
-        nodeTiers[_nodeTierId].status = status;
-        nodeTiers[_nodeTierId].price = price;
-        nodeTiers[_nodeTierId].hashrate = hashrate;
-        nodeTiers[_nodeTierId].farmSpeed = farmSpeed;
+
+        nodetier.name = name;
+        nodetier.status = status;
+        nodetier.price = price;
+        nodetier.hashrate = hashrate;
+        nodetier.farmSpeed = farmSpeed;
+        nodetier.ReferralRate = ReferralRate;
+
         emit UpdatedNode(
             msg.sender,
             _nodeTierId,
-            nodeTiers[_nodeTierId].status,
-            nodeTiers[_nodeTierId].name,
-            nodeTiers[_nodeTierId].price,
-            nodeTiers[_nodeTierId].hashrate,
-            nodeTiers[_nodeTierId].farmSpeed
+            nodetier.status,
+            nodetier.name,
+            nodetier.price,
+            nodetier.hashrate,
+            nodetier.farmSpeed,
+            nodetier.ReferralRate
         );
     }
 
@@ -351,10 +363,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price = nodeTiers[_nodeTierId].price;
         uint8 discountPercent = 0;
         uint256 discountValue = 0;
-        uint8 commissionPercent = 0;
         uint256 totalSales = 0;
         address caller = msg.sender;
         require(price > 0, "Node does not exist");
+
         if (
             discountCouponId != 0 &&
             discountCouponsIdUserLinks[discountCouponId] != caller
@@ -366,16 +378,13 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             );
             require(coupon.status, "Discount coupon is not active");
 
-            NodeTier memory nodetier = nodeTiers[_nodeTierId];
-            require(nodetier.status, "Node is not active");
             discountPercent = coupon.discountPercent;
-            commissionPercent = coupon.commissionPercent;
             discountValue = (price * discountPercent) / 100;
 
             address discountOwner = discountCouponsIdUserLinks[
                 discountCouponId
             ];
-            uint256 commissionValue = (price * commissionPercent) / 100;
+            uint256 commissionValue = (price * coupon.commissionPercent) / 100;
             require(
                 commissionValue > 0,
                 "Commission value must be greater than 0"
@@ -404,7 +413,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referralIdUserLinks[referralId] != caller
         ) {
             address referralsOwner = referralIdUserLinks[referralId];
-            totalSales = (expectedValue * referenceRate) / 100;
+            uint8 referralRate = nodeTiers[_nodeTierId].ReferralRate;
+            totalSales = (expectedValue * referralRate) / 100;
             require(address(this).balance >= totalSales, "Not enough balance");
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");
@@ -489,14 +499,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return (referrals[referralId].code, referrals[referralId].totalSales);
     }
 
-    function setReferenceRate(uint256 _referenceRate)
-        public
-        onlyRole(ADMIN_ROLE)
-        whenNotPaused
-    {
-        require(_referenceRate <= 100, "Invalid input");
-        referenceRate = _referenceRate;
-    }
+    // function setReferenceRate(uint256 _referenceRate)
+    //     public
+    //     onlyRole(ADMIN_ROLE)
+    //     whenNotPaused
+    // {
+    //     require(_referenceRate <= 100, "Invalid input");
+    //     referenceRate = _referenceRate;
+    // }
 
     function buyAdmin(
         uint256 _nodeTierId,

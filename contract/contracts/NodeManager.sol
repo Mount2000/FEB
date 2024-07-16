@@ -206,29 +206,31 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 farmSpeed,
         uint8 referralRate
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        NodeTier memory nodetier = nodeTiers[_nodeTierId];
-        require(nodetier.price > 0, "Node does not exist");
+        NodeTier memory newNode = nodeTiers[_nodeTierId];
+        require(newNode.price > 0, "Node does not exist");
         require(
             price > 0 && hashrate > 0 && farmSpeed > 0,
             "Price, Hashrate and FarmSpeed must be greater than 0"
         );
 
-        nodetier.name = name;
-        nodetier.status = status;
-        nodetier.price = price;
-        nodetier.hashrate = hashrate;
-        nodetier.farmSpeed = farmSpeed;
-        nodetier.referralRate = referralRate;
+        newNode.name = name;
+        newNode.status = status;
+        newNode.price = price;
+        newNode.hashrate = hashrate;
+        newNode.farmSpeed = farmSpeed;
+        newNode.referralRate = referralRate;
+
+        nodeTiers[_nodeTierId] = newNode;
 
         emit UpdatedNode(
             msg.sender,
             _nodeTierId,
-            nodetier.status,
-            nodetier.name,
-            nodetier.price,
-            nodetier.hashrate,
-            nodetier.farmSpeed,
-            nodetier.referralRate
+            newNode.status,
+            newNode.name,
+            newNode.price,
+            newNode.hashrate,
+            newNode.farmSpeed,
+            newNode.referralRate
         );
     }
 
@@ -377,16 +379,16 @@ contract NodeManager is Pausable, AccessControl, Ownable {
                 coupon.discountPercent > 0,
                 "Discount coupon does not exist"
             );
-            
+
             require(coupon.status, "Discount coupon is not active");
             require(nodetier.status, "Node is not active");
             discountPercent = coupon.discountPercent;
             discountValue = (price * discountPercent) / 100;
-        
+
             address discountOwner = discountCouponsIdUserLinks[
                 discountCouponId
             ];
-             commissionPercent = coupon.commissionPercent;
+            commissionPercent = coupon.commissionPercent;
             uint256 commissionValue = (price * commissionPercent) / 100;
             require(
                 commissionValue > 0,
@@ -416,7 +418,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referralIdUserLinks[referralId] != caller
         ) {
             address referralsOwner = referralIdUserLinks[referralId];
-            totalSales = (expectedValue * nodeTiers[_nodeTierId].referralRate) / 100;
+            totalSales =
+                (expectedValue * nodeTiers[_nodeTierId].referralRate) /
+                100;
             require(address(this).balance >= totalSales, "Not enough balance");
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");

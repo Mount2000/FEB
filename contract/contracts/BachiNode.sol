@@ -15,13 +15,15 @@ contract BachiNode is
     AccessControl,
     Ownable
 {
-    address private nodeManagerAddress;
+    address public nodeManagerAddress;
 
-    constructor(string memory name, string memory symbol)
-        ERC721(name, symbol)
-        Ownable(msg.sender)
-    {
+    constructor(
+        string memory name,
+        string memory symbol,
+        address _nodeManagerAddress
+    ) ERC721(name, symbol) Ownable(msg.sender) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        nodeManagerAddress = _nodeManagerAddress;
     }
 
     modifier onlyNodeManager() {
@@ -34,10 +36,6 @@ contract BachiNode is
 
     function setNodeManagerAddress(address newAddress) public onlyOwner {
         nodeManagerAddress = newAddress;
-    }
-
-    function getNodeManagerAddress() public view returns (address) {
-        return nodeManagerAddress;
     }
 
     function safeMint(
@@ -59,23 +57,22 @@ contract BachiNode is
         return super._update(to, tokenId, auth);
     }
 
-    function _increaseBalance(address account, uint128 value)
-        internal
-        override(ERC721, ERC721Enumerable)
-    {
+    function _increaseBalance(
+        address account,
+        uint128 value
+    ) internal override(ERC721, ERC721Enumerable) {
         super._increaseBalance(account, value);
     }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
+    function tokenURI(
+        uint256 tokenId
+    ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
     }
 
-    function supportsInterface(bytes4 interfaceId)
+    function supportsInterface(
+        bytes4 interfaceId
+    )
         public
         view
         override(ERC721, ERC721Enumerable, ERC721URIStorage, AccessControl)

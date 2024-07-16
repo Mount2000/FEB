@@ -5,20 +5,20 @@ async function main() {
   console.log("Deployer:", deployer.address);
   const nodeContractAddress = "0x67dB0283eF2b7468723FB625cA2E63b0a27e0a9D";
   const tokenContractAddress = "0xE4614910b2AC003866774b4ae9c2e308748d5270";
-  const stakingContractAddress = "0x654Af47D0Bbef73d9Da23fACbea6e1c191Cb8dD9";
-  const NodeMannager = await ethers.getContractFactory("NodeManager");
-  const nodeMannager = await NodeMannager.deploy(
+  const nodeManagerContractAddress = "0x57004c66ccE0Cd1045C642db1E2A7543B20A2477";
+  const Staking = await ethers.getContractFactory("Staking");
+  const staking = await Staking.deploy(
     nodeContractAddress,
     tokenContractAddress,
-    stakingContractAddress,
+    nodeManagerContractAddress,
   );
 
-  await nodeMannager.waitForDeployment();
-  const tx = await nodeMannager.deploymentTransaction();
+  await staking.waitForDeployment();
+  const tx = await staking.deploymentTransaction();
 
   console.log("Contract deployed successfully.");
-  console.log(`Deployer: ${nodeMannager.runner.address}`);
-  console.log(`Deployed to: ${nodeMannager.target}`);
+  console.log(`Deployer: ${staking.runner.address}`);
+  console.log(`Deployed to: ${staking.target}`);
   console.log(`Transaction hash: ${tx.hash}`);
 }
 

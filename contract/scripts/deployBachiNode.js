@@ -2,11 +2,12 @@ const { ethers } = require("hardhat");
 
 async function main() {
     const [deployer] = await ethers.getSigners();
-
     console.log("Deploying contracts with the account:", deployer.address);
-
+    const tokenName = "BACHI NFT";
+    const tokenSymbol = "BACHI";
+    const nodeManagerAddress = "0xeD29e1051Bdf76443311a9cFE2434198F6b4BfB3";
     const BachiNode = await ethers.getContractFactory("BachiNode");
-    const bachiNode = await BachiNode.deploy("BachiNode", "BN");
+    const bachiNode = await BachiNode.deploy(tokenName, tokenSymbol, nodeManagerAddress);
     await bachiNode.waitForDeployment();
     const tx = await bachiNode.deploymentTransaction();
 

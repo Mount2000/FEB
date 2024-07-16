@@ -23,7 +23,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price;
         uint8 hashrate;
         uint256 farmSpeed;
-        uint8 ReferralRate;
+        uint8 referralRate;
     }
 
     uint256 public nodeTierId;
@@ -46,7 +46,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     // Referral
     uint256 public referenceId;
-    uint256 public referenceRate = 10;
     struct ReferralInformation {
         string code;
         uint256 totalSales;
@@ -205,9 +204,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price,
         uint8 hashrate,
         uint256 farmSpeed,
-        uint8 ReferralRate
+        uint8 referralRate
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
-        NodeTier storage nodetier = nodeTiers[_nodeTierId];
+        NodeTier memory nodetier = nodeTiers[_nodeTierId];
         require(nodetier.price > 0, "Node does not exist");
         require(
             price > 0 && hashrate > 0 && farmSpeed > 0,
@@ -219,7 +218,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         nodetier.price = price;
         nodetier.hashrate = hashrate;
         nodetier.farmSpeed = farmSpeed;
-        nodetier.ReferralRate = ReferralRate;
+        nodetier.referralRate = referralRate;
 
         emit UpdatedNode(
             msg.sender,
@@ -229,7 +228,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             nodetier.price,
             nodetier.hashrate,
             nodetier.farmSpeed,
-            nodetier.ReferralRate
+            nodetier.referralRate
         );
     }
 
@@ -364,6 +363,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint8 discountPercent = 0;
         uint256 discountValue = 0;
         uint256 totalSales = 0;
+        uint8 commissionPercent = 0;
         address caller = msg.sender;
         require(price > 0, "Node does not exist");
 
@@ -380,11 +380,12 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
             discountPercent = coupon.discountPercent;
             discountValue = (price * discountPercent) / 100;
-
+        
             address discountOwner = discountCouponsIdUserLinks[
                 discountCouponId
             ];
-            uint256 commissionValue = (price * coupon.commissionPercent) / 100;
+             commissionPercent = coupon.commissionPercent;
+            uint256 commissionValue = (price * commissionPercent) / 100;
             require(
                 commissionValue > 0,
                 "Commission value must be greater than 0"
@@ -413,8 +414,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referralIdUserLinks[referralId] != caller
         ) {
             address referralsOwner = referralIdUserLinks[referralId];
-            uint8 referralRate = nodeTiers[_nodeTierId].ReferralRate;
-            totalSales = (expectedValue * referralRate) / 100;
+            totalSales = (expectedValue * nodeTiers[_nodeTierId].referralRate) / 100;
             require(address(this).balance >= totalSales, "Not enough balance");
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");
@@ -498,15 +498,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     {
         return (referrals[referralId].code, referrals[referralId].totalSales);
     }
-
-    // function setReferenceRate(uint256 _referenceRate)
-    //     public
-    //     onlyRole(ADMIN_ROLE)
-    //     whenNotPaused
-    // {
-    //     require(_referenceRate <= 100, "Invalid input");
-    //     referenceRate = _referenceRate;
-    // }
 
     function buyAdmin(
         uint256 _nodeTierId,

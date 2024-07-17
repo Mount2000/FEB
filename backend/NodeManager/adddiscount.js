@@ -1,4 +1,4 @@
-require("dotenv").config({ path: __dirname + "./NodeManager/.env" });
+require('dotenv').config()
 const ethers = require('ethers')
 const contractABI =require('../artifacts/NodeManager.json')
 const QUICKNODE_ENDPOINT = process.env.HTTP_PROVIDER_URL

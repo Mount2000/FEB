@@ -32,7 +32,7 @@ const CustomButton = ({ children, ...props }) => {
           right: 0,
           width: "20px",
           height: "20px",
-          backgroundColor: "pink.500",
+          // backgroundColor: "pink.500",
           clipPath: "polygon(100% 0, 0 0, 100% 100%)",
         },
       }}

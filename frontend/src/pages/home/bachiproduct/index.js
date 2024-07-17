@@ -6,47 +6,69 @@ import appProductHome from "../../../assets/img/app-product-home.png";
 const ProductHome = () => {
   return (
     <Box>
-      <Flex>
-        <Image src={appProduct} marginTop={"200px"} height={"100%"} />
-        <Flex flexDirection={"column"} marginTop={"208px"}>
+      <Flex marginTop={"197px"}>
+        <Image src={appProduct} height={"100%"}  />
+        <Flex flexDirection={"column"} marginTop={"11px"}>
           <Text
             fontSize={"40px"}
             color={"#E42493"}
             lineHeight={"normal"}
             marginBottom={"35px"}
+            fontFamily="var(--font-text-extra)"
           >
-            BACHI Product
+            BACHI EARTH
           </Text>
-          <Text fontSize={"86px"} lineHeight={"100px"} marginBottom={"45px"}>
+          <Text
+            fontSize={"70px"}
+            lineHeight={"100px"}
+            marginBottom={"45px"}
+            fontFamily="var(--font-heading)"
+          >
             Unlocking the potential of artificial intelligence
           </Text>
-          <Text fontSize={"32px"} lineHeight={"normal"}>
-            BACHI provides innovative products that empower users to engage in
-            trading. Swap tokens and contribute liquidity to various protocols
-            seamlessly. But that's not all! Users can earn rewards for providing
-            liquidity and actively participate in the BACHI DAO
+          <Text
+            fontSize={"32px"}
+            lineHeight={"normal"}
+            fontFamily="var(--font-text-main)"
+          >
+            Earth leverages a innovative bare metal GPU cloud designed to
+            provide raw GPU computing power, ensuring high performance without
+            the overhead of virtualization. Ideal for compute-intensive tasks
+            such as AI model training, fine-tuning, and inference.
           </Text>
         </Flex>
       </Flex>
-      <Flex>
-        <Flex flexDirection={"column"} marginLeft={"214px"} marginTop={"500px"}>
+      <Flex position={"relative"} marginTop={"406px"}>
+        <Flex flexDirection={"column"} marginLeft={"214px"} width={"601px"}>
           <Text
             fontSize={"40px"}
             color={"#E42493"}
             lineHeight={"normal"}
             marginBottom={"36px"}
+            fontFamily="var(--font-text-extra)"
           >
-            BACHI SWAP
+            BACHI ATMOSPHERE
           </Text>
-          <Text fontSize={"86px"} lineHeight={"100px"} marginBottom={"43px"}>
-            Swap everything in ONE click
+          <Text fontSize={"70px"} lineHeight={"100px"} marginBottom={"43px"}>
+            Leveling up the gaming industry
           </Text>
-          <Text fontSize={"32px"} lineHeight={"normal"}>
+          <Text
+            fontSize={"32px"}
+            lineHeight={"normal"}
+            fontFamily="var(--font-text-main)"
+          >
             As a Taiko’s native DEX, BACHI allows users to easily trade tokens
             across the TAIKO network
           </Text>
         </Flex>
-        <Image src={appProductHome} marginTop={"250px"} height={"100%"} />
+        <Image
+          width={"873px"}
+          position={"absolute"}
+          right={"0px"}
+          bottom={"-150px"}
+          src={appProductHome}
+          height={"800px"}
+        />
       </Flex>
     </Box>
   );

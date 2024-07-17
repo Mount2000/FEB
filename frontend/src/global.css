@@ -1,5 +1,11 @@
 :root {
-  --font-heading: "Bruno Ace SC", sans-serif;
+  --font-heading: "Bruno Ace SC Regular", sans-serif;
+  --font-text-main: "Ubuntu Mono Regular", sans-serif;
+  --font-heading-main:"Bruno Ace Regular", sans-serif;
+  --font-text-extra: "Ubuntu Condensed Regular",sans-serif;
+  --color-border-bottom: #FCDDEC;
+  --color-background: #0E001F;
+  --color-main: #E42493;
 }
 
 html {

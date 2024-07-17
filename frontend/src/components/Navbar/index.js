@@ -8,8 +8,14 @@ import CustomButton from "../button";
 //import image
 import appLogo from "../../assets/img/app-logo.png";
 import navIcon from "../../assets/img/nav-icon.png";
+import { useModal } from "../../contexts/useModal";
+import { useAccount } from "wagmi";
+import { truncateStr } from "../../utils";
 
 const Navbar = () => {
+  const { setConnectWalletModalVisible } = useModal();
+  const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
+  const { address } = useAccount();
   return (
     <SectionContainer
       backgroundColor={"rgba(27, 27, 27, 0.20)"}
@@ -78,8 +84,8 @@ const Navbar = () => {
           </Flex>
         </Flex>
 
-        <CustomButton width={"148px"} height={"60px"}>
-          Connect Wallet
+        <CustomButton onClick={onOpenConnectWalletModal}>
+          {address ? truncateStr(address) : "Connect Wallet"}
         </CustomButton>
       </Flex>
     </SectionContainer>

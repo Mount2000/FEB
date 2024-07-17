@@ -516,11 +516,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             "Node tier already owned"
         );
         bachiNodeContract.safeMint(nodeOwner, _nodeTierId, metadata);
-        userNodeTiersIdLinks[msg.sender].add(_nodeTierId);
-        nodeTiersIdUserLinks[_nodeTierId] = msg.sender;
-        emit Sale(msg.sender, _nodeTierId, 0, 0);
+        userNodeTiersIdLinks[nodeOwner].add(_nodeTierId);
+        nodeTiersIdUserLinks[_nodeTierId] = nodeOwner;
+        emit Sale(nodeOwner, _nodeTierId, 0, 0);
     }
-
+    
     function transferNode(uint256 _nodeTierId, address newOwner)
         public
         whenNotPaused

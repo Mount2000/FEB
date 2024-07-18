@@ -9,10 +9,10 @@ const customTheme = extendTheme({
       },
     },
   },
-  fonts: {
-    heading: `'Bruno Ace SC Regular', sans-serif`,
-    body: `'Bruno Ace SC Regular', sans-serif`,
-  },
+  // fonts: {
+  //   heading: `'Bruno Ace SC Regular', sans-serif`,
+  //   body: `'Bruno Ace SC Regular', sans-serif`,
+  // },
 });
 
 export default customTheme;

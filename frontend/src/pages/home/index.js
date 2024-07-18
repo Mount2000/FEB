@@ -1,10 +1,10 @@
 import React from "react";
 import "./style.css";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
 //import component
 import BannerHome from "./bannerhome";
 import ProductHome from "./bachiproduct";
 import BackgroundHome from "./backgroundhome";
+import ResourcesHome from "./resourceshome";
 //import image
 
 const HomePage = () => {
@@ -14,10 +14,13 @@ const HomePage = () => {
         <BannerHome />
       </section>
       <section>
-        <ProductHome/>
+        <ProductHome />
       </section>
       <section>
-        <BackgroundHome/>
+        <BackgroundHome />
+      </section>
+      <section>
+        <ResourcesHome />
       </section>
     </>
   );

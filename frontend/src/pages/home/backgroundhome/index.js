@@ -52,28 +52,29 @@ const BackgroundHome = () => {
               "::before": {
                 content: '""',
                 position: "absolute",
-                top: 0, 
+                top: 0,
                 left: 0,
                 width: "20px",
                 height: "20px",
                 backgroundColor: "pink.500",
-                clipPath: "polygon(0 100%, 100% 0, 0 0)", 
+                clipPath: "polygon(0 100%, 100% 0, 0 0)",
               },
               "::after": {
                 content: '""',
                 position: "absolute",
-                bottom: 0, 
+                bottom: 0,
                 right: 0,
                 width: "20px",
                 height: "20px",
                 backgroundColor: "pink.500",
-                clipPath: "polygon(100% 100%, 100% 0, 0 100%)", 
+                clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
               },
             }}
             backgroundColor={"rgba(27, 27, 27, 0.20)"}
           >
             <CommonButton
               border="0.5px solid var(--color-main)"
+              boxShadow={"inset 0 0 10px var(--color-main)"}
               position="relative"
               zIndex="10"
             >
@@ -120,12 +121,12 @@ const BackgroundHome = () => {
                 width: "20px",
                 height: "20px",
                 backgroundColor: "pink.500",
-                clipPath: "polygon(0 100%, 100% 0, 0 0)", 
+                clipPath: "polygon(0 100%, 100% 0, 0 0)",
               },
               "::after": {
                 content: '""',
                 position: "absolute",
-                bottom: 0, 
+                bottom: 0,
                 right: 0,
                 width: "20px",
                 height: "20px",
@@ -136,6 +137,7 @@ const BackgroundHome = () => {
           >
             <CommonButton
               backgroundColor={"rgba(27, 27, 27, 0.20)"}
+              boxShadow={"inset 0 0 10px var(--color-main)"}
               border="0.5px solid var(--color-main)"
               position="relative"
               zIndex="10"

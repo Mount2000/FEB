@@ -5,6 +5,7 @@ import CustomButton from "../../../components/button";
 import SectionContainer from "../../../components/container";
 //import image
 import appBanner from "../../../assets/img/app-banner.png";
+import { wrap } from "framer-motion";
 
 const BannerHome = () => {
   return (
@@ -17,6 +18,7 @@ const BannerHome = () => {
             lineHeight={"120px"}
             width={"900px"}
             marginBottom={"45px"}
+            fontFamily="var(--font-heading)"
           >
             Swap everything on TAIKO
           </Text>
@@ -36,6 +38,7 @@ const BannerHome = () => {
           <CustomButton
             width={{ base: "140px", md: "230px" }}
             height={{ base: "40px", md: "66px" }}
+            backgroundColor="var(--color-main)"
           >
             Launch App
           </CustomButton>
@@ -55,7 +58,11 @@ const BannerHome = () => {
         z-index={"10"}
         position={"relative"}
       >
-        <Flex paddingTop={{ base: "55px", md: "30px" }} gap={"15px"}>
+        <Flex
+          paddingTop={{ base: "55px", md: "30px" }}
+          justifyContent={"space-between"}
+          flexWrap={wrap}
+        >
           <Flex
             flexDirection={"column"}
             width={"497px"}

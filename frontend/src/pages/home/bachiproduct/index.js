@@ -8,7 +8,7 @@ const ProductHome = () => {
     <Box>
       <Flex marginTop={"197px"}>
         <Image src={appProduct} height={"100%"}  />
-        <Flex flexDirection={"column"} marginTop={"11px"}>
+        <Flex flexDirection={"column"} marginTop={"11px"} marginRight={"30px"}>
           <Text
             fontSize={"40px"}
             color={"#E42493"}
@@ -39,7 +39,7 @@ const ProductHome = () => {
         </Flex>
       </Flex>
       <Flex position={"relative"} marginTop={"406px"}>
-        <Flex flexDirection={"column"} marginLeft={"214px"} width={"601px"}>
+        <Flex flexDirection={"column"} marginLeft={"214px"} width={"40%"}>
           <Text
             fontSize={"40px"}
             color={"#E42493"}
@@ -49,7 +49,7 @@ const ProductHome = () => {
           >
             BACHI ATMOSPHERE
           </Text>
-          <Text fontSize={"70px"} lineHeight={"100px"} marginBottom={"43px"}>
+          <Text fontSize={"70px"} lineHeight={"100px"} marginBottom={"43px"} fontFamily="var(--font-heading)">
             Leveling up the gaming industry
           </Text>
           <Text

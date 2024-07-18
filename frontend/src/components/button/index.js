@@ -5,7 +5,7 @@ const CustomButton = ({ children, onClick, ...props }) => {
   return (
     <Button
       {...props}
-      bg="pink.500"
+      // bg="pink.500"
       color="white"
       fontWeight="400"
       fontFamily={`'Inter', sans-serif`}

@@ -33,7 +33,7 @@ const Navbar = () => {
           <Flex
             gap={{ base: "4.64px", md: "14.45px" }}
             alignItems={"center"}
-            marginRight={{ base: "0px", "2xl": "177px" }}
+            marginRight={{ base: "0px", "xl": "177px" }}
           >
             <Image src={appLogo} />
             <Text

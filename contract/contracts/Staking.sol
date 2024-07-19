@@ -24,7 +24,7 @@ contract Staking is Pausable, AccessControl, Ownable {
     struct StakeInformation {
         uint256 bachiStakeStartTime;
         uint256 taikoStakeStartTime;
-        uint256 nodeTierId;
+        uint256 nodeId;
     }
 
     mapping(uint256 => StakeInformation) public stakeInfors; //stakeId => stakeInfo
@@ -37,7 +37,7 @@ contract Staking is Pausable, AccessControl, Ownable {
     event Staked(
         address indexed user,
         uint256 indexed _stakeId,
-        uint256 indexed nodeTierId,
+        uint256 indexed nodeId,
         uint256 stakeTime
     );
     event Claimed(
@@ -51,7 +51,7 @@ contract Staking is Pausable, AccessControl, Ownable {
     event NodeTransferred(
         address indexed previousOwner,
         address indexed newOwner,
-        uint256 indexed nodeTierId
+        uint256 indexed nodeId
     );
     error AlreadyStaked(uint256 nodeId);
 
@@ -67,17 +67,17 @@ contract Staking is Pausable, AccessControl, Ownable {
         nodeManagerContract = NodeManager(_nodeManagerContract);
     }
 
-    modifier onlyNFTOwner(uint256 _nodeTierId) {
+    modifier onlyNftOwner(uint256 _nodeId) {
         require(
-            bachiNodeContract.ownerOf(_nodeTierId) == msg.sender,
+            bachiNodeContract.ownerOf(_nodeId) == msg.sender,
             "Unauthorized: Only nft owner"
         );
         _;
     }
 
-    modifier onlyNodeOwner(uint256 _nodeTierId) {
+    modifier onlyNodeOwner(uint256 _nodeId) {
         require(
-            nodeManagerContract.getOwnerByNodeId(_nodeTierId) == msg.sender,
+            nodeManagerContract.nodeIdUserLinks(_nodeId) == msg.sender,
             "Unauthorized: Only node owner"
         );
         _;
@@ -141,45 +141,44 @@ contract Staking is Pausable, AccessControl, Ownable {
         taikoMinClaimAmount = _taikoMinClaimAmount;
     }
 
-    function stake(
-        uint256 _nodeTierId
-    ) public onlyNFTOwner(_nodeTierId) whenNotPaused {
+    function stake(uint256 _nodeId) public onlyNftOwner(_nodeId) whenNotPaused {
         address staker = msg.sender;
         uint256 currentTimestamp = block.timestamp;
-        require(nodeIdStakeIdLinks[_nodeTierId] == 0, "Node already staked");
+        require(nodeIdStakeIdLinks[_nodeId] == 0, "Node already staked");
         require(
-            bachiNodeContract.isApprovedForAll(staker, address(this)),
+            bachiNodeContract.getApproved(_nodeId) == address(this) ||
+                bachiNodeContract.isApprovedForAll(staker, address(this)),
             "Token not approved for transfer"
         );
-        bachiNodeContract.transferFrom(staker, address(this), _nodeTierId);
+        bachiNodeContract.transferFrom(staker, address(this), _nodeId);
 
         stakeId++;
 
         StakeInformation memory stakeInfo = StakeInformation({
             bachiStakeStartTime: currentTimestamp,
             taikoStakeStartTime: currentTimestamp,
-            nodeTierId: _nodeTierId
+            nodeId: _nodeId
         });
 
         stakeInfors[stakeId] = stakeInfo;
         userStakes[staker].add(stakeId);
-        nodeIdStakeIdLinks[_nodeTierId] = stakeId;
+        nodeIdStakeIdLinks[_nodeId] = stakeId;
         stakeIdUserLinks[stakeId] = staker;
 
-        emit Staked(staker, stakeId, _nodeTierId, currentTimestamp);
+        emit Staked(staker, stakeId, _nodeId, currentTimestamp);
     }
 
     function transferStake(
-        uint256 _nodeTierId,
+        uint256 _nodeId,
         address previousOwner,
         address newOwner
     ) external onlyNodeManager whenNotPaused {
-        uint256 _stakeId = nodeIdStakeIdLinks[_nodeTierId];
+        uint256 _stakeId = nodeIdStakeIdLinks[_nodeId];
         if (_stakeId > 0 && userStakes[previousOwner].contains(_stakeId)) {
             userStakes[previousOwner].remove(_stakeId);
             userStakes[newOwner].add(_stakeId);
             stakeIdUserLinks[_stakeId] = newOwner;
-            emit NodeTransferred(previousOwner, newOwner, _nodeTierId);
+            emit NodeTransferred(previousOwner, newOwner, _nodeId);
         }
     }
 
@@ -188,8 +187,8 @@ contract Staking is Pausable, AccessControl, Ownable {
         uint8 claimMode
     ) public whenNotPaused {
         StakeInformation memory stakeInfo = stakeInfors[_stakeId];
-        uint256 _nodeTierId = stakeInfo.nodeTierId;
-        address staker = nodeManagerContract.getOwnerByNodeId(_nodeTierId);
+        uint256 _nodeId = stakeInfo.nodeId;
+        address staker = nodeManagerContract.nodeIdUserLinks(_nodeId);
         require(staker == msg.sender, "Unauthorized: Only staker can claim");
         uint256 currentTimestamp = block.timestamp;
         uint256 bachiTotalTimeStaking = currentTimestamp -
@@ -198,7 +197,7 @@ contract Staking is Pausable, AccessControl, Ownable {
             stakeInfo.taikoStakeStartTime;
         uint256 bachiRewardAmount = 0;
         uint256 taikoRewardAmount = 0;
-        uint256 farmSpeed = nodeManagerContract.getNodeFarmSpeed(_nodeTierId);
+        uint256 farmSpeed = nodeManagerContract.getNodeFarmSpeed(_nodeId);
 
         if (claimMode == 0) {
             // Mint Bachi tokens

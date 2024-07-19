@@ -9,6 +9,7 @@ import Rank from "./rank";
 import ReferralProgram from "./referralprogram";
 //import image
 import backgroundNode from "../../../assets/img/node/background-node.png";
+import backgroundReferral from "../../../assets/img/node/background-referral.png";
 const ProductNode = () => {
   const [currentTab, setcurrentTab] = useState(0);
 
@@ -43,6 +44,12 @@ const ProductNode = () => {
         right={"0px"}
         top={"70px"}
       />
+      <Image
+        src={backgroundReferral}
+        position={"absolute"}
+        right={"0"}
+        top={"380px"}
+      />
       <SectionContainer
         marginLeft={"44px"}
         marginRight={"40px"}
@@ -61,8 +68,9 @@ const ProductNode = () => {
             Farm
           </Text>
           <Flex
-            justifyContent={"center"}
-            gap={"50px"}
+            justifyContent={"space-between"}
+            // gap={"80px"}
+
             borderBottom="1px solid #FCDDEC"
             width={"100%"}
             marginTop={"99px"}
@@ -82,7 +90,7 @@ const ProductNode = () => {
                   zIndex={"10"}
                 >
                   <Text
-                    fontSize={"36px"}
+                    fontSize={"32px"}
                     fontWeight={400}
                     lineHeight={"normal"}
                     fontFamily="var(--font-heading-main)"

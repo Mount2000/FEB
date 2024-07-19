@@ -5,6 +5,7 @@ import CommonButton from "../button/commonbutton";
 //import image
 import iconNode from "../../assets/img/node/icon-node.png";
 import Quantity from "../quantity";
+import { Link } from "react-router-dom";
 const PayNow = () => {
   return (
     <CommonButton
@@ -135,19 +136,21 @@ const PayNow = () => {
         justifyContent={"center"}
         borderTop={"1px solid var(--color-main)"}
       >
-        <CommonButton
-          width={"750px"}
-          height={"100px"}
-          backgroundColor="var(--color-main)"
-          margin={"58px 0 52px 0"}
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Text textAlign={"center"} fontSize={"32px"} fontWeight={500}>
-            PAY NOW
-          </Text>
-        </CommonButton>
+        <Link to="/node/node-tier-1">
+          <CommonButton
+            width={"750px"}
+            height={"100px"}
+            backgroundColor="var(--color-main)"
+            margin={"58px 0 52px 0"}
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Text textAlign={"center"} fontSize={"32px"} fontWeight={500}>
+              PAY NOW
+            </Text>
+          </CommonButton>
+        </Link>
       </Flex>
     </CommonButton>
   );

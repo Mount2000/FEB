@@ -22,7 +22,7 @@ const Quantity = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <Text color={"#000"} fontSize={"50px"} cursor={"pointer"}>
+        <Text color={"#000"} fontSize={"30px"} cursor={"pointer"} >
           -
         </Text>
       </Flex>
@@ -41,7 +41,7 @@ const Quantity = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <Text color={"#000"} fontSize={"50px"} cursor={"pointer"}>
+        <Text color={"#000"} fontSize={"30px"} cursor={"pointer"}>
           +
         </Text>
       </Flex>

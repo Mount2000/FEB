@@ -13,8 +13,10 @@ const BackgroundHome = () => {
     <Box
       backgroundImage={`url(${backgroundHome})`}
       backgroundSize="cover"
-      height={"1159.688px"}
+      // height={"1159.688px"}
       marginTop={"197px"}
+      paddingTop={"225px"}
+      paddingBottom={"264px"}
       zIndex={"1"}
       position={"relative"}
     >
@@ -29,7 +31,7 @@ const BackgroundHome = () => {
           width={"235px"}
           height={"100px"}
           src={appLogo}
-          marginTop={"225px"}
+          // marginTop={"225px"}
           marginBottom={"36px"}
         />
         <Text

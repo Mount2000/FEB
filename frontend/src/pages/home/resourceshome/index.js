@@ -8,8 +8,8 @@ import CustomButton from "../../../components/button";
 //import icon
 import { HiArrowSmRight } from "react-icons/hi";
 //import image
-import resourcesHome from "../../../assets/img/resources-home.png";
-import backgroundResources from "../../../assets/img/background-resources-home.png";
+import resourcesHome from "../../../assets/img/homepage/resources-home.png";
+import backgroundResources from "../../../assets/img/homepage/background-resources-home.png";
 const ResourcesHome = () => {
   return (
     <>

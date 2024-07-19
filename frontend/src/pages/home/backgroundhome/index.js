@@ -4,7 +4,7 @@ import React from "react";
 import CommonButton from "../../../components/button/commonbutton";
 //import image
 import appLogo from "../../../assets/img/app-logo.png";
-import backgroundHome from "../../../assets/img/background-home.png";
+import backgroundHome from "../../../assets/img/homepage/background-home.png";
 //import icon
 import { HiArrowSmRight } from "react-icons/hi";
 

@@ -4,8 +4,8 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import CustomButton from "../../../components/button";
 import SectionContainer from "../../../components/container";
 //import image
-import appBanner from "../../../assets/img/app-banner.png";
-import { wrap } from "framer-motion";
+import appBanner from "../../../assets/img/homepage/app-banner.png";
+
 
 const BannerHome = () => {
   return (
@@ -61,7 +61,7 @@ const BannerHome = () => {
         <Flex
           paddingTop={{ base: "55px", md: "30px" }}
           justifyContent={"space-between"}
-          flexWrap={wrap}
+          // flexWrap={wrap}
         >
           <Flex
             flexDirection={"column"}

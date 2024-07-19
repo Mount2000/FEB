@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 //import image
-import appProduct from "../../../assets/img/app-product.png";
-import appProductHome from "../../../assets/img/app-product-home.png";
+import appProduct from "../../../assets/img/homepage/app-product.png";
+import appProductHome from "../../../assets/img/homepage/app-product-home.png";
 const ProductHome = () => {
   return (
     <Box>

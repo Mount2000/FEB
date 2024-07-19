@@ -11,6 +11,7 @@ import navIcon from "../../assets/img/nav-icon.png";
 import { useModal } from "../../contexts/useModal";
 import { useAccount } from "wagmi";
 import { truncateStr } from "../../utils";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const { setConnectWalletModalVisible } = useModal();
@@ -61,7 +62,9 @@ const Navbar = () => {
               />
             </Flex>
             <Flex alignItems={"center"} gap={"10px"}>
-              <Text fontSize={{ base: "20px", md: "24px" }}>Governance</Text>
+              <Link to="/node">
+                <Text fontSize={{ base: "20px", md: "24px" }}>Governance</Text>
+              </Link>
               <Image
                 marginTop={"6px"}
                 width={"14px"}

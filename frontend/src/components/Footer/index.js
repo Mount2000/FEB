@@ -2,9 +2,10 @@ import { Flex, Image, ListItem, Text, UnorderedList } from "@chakra-ui/react";
 import React from "react";
 //import component
 import CustomButton from "../button";
+import SectionContainer from "../container";
 //import image
 import appLogo from "../../assets/img/app-logo.png";
-import SectionContainer from "../container";
+
 
 const BachiSwapFooter = () => {
   return (

@@ -1,11 +1,12 @@
 :root {
   --font-heading: "Bruno Ace SC Regular", sans-serif;
   --font-text-main: "Ubuntu Mono Regular", sans-serif;
-  --font-heading-main:"Bruno Ace Regular", sans-serif;
-  --font-text-extra: "Ubuntu Condensed Regular",sans-serif;
-  --color-border-bottom: #FCDDEC;
-  --color-background: #0E001F;
-  --color-main: #E42493;
+  --font-heading-main: "Bruno Ace Regular", sans-serif;
+  --font-text-extra: "Ubuntu Condensed Regular", sans-serif;
+  --color-border-bottom: #fcddec;
+  --color-background: #0e001f;
+  --color-main: #e42493;
+  --color-background-popup: #231a2e;
 }
 
 html {
@@ -13,7 +14,7 @@ html {
   font-weight: 400;
   font-style: normal;
 }
-*{
+* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;

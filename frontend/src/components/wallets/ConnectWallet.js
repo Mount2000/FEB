@@ -28,6 +28,7 @@ export default function ConnectWalletModal() {
   const { connectWalletModalVisible, setConnectWalletModalVisible } =
     useModal();
   const onCloseWalletModal = () => setConnectWalletModalVisible(false);
+  const { address } = useAccount();
 
   return (
     <>
@@ -74,11 +75,18 @@ export default function ConnectWalletModal() {
                 <IoCloseSharp color="black" size={"40px"} />
               </CloseButton>
             </Flex>
-            <Box w={"100%"} h={"100px"} mx={"auto"} position={"relative"}>
-              <Box position={"absolute"} top={"-24px"} left={"50%"} transform={"translateX(-50%)"}>
-                <Image src={EllipseIcon} alt="" />
+            {address && (
+              <Box w={"100%"} h={"100px"} mx={"auto"} position={"relative"}>
+                <Box
+                  position={"absolute"}
+                  top={"-24px"}
+                  left={"50%"}
+                  transform={"translateX(-50%)"}
+                >
+                  <Image src={EllipseIcon} alt="" />
+                </Box>
               </Box>
-            </Box>
+            )}
             <ConnectWallet />
           </ModalBody>
         </ModalContent>

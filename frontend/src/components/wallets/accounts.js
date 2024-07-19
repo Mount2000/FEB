@@ -15,6 +15,9 @@ import ActionButton from "../button/ActionButton";
 import IconEth from "../../assets/img/node/icon-eth.png";
 import { IoArrowForwardSharp } from "react-icons/io5";
 import { RxExit } from "react-icons/rx";
+// for example call contract
+import bachi_node_contract from "../../utils/contracts/bachi_node_contract";
+import { useReadContract, useWriteContract } from "wagmi";
 
 export function Account() {
   const { address } = useAccount();
@@ -33,6 +36,32 @@ export function Account() {
   const currentChain = chains.find((chain) => chain.id === chainId);
   console.log({ currentChain, chains });
 
+  /** Example  */
+  /** Example query func */
+  const { data: nodeManagerContractAddress, error: getErr } = useReadContract({
+    address: bachi_node_contract.CONTRACT_ADDRESS,
+    abi: bachi_node_contract.CONTRACT_ABI,
+    functionName: "nodeManagerAddress",
+    args: [],
+  });
+
+  console.log({ nodeManagerContractAddress, getErr });
+
+  /** Example tx func */
+  const { data: hash, writeContract, error: setErr } = useWriteContract();
+  const setNodeManagerAddress = async () => {
+    const nodeManagerAddress = "0x654Af47D0Bbef73d9Da23fACbea6e1c191Cb8dD9";
+    writeContract({
+      address: bachi_node_contract.CONTRACT_ADDRESS,
+      abi: bachi_node_contract.CONTRACT_ABI,
+      functionName: "setNodeManagerAddress",
+      args: [nodeManagerAddress],
+    });
+    if (setErr) console.log({ setErr });
+    if (hash) console.log({ hash });
+  };
+
+  /*******************/
   return (
     <Flex
       w={"100%"}
@@ -77,11 +106,11 @@ export function Account() {
           <option value={chain?.id}>{chain?.name}</option>
         ))}
       </Select>
-      <ActionButton w={"100%"} onClick={() => disconnect()}>
+      <ActionButton w={"100%"} onClick={setNodeManagerAddress}>
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
-        <Text fontSize={"24px"} fontWeight={"500"}>
-          Buy Crypto
-        </Text>
+          <Text fontSize={"24px"} fontWeight={"500"}>
+            Buy Crypto
+          </Text>
           <Box w={"36px"}>
             <IoArrowForwardSharp fontSize={"36px"} color="black" />
           </Box>

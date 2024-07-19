@@ -12,9 +12,9 @@ import { addressShortener } from "../../utils";
 export const AddressCopier = ({
   address,
   truncated = true,
-
   fontWeight,
   style,
+  fontSize,
 }) => {
   const handleCopy = (label, text) => {
     navigator.clipboard.writeText(text);
@@ -31,10 +31,10 @@ export const AddressCopier = ({
         sx={{ fontWeight: fontWeight || "bold", color: "#F7F7F8" }}
         style={style}
       >
-        <Text mr="4px" color={"black"}>
+        <Text mr="4px" fontSize={fontSize}>
           {truncated ? addressShortener(address) : address}
         </Text>
-        <MdOutlineContentCopy color="black" w="24px" h="21px" />
+        <MdOutlineContentCopy size={"24px"} />
       </Flex>
     </>
   );

@@ -1,18 +1,17 @@
 import React from "react";
 import { Button } from "@chakra-ui/react";
 
-const CloseButton = ({ children, onClick, ...props }) => {
+const ActionButton = ({ children, onClick, bgColor, textColor, ...props }) => {
   return (
     <Button
       {...props}
-      bg="pink.500"
+      bg={bgColor ? bgColor : "pink.500"}
       color="white"
       fontWeight="400"
       fontSize={"20px"}
       position="relative"
       borderRadius="0px"
-      w={{ base: "60px", xl: "60px" }}
-      h={{ base: "60px", xl: "60px" }}
+      h={"60px"}
       sx={{
         clipPath:
           "polygon(0 16px, 16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%)",
@@ -32,7 +31,7 @@ const CloseButton = ({ children, onClick, ...props }) => {
           right: 0,
           width: "16px",
           height: "16px",
-          clipPath: "polygon(100% 100%, 100% 0, 0 100%)", // Điều chỉnh clip-path cho góc dưới
+          clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
         },
       }}
       onClick={onClick}
@@ -42,4 +41,4 @@ const CloseButton = ({ children, onClick, ...props }) => {
   );
 };
 
-export default CloseButton;
+export default ActionButton;

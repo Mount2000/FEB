@@ -3,7 +3,9 @@ import { Account } from "./accounts";
 import { WalletOptions } from "./walletOption";
 import { useAccount } from "wagmi";
 import {
+  Box,
   Flex,
+  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,6 +16,7 @@ import {
 import { useModal } from "../../contexts/useModal";
 import CloseButton from "../button/CloseButton";
 import { IoCloseSharp } from "react-icons/io5";
+import EllipseIcon from "../../assets/img/node/ellipse-2.png";
 
 function ConnectWallet() {
   const { isConnected } = useAccount();
@@ -36,18 +39,21 @@ export default function ConnectWalletModal() {
         <ModalOverlay />
         <ModalContent
           borderRadius={"0px"}
-          py={"12px"}
+          backgroundColor={"var(--color-background-popup)"}
+          pt={"28px"}
+          pb={"48px"}
+          border={"1px solid #FCDDEC"}
           sx={{
             clipPath:
-              "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+              "polygon(0 36px, 36px 0, 100% 0, 100% calc(100% - 36px), calc(100% - 36px) 100%, 0 100%)",
             "::before": {
               content: '""',
               position: "absolute",
               top: 0,
               left: 0,
-              width: "20px",
-              height: "20px",
-              backgroundColor: "pink.500",
+              width: "36px",
+              height: "36px",
+              backgroundColor: "#FCDDEC",
               clipPath: "polygon(0 100%, 100% 0, 0 0)",
             },
             "::after": {
@@ -55,19 +61,24 @@ export default function ConnectWalletModal() {
               position: "absolute",
               bottom: 0,
               right: 0,
-              width: "20px",
-              height: "20px",
-              backgroundColor: "pink.500",
-              clipPath: "polygon(100% 100%, 100% 0, 0 100%)", // Điều chỉnh clip-path cho góc dưới
+              width: "36px",
+              height: "36px",
+              backgroundColor: "#FCDDEC",
+              clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
             },
           }}
         >
-          <ModalBody>
-            <Flex w={"100%"} justifyContent={"end"} py={"12px"}>
+          <ModalBody py={"0px"}>
+            <Flex w={"100%"} justifyContent={"end"}>
               <CloseButton onClick={onCloseWalletModal}>
                 <IoCloseSharp color="black" size={"40px"} />
               </CloseButton>
             </Flex>
+            <Box w={"100%"} h={"100px"} mx={"auto"} position={"relative"}>
+              <Box position={"absolute"} top={"-24px"} left={"50%"} transform={"translateX(-50%)"}>
+                <Image src={EllipseIcon} alt="" />
+              </Box>
+            </Box>
             <ConnectWallet />
           </ModalBody>
         </ModalContent>

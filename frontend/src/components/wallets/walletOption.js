@@ -1,7 +1,7 @@
-import { Button, Flex } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { Connector, useConnect } from "wagmi";
-import CustomButton from "../button";
+import ActionButton from "../button/ActionButton";
 
 export function WalletOptions() {
   const { connectors, connect } = useConnect();
@@ -10,7 +10,7 @@ export function WalletOptions() {
   );
   console.log({ connectors });
   return (
-    <Flex flexDirection={"column"} gap={"12px"}>
+    <Flex flexDirection={"column"} gap={"12px"} mt={"24px"}>
       {walletConnectors.map((connector) => (
         <WalletOption
           key={connector.uid}
@@ -33,8 +33,8 @@ function WalletOption({ connector, onClick }) {
   }, [connector]);
 
   return (
-    <CustomButton disabled={!ready} onClick={onClick}>
-      {connector.name}
-    </CustomButton>
+    <ActionButton disabled={!ready} onClick={onClick}>
+      <Text>{connector.name}</Text>
+    </ActionButton>
   );
 }

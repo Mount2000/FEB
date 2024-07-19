@@ -1,4 +1,4 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Select, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
   useAccount,
@@ -11,6 +11,10 @@ import { getBalance, getChainId, getChains } from "@wagmi/core";
 import { config } from "./config";
 import { formatBalacne } from "../../utils";
 import { AddressCopier } from "../addressCopier";
+import ActionButton from "../button/ActionButton";
+import IconEth from "../../assets/img/node/icon-eth.png";
+import { IoArrowForwardSharp } from "react-icons/io5";
+import { RxExit } from "react-icons/rx";
 
 export function Account() {
   const { address } = useAccount();
@@ -27,23 +31,82 @@ export function Account() {
   const chains = getChains(config);
   const chainId = getChainId(config);
   const currentChain = chains.find((chain) => chain.id === chainId);
-  console.log({ currentChain });
+  console.log({ currentChain, chains });
 
   return (
-    <Box color={"black"}>
+    <Flex
+      w={"100%"}
+      textAlign={"center"}
+      flexDirection={"column"}
+      gap={"20px"}
+      alignItems={"center"}
+    >
       {ensAvatar && <img alt="ENS Avatar" src={ensAvatar} />}
       {address && (
-        <AddressCopier
-          address={ensName ? `${ensName} (${address})` : address}
-        />
+        <Box>
+          <AddressCopier
+            address={ensName ? `${ensName} (${address})` : address}
+            fontSize={"28px"}
+            fontWeight={"600"}
+          />
+        </Box>
       )}
       {address && !isLoading && (
-        <div>{`${formatBalacne(balance?.formatted)} ${balance?.symbol}`}</div>
+        <Text
+          fontSize={"20px"}
+          color={"var(--color-main)"}
+        >{`${formatBalacne(balance?.formatted)} ${balance?.symbol}`}</Text>
       )}
-      {address && (
-        <div>{`Chain: ${currentChain?.name}`}</div>
-      )}
-      <Button onClick={() => disconnect()}>Disconnect</Button>
-    </Box>
+      <ActionButton
+        my="12px"
+        w="250px"
+        bgColor={"#FCDDEC"}
+        onClick={() => disconnect()}
+      >
+        <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
+          <Text color={"black"} fontSize={"24px"} fontWeight={"500"}>
+            Block Explorer
+          </Text>
+          <Box w={"36px"} sx={{ transform: "rotate(-45deg)" }}>
+            <IoArrowForwardSharp fontSize={"36px"} color="black" />
+          </Box>
+        </Flex>
+      </ActionButton>
+      <Select borderRadius={"0px"} size={"lg"}>
+        {chains?.map((chain) => (
+          <option value={chain?.id}>{chain?.name}</option>
+        ))}
+      </Select>
+      <ActionButton w={"100%"} onClick={() => disconnect()}>
+        <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
+        <Text fontSize={"24px"} fontWeight={"500"}>
+          Buy Crypto
+        </Text>
+          <Box w={"36px"}>
+            <IoArrowForwardSharp fontSize={"36px"} color="black" />
+          </Box>
+        </Flex>
+      </ActionButton>
+      <ActionButton w={"100%"} onClick={() => disconnect()}>
+        <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
+          <Text fontSize={"24px"} fontWeight={"500"}>
+            Activity
+          </Text>
+          <Box w={"36px"}>
+            <IoArrowForwardSharp fontSize={"36px"} color="black" />
+          </Box>
+        </Flex>
+      </ActionButton>
+      <ActionButton w={"100%"} onClick={() => disconnect()}>
+        <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
+          <Text fontSize={"24px"} fontWeight={"500"}>
+            Disconnect
+          </Text>
+          <Box w={"36px"}>
+            <RxExit fontSize={"28px"} color="black" />
+          </Box>
+        </Flex>
+      </ActionButton>
+    </Flex>
   );
 }

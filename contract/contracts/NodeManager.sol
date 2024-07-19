@@ -134,9 +134,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return address(bachiNodeContract);
     }
 
-    function setNodeContractAddress(
-        address _bachiNodeContract
-    ) public onlyRole(ADMIN_ROLE) {
+    function setNodeContractAddress(address _bachiNodeContract)
+        public
+        onlyRole(ADMIN_ROLE)
+    {
         bachiNodeContract = BachiNode(_bachiNodeContract);
     }
 
@@ -144,9 +145,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return address(tokenContract);
     }
 
-    function setTokenContractAddress(
-        address _tokenContract
-    ) public onlyRole(ADMIN_ROLE) {
+    function setTokenContractAddress(address _tokenContract)
+        public
+        onlyRole(ADMIN_ROLE)
+    {
         tokenContract = BachiToken(_tokenContract);
     }
 
@@ -154,9 +156,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return address(stakingContract);
     }
 
-    function setStakingContractAddress(
-        address _stakingContract
-    ) public onlyRole(ADMIN_ROLE) {
+    function setStakingContractAddress(address _stakingContract)
+        public
+        onlyRole(ADMIN_ROLE)
+    {
         stakingContract = Staking(_stakingContract);
     }
 
@@ -232,10 +235,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getNodeIdByIndex(
-        address user,
-        uint256 index
-    ) public view returns (uint256) {
+    function getNodeIdByIndex(address user, uint256 index)
+        public
+        view
+        returns (uint256)
+    {
         require(index < userNodeIdLinks[user].length(), "Index out of bounds");
         return userNodeIdLinks[user].at(index);
     }
@@ -329,26 +333,21 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 discountCouponId,
         uint256 quality
     ) public payable whenNotPaused returns (string memory) {
-        uint256 price = nodeTiers[_nodeTierId].price;
-        uint8 discountPercent = 0;
-        uint256 discountValue = 0;
-        uint256 totalSales = 0;
-        uint8 commissionPercent = 0;
-        address caller = msg.sender;
-        require(price > 0, "Node tier does not exist");
         require(
             quality > 0 && quality <= 10,
             "Quality must be between 1 and 10"
         );
-
-        uint256 totalPrice = price * quality;
+        uint256 price = nodeTiers[_nodeTierId].price * quality;
+        uint256 discountValue = 0;
+        uint256 totalSales = 0;
+        address caller = msg.sender;
+        require(price > 0, "Node tier does not exist");
 
         if (
             discountCouponId != 0 &&
             discountCouponsIdUserLinks[discountCouponId] != caller
         ) {
             DiscountCoupon memory coupon = discountCoupons[discountCouponId];
-
             NodeTier memory nodetier = nodeTiers[_nodeTierId];
             require(
                 coupon.discountPercent > 0,
@@ -356,14 +355,12 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             );
             require(coupon.status, "Discount coupon is not active");
             require(nodetier.status, "Node is not active");
-            discountPercent = coupon.discountPercent;
-            discountValue = (totalPrice * discountPercent) / 100;
+            discountValue = (price * coupon.discountPercent) / 100;
 
             address discountOwner = discountCouponsIdUserLinks[
                 discountCouponId
             ];
-            commissionPercent = coupon.commissionPercent;
-            uint256 commissionValue = (totalPrice * commissionPercent) / 100;
+            uint256 commissionValue = (price * coupon.commissionPercent) / 100;
             require(
                 commissionValue > 0,
                 "Commission value must be greater than 0"
@@ -379,7 +376,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             require(commissionSent, "Failed to send commission Ether");
         }
 
-        uint256 expectedValue = totalPrice - discountValue;
+        uint256 expectedValue = price - discountValue;
         require(msg.value == expectedValue, "Insufficient funds");
 
         if (
@@ -429,10 +426,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return _code;
     }
 
-    function getDiscountIdByIndex(
-        address user,
-        uint256 index
-    ) public view returns (uint256) {
+    function getDiscountIdByIndex(address user, uint256 index)
+        public
+        view
+        returns (uint256)
+    {
         require(
             index < userdiscountCouponsIdLinks[user].length(),
             "Index out of bounds"
@@ -440,9 +438,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return userdiscountCouponsIdLinks[user].at(index);
     }
 
-    function getTotalDiscountByOwner(
-        address owner
-    ) public view returns (uint256) {
+    function getTotalDiscountByOwner(address owner)
+        public
+        view
+        returns (uint256)
+    {
         return userdiscountCouponsIdLinks[owner].length();
     }
 
@@ -460,10 +460,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         emit Sale(nodeOwner, _nodeTierId, 0, 0);
     }
 
-    function transferNode(
-        uint256 nodeId,
-        address newOwner
-    ) public whenNotPaused {
+    function transferNode(uint256 nodeId, address newOwner)
+        public
+        whenNotPaused
+    {
         address currentOwner = nodeIdUserLinks[nodeId];
         require(currentOwner != address(0), "Node does not exist");
         require(

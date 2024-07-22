@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Flex, Grid, Image, Input, Select, Text } from "@chakra-ui/react";
+import { useLocation, useParams } from "react-router-dom";
 //import component
 import SectionContainer from "../../../../../components/container";
 import CommonButton from "../../../../../components/button/commonbutton";
 import Quantity from "../../../../../components/quantity";
 import ReferralCodeForm from "../../../../../components/referralform";
+import Message from "../../../../../components/message";
 //import image
 import backgroundNode from "../../../../../assets/img/node/background-node.png";
 import backgroundReferral from "../../../../../assets/img/node/background-referral.png";
@@ -14,6 +16,32 @@ import iconReferral from "../../../../../assets/img/node/icon-referral-node.png"
 import CustomSelect from "../../../../../components/customdropdown";
 
 const ProductDetail = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState(null);
+
+  const handlePayNow = () => {
+    setIsLoading(true);
+    setPaymentStatus(null);
+
+    // Giả sử gọi API thanh toán
+    setTimeout(() => {
+      setIsLoading(false);
+      // Giả sử kết quả thanh toán thành công
+      const success = Math.random() > 0.5; // Giả lập kết quả thanh toán ngẫu nhiên
+      if (success) {
+        setPaymentStatus("success");
+      } else {
+        setPaymentStatus("failure");
+      }
+    }, 3000);
+  };
+
+  const location = useLocation();
+  const { products } = location.state || {};
+
+  if (!products) {
+    return <div>No product selected</div>;
+  }
   return (
     <>
       <Image
@@ -45,7 +73,7 @@ const ProductDetail = () => {
             <Flex alignItems={"center"}>
               <Box width={"40%"} height={"100%"}>
                 <Image
-                  src={productCoreI5}
+                  src={products.image}
                   width={"100%"}
                   height={"100%"}
                   padding={"50px"}
@@ -137,7 +165,11 @@ const ProductDetail = () => {
                           alignItems="center"
                           justifyContent="center"
                         >
-                          <Text color="#8F8F8F" fontWeight="bold" fontSize="16px">
+                          <Text
+                            color="#8F8F8F"
+                            fontWeight="bold"
+                            fontSize="16px"
+                          >
                             !
                           </Text>
                         </Box>
@@ -289,6 +321,7 @@ const ProductDetail = () => {
                   display={"flex"}
                   alignItems={"center"}
                   justifyContent={"center"}
+                  onClick={() => handlePayNow()}
                 >
                   <Text textAlign={"center"} fontSize={"32px"} fontWeight={500}>
                     PAY NOW
@@ -433,6 +466,7 @@ const ProductDetail = () => {
           </Flex>
         </Flex>
       </SectionContainer>
+      <Message />
     </>
   );
 };

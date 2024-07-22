@@ -11,7 +11,7 @@ const BachiSwapFooter = () => {
   return (
     <>
       <SectionContainer>
-        <Flex flexDirection={"column"} gap={"102px"}>
+        <Flex flexDirection={"column"} gap={"102px"} paddingBottom={"132px"}>
           <Flex justifyContent={"space-between"} marginTop={"187px"}>
             <Flex flexDirection={"column"} gap={"82px"}>
               <Flex alignItems={"center"} gap={"24.14px"}>

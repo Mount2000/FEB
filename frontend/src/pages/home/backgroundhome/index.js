@@ -12,19 +12,21 @@ const BackgroundHome = () => {
   return (
     <Box
       backgroundImage={`url(${backgroundHome})`}
-      backgroundSize="cover"
+      backgroundSize="contain"
+      backgroundPosition={"center"}
+      backgroundRepeat={"no-repeat"}
       // height={"1159.688px"}
-      marginTop={"197px"}
-      paddingTop={"225px"}
+      // marginTop={"197px"}
       paddingBottom={"264px"}
       zIndex={"1"}
       position={"relative"}
     >
       <Flex
+        paddingTop={"225px"}
         flexDirection={"column"}
         alignItems={"center"}
-        paddingLeft={"173px"}
-        paddingRight={"185px"}
+        paddingLeft={{ base: "25px", md: "100px", "2xl": "173px" }}
+        paddingRight={{ base: "25px", md: "100px", "2xl": "185px" }}
         zIndex={"1"}
       >
         <Image
@@ -35,7 +37,7 @@ const BackgroundHome = () => {
           marginBottom={"36px"}
         />
         <Text
-          fontSize={"86px"}
+          fontSize={"64px"}
           lineHeight={"normal"}
           fontFamily="var(--font-heading)"
           textAlign={"center"}
@@ -86,7 +88,11 @@ const BackgroundHome = () => {
                 gap={"22px"}
               >
                 <Flex alignItems={"center"} justifyContent={"space-between"}>
-                  <Text fontSize={"40px"} fontFamily="var(--font-text-extra)">
+                  <Text
+                    fontSize={"36px"}
+                    fontFamily="var(--font-text-extra)"
+                    color="var(--color-main)"
+                  >
                     DOCUMENTATION
                   </Text>
                   <CommonButton
@@ -102,7 +108,7 @@ const BackgroundHome = () => {
                     </Box>
                   </CommonButton>
                 </Flex>
-                <Text fontSize={"36px"} fontFamily="var(--font-heading-main)">
+                <Text fontSize={"24px"} fontFamily="var(--font-heading-main)">
                   Learn about cost effective edge gaming
                 </Text>
               </Flex>
@@ -150,7 +156,11 @@ const BackgroundHome = () => {
                 gap={"22px"}
               >
                 <Flex alignItems={"center"} justifyContent={"space-between"}>
-                  <Text fontSize={"40px"} fontFamily="var(--font-text-extra)">
+                  <Text
+                    fontSize={"36px"}
+                    fontFamily="var(--font-text-extra)"
+                    color="var(--color-main)"
+                  >
                     DOCUMENTATION
                   </Text>
                   <CommonButton
@@ -166,7 +176,7 @@ const BackgroundHome = () => {
                     </Box>
                   </CommonButton>
                 </Flex>
-                <Text fontSize={"36px"} fontFamily="var(--font-heading-main)">
+                <Text fontSize={"24px"} fontFamily="var(--font-heading-main)">
                   Learn about cost effective edge gaming
                 </Text>
               </Flex>

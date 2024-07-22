@@ -7,8 +7,8 @@ const ProductHome = () => {
   return (
     <Box>
       <Flex marginTop={"197px"}>
-        <Image src={appProduct} height={"100%"}  />
-        <Flex flexDirection={"column"} marginTop={"11px"} marginRight={"30px"}>
+        <Image src={appProduct} height={"100%"} />
+        <Flex flexDirection={"column"} marginTop={"11px"} marginRight={"40px"}>
           <Text
             fontSize={"40px"}
             color={"#E42493"}
@@ -49,7 +49,12 @@ const ProductHome = () => {
           >
             BACHI ATMOSPHERE
           </Text>
-          <Text fontSize={"70px"} lineHeight={"100px"} marginBottom={"43px"} fontFamily="var(--font-heading)">
+          <Text
+            fontSize={"70px"}
+            lineHeight={"100px"}
+            marginBottom={"43px"}
+            fontFamily="var(--font-heading)"
+          >
             Leveling up the gaming industry
           </Text>
           <Text
@@ -57,8 +62,8 @@ const ProductHome = () => {
             lineHeight={"normal"}
             fontFamily="var(--font-text-main)"
           >
-            As a Taiko’s native DEX, BACHI allows users to easily trade tokens
-            across the TAIKO network
+            Atmosphere utilizes a highly performant network of low-latency GPUs
+            to enable real-time, high-quality gaming experiences in the cloud.
           </Text>
         </Flex>
         <Image

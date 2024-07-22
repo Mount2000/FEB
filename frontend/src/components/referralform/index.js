@@ -27,28 +27,30 @@ const ReferralCodeForm = () => {
         justifyContent="space-between"
         padding={"25px 28px 25px 34px"}
       >
-        <Input
-          placeholder="Input"
-          border="none"
-          bg="#231A2E"
-          height="40px"
-          color="#FFFFFF"
-          flex="1"
-          marginRight="8px"
-          _focus={{ outline: "none", boxShadow: "none" }}
-        />
-        <CustomButton
-          width={"15%"}
-          bg="#EC4899"
-          color="#FFFFFF"
-          height="40px"
-          borderRadius="0"
-          border="none"
-          _hover={{ bg: "#DB2777" }}
-          _active={{ bg: "#BE185D" }}
-        >
-          Apply
-        </CustomButton>
+        <Flex height={"70px"} width={"100%"}>
+          <Input
+            placeholder="Input"
+            border="none"
+            bg="#231A2E"
+            height="70px"
+            color="#FFFFFF"
+            flex="1"
+            marginRight="8px"
+            _focus={{ outline: "none", boxShadow: "none" }}
+          />
+          <CustomButton
+            height={"70px"}
+            width={"15%"}
+            bg="#EC4899"
+            color="#FFFFFF"
+            borderRadius="0"
+            border="none"
+            _hover={{ bg: "#DB2777" }}
+            _active={{ bg: "#BE185D" }}
+          >
+            Apply
+          </CustomButton>
+        </Flex>
       </Flex>
     </Box>
   );

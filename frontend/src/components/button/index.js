@@ -12,7 +12,7 @@ const CustomButton = ({ children, onClick, ...props }) => {
       fontSize={"20px"}
       position="relative"
       borderRadius="3px"
-      height={"60px"}
+      // height={"60px"}
       sx={{
         clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))",
         "::before": {

@@ -6,21 +6,24 @@ import SectionContainer from "../../../components/container";
 //import image
 import appBanner from "../../../assets/img/homepage/app-banner.png";
 
-
 const BannerHome = () => {
   return (
     <div>
       <SectionContainer position={"relative"}>
-        <Flex flexDirection={"column"} marginTop={{ base: "18px", md: "49px" }}>
+        <Flex
+          flexDirection={"column"}
+          marginTop={{ base: "18px", md: "49px" }}
+          width={"60%"}
+        >
           <Text
-            fontSize={{ md: "109px", "2xl": "109px" }}
+            fontSize={{ md: "88px", "2xl": "88px" }}
             fontWeight={400}
-            lineHeight={"120px"}
-            width={"900px"}
+            lineHeight={"100px"}
+            // width={"900px"}
             marginBottom={"45px"}
             fontFamily="var(--font-heading)"
           >
-            Swap everything on TAIKO
+            Powerful GPU compute solutions on-demand
           </Text>
           <Text
             fontSize={"24px"}
@@ -30,10 +33,9 @@ const BannerHome = () => {
             fontFamily="var(--font-text-main)"
             lineHeight={"normal"}
           >
-            Welcome to BachiSwap, the ultimate AMM DEX. Including Layer 1 and
-            Layer 2 solutions, as well as both EVM and non-EVM environments.
-            With BachiSwap, effortlessly swap any token and transfer your assets
-            across different networks with ease
+            Accelerate growth and get closer to the edge with Aethir's
+            distributed cloud compute infrastructure. We provide secure,
+            cost-effective access to enterprise grade GPUs around the world.
           </Text>
           <CustomButton
             width={{ base: "140px", md: "230px" }}

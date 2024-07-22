@@ -21,8 +21,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         bool status;
         string name;
         uint256 price;
-        uint8 hashrate;
-        uint256 farmSpeed;
+        uint256 hashrate;
+        uint256 farmSpeedBachi;
+        uint256 farmSpeedTaiko;
         uint8 referralRate;
     }
 
@@ -63,7 +64,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         string name,
         uint256 price,
         uint256 hashrate,
-        uint256 farmSpeed,
+        uint256 farmSpeedBachi,
+        uint256 farmSpeedTaiko,
         uint8 ReferralRate
     );
 
@@ -73,8 +75,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         bool status,
         string name,
         uint256 price,
-        uint8 hashrate,
-        uint256 farmSpeed,
+        uint256 hashrate,
+        uint256 farmSpeedBachi,
+        uint256 farmSpeedTaiko,
         uint8 ReferralRate
     );
 
@@ -168,12 +171,16 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     function addNodeTier(
         string memory name,
         uint256 price,
-        uint8 hashrate,
-        uint256 farmSpeed,
+        uint256 hashrate,
+        uint256 farmSpeedBachi,
+        uint256 farmSpeedTaiko,
         uint8 ReferralRate
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(
-            price > 0 && hashrate > 0 && farmSpeed > 0,
+            price > 0 &&
+                hashrate > 0 &&
+                farmSpeedBachi > 0 &&
+                farmSpeedTaiko > 0,
             "Price, Hashrate and FarmSpeed must be greater than 0"
         );
         nodeTierId++;
@@ -182,7 +189,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             name,
             price,
             hashrate,
-            farmSpeed,
+            farmSpeedBachi,
+            farmSpeedTaiko,
             ReferralRate
         );
         nodeTiers[nodeTierId] = newNode;
@@ -193,7 +201,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             name,
             price,
             hashrate,
-            farmSpeed,
+            farmSpeedBachi,
+            farmSpeedTaiko,
             ReferralRate
         );
     }
@@ -203,14 +212,18 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         string memory name,
         bool status,
         uint256 price,
-        uint8 hashrate,
-        uint256 farmSpeed,
+        uint256 hashrate,
+        uint256 farmSpeedBachi,
+        uint256 farmSpeedTaiko,
         uint8 referralRate
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         NodeTier memory newNode = nodeTiers[_nodeTierId];
         require(newNode.price > 0, "Node does not exist");
         require(
-            price > 0 && hashrate > 0 && farmSpeed > 0,
+            price > 0 &&
+                hashrate > 0 &&
+                farmSpeedBachi > 0 &&
+                farmSpeedTaiko > 0,
             "Price, Hashrate and FarmSpeed must be greater than 0"
         );
 
@@ -218,7 +231,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         newNode.status = status;
         newNode.price = price;
         newNode.hashrate = hashrate;
-        newNode.farmSpeed = farmSpeed;
+        newNode.farmSpeedBachi = farmSpeedBachi;
+        newNode.farmSpeedTaiko = farmSpeedTaiko;
         newNode.referralRate = referralRate;
 
         nodeTiers[_nodeTierId] = newNode;
@@ -230,11 +244,13 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             newNode.name,
             newNode.price,
             newNode.hashrate,
-            newNode.farmSpeed,
+            newNode.farmSpeedBachi,
+            newNode.farmSpeedTaiko,
             newNode.referralRate
         );
     }
 
+    //cronjob addnodetier, môngdb, pull datanodetier
     function getNodeIdByIndex(address user, uint256 index)
         public
         view
@@ -248,9 +264,15 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return userNodeIdLinks[user].length();
     }
 
-    function getNodeFarmSpeed(uint256 nodeId) public view returns (uint256) {
+    function getFarmSpeed(uint256 nodeId)
+        public
+        view
+        returns (uint256, uint256)
+    {
         uint256 _nodeTierId = nodeIdNodeTiersIdLinks[nodeId];
-        return nodeTiers[_nodeTierId].farmSpeed;
+        uint256 farmSpeedBachi = nodeTiers[_nodeTierId].farmSpeedBachi;
+        uint256 farmSpeedTaiko = nodeTiers[_nodeTierId].farmSpeedTaiko;
+        return (farmSpeedBachi, farmSpeedTaiko);
     }
 
     // COUPON MANAGEMENT
@@ -459,8 +481,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         nodeIdUserLinks[nodeId] = nodeOwner;
         emit Sale(nodeOwner, _nodeTierId, 0, 0);
     }
-
-   
 
     function withdraw(address payable to, uint256 value) public onlyOwner {
         require(

@@ -12,9 +12,30 @@ import productCoreI7 from "../../../../assets/img/node/product-corei7.png";
 import productCoreI9 from "../../../../assets/img/node/product-corei9.png";
 import iconNode from "../../../../assets/img/node/icon-node.png";
 import iconPower from "../../../../assets/img/node/icon-node-power.png";
+import node_manager_contract from "../../../../utils/contracts/node_manager_contract";
+import { useReadContract, useWriteContract } from "wagmi";
+import { config } from "../../../../components/wallets/config";
+import { getBalance, getChainId, getChains } from "@wagmi/core";
 
 const MintRune = () => {
   const navigate = useNavigate();
+
+  const chains = getChains(config);
+  const chainId = getChainId(config);
+  const currentChain = chains.find((chain) => chain.id === chainId);
+  const chainDecimal = currentChain?.nativeCurrency?.decimals;
+  const [nodeId, setNodeId] = useState(1);
+  const [count, setCount] = useState(0);
+  const nodeManagerContract = {
+    address: node_manager_contract.CONTRACT_ADDRESS,
+    abi: node_manager_contract.CONTRACT_ABI,
+  };
+  const { data: nodeData, error: getNode1DataErr } = useReadContract({
+    ...nodeManagerContract,
+    functionName: "nodeTiers",
+    args: [nodeId],
+  });
+
   const products = [
     {
       tierId: 1,
@@ -38,25 +59,25 @@ const MintRune = () => {
       reward: "150.000 ETH",
     },
   ];
-  const [selectProduct, setselectProduct] = useState(null);
-  useEffect(() => {
-    const savedProduct = localStorage.getItem("selectedProduct");
-    if (savedProduct) {
-      setselectProduct(JSON.parse(savedProduct));
-    } else {
-      setselectProduct(products[0]);
-    }
-  }, []);
-
+  const [selectProduct, setselectProduct] = useState(products[0]);
   const handleProductSelect = (products) => {
     setselectProduct(products);
-    localStorage.setItem("selectedProduct", JSON.stringify(products));
+    setNodeId(products.tierId);
   };
   // const handleUrl = (products) => {
   //   const tierUrl = `/node/node-tier-${products.tierId}`;
 
   //   navigate(tierUrl, { state: { selectedProduct: products } });
   // };
+  function convertAndDivide(data, chainDecimal) {
+    const value = data
+      ? typeof data === "bigint"
+        ? Number(data)
+        : data
+      : 0;
+    return value / 10 ** chainDecimal;
+  }
+
   return (
     <SectionContainer width={"100%"} paddingLeft={"0px"} paddingRight={"0px"}>
       <Flex flexDirection={"column"} marginTop={"87px"}>
@@ -123,7 +144,7 @@ const MintRune = () => {
                     <Text fontSize={"32px"} fontWeight={400}>
                       {products.power}
                     </Text>
-                    <Image src={iconPower} paddingTop={"5px"}/>
+                    <Image src={iconPower} paddingTop={"5px"} />
                   </Flex>
                 </Flex>
               </CommonButton>
@@ -152,7 +173,7 @@ const MintRune = () => {
                   Minting Power
                 </Text>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
-                  100 GH/s
+                  {nodeData ? nodeData[3] : 0} GH/s
                 </Text>
               </Flex>
               <Flex
@@ -176,7 +197,7 @@ const MintRune = () => {
                   Rent Price
                 </Text>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
-                  14.2 ETH
+                  {nodeData ? convertAndDivide(nodeData[2], chainDecimal) : 0} ETH
                 </Text>
               </Flex>
               <Flex
@@ -195,7 +216,10 @@ const MintRune = () => {
                   <Image src={iconNode} />
                 </Flex>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
-                  20.736 ETH
+                  {nodeData
+                    ? convertAndDivide(nodeData[4], chainDecimal) * 86400 * 30
+                    : 0}{" "}
+                  ETH
                 </Text>
               </Flex>
               <Flex
@@ -215,7 +239,10 @@ const MintRune = () => {
                   <Image />
                 </Flex>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
-                  0.6912 ETH
+                  {nodeData
+                    ? convertAndDivide(nodeData[4], chainDecimal) * 86400
+                    : 0}{" "}
+                  ETH
                 </Text>
               </Flex>
               <Flex
@@ -227,7 +254,9 @@ const MintRune = () => {
                   BACHI Reward
                 </Text>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
+                  {/* {nodeData ? convertAndDivide(nodeData[4], chainDecimal) : 0}{" "} */}
                   {selectProduct?.reward}
+                  Bachi
                 </Text>
               </Flex>
               <Flex
@@ -238,7 +267,7 @@ const MintRune = () => {
                 <Text fontSize={"36px"} fontWeight={400} color={"#B2B2B2"}>
                   Quantity
                 </Text>
-                <Quantity />
+                <Quantity count={count} setCount={setCount} />
               </Flex>
               <Flex
                 alignItems={"center"}
@@ -249,7 +278,8 @@ const MintRune = () => {
                   Total Renting Price
                 </Text>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
-                  14.2 ETH
+                  {nodeData ? convertAndDivide(nodeData[2], chainDecimal) * count : 0}{" "}
+                  ETH
                 </Text>
               </Flex>
             </Flex>

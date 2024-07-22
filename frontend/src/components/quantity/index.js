@@ -1,14 +1,14 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 
-const Quantity = () => {
-  const [count, setCount] = useState(0);
+const Quantity = ({ count, setCount }) => {
+  // const [count, setCount] = useState(0);
 
   const increaseCount = () => {
-    setCount(count + 1);
+    if (count < 10) setCount(count + 1);
   };
   const reduceCount = () => {
-    setCount(count - 1);
+    if (count > 0) setCount(count - 1);
   };
   return (
     <Flex alignItems={"center"}>
@@ -21,8 +21,9 @@ const Quantity = () => {
         onClick={reduceCount}
         alignItems={"center"}
         justifyContent={"center"}
+        cursor={"pointer"}
       >
-        <Text color={"#000"} fontSize={"30px"} cursor={"pointer"} >
+        <Text color={"#000"} fontSize={"30px"} cursor={"pointer"}>
           -
         </Text>
       </Flex>
@@ -40,6 +41,7 @@ const Quantity = () => {
         onClick={increaseCount}
         alignItems={"center"}
         justifyContent={"center"}
+        cursor={"pointer"}
       >
         <Text color={"#000"} fontSize={"30px"} cursor={"pointer"}>
           +

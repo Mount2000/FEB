@@ -1,6 +1,6 @@
 const contract = {
   testnet: {
-    CONTRACT_ADDRESS: "0xe01be0163ACa91979C8Dd4e35eB8E6F950d8f9D3",
+    CONTRACT_ADDRESS: "0x6d4911aaAb67aD18b276B4ACa09BF47A993A5611",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -603,40 +603,6 @@ const contract = {
         type: "function",
       },
       {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_nodeTierId",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "referralId",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "metadata",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "discountCouponId",
-            type: "uint256",
-          },
-        ],
-        name: "buyNode",
-        outputs: [
-          {
-            internalType: "string",
-            name: "",
-            type: "string",
-          },
-        ],
-        stateMutability: "payable",
-        type: "function",
-      },
-      {
         inputs: [],
         name: "couponId",
         outputs: [
@@ -910,6 +876,45 @@ const contract = {
           },
         ],
         stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_nodeTierId",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "referralId",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "metadata",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "discountCouponId",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "quality",
+            type: "uint256",
+          },
+        ],
+        name: "multiBuyNode",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "payable",
         type: "function",
       },
       {
@@ -1195,24 +1200,6 @@ const contract = {
           },
         ],
         stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "nodeId",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "newOwner",
-            type: "address",
-          },
-        ],
-        name: "transferNode",
-        outputs: [],
-        stateMutability: "nonpayable",
         type: "function",
       },
       {
@@ -1351,7 +1338,7 @@ const contract = {
     ],
   },
   mainnet: {
-    CONTRACT_ADDRESS: "0xe01be0163ACa91979C8Dd4e35eB8E6F950d8f9D3",
+    CONTRACT_ADDRESS: "0x6d4911aaAb67aD18b276B4ACa09BF47A993A5611",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -1954,40 +1941,6 @@ const contract = {
         type: "function",
       },
       {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_nodeTierId",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "referralId",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "metadata",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "discountCouponId",
-            type: "uint256",
-          },
-        ],
-        name: "buyNode",
-        outputs: [
-          {
-            internalType: "string",
-            name: "",
-            type: "string",
-          },
-        ],
-        stateMutability: "payable",
-        type: "function",
-      },
-      {
         inputs: [],
         name: "couponId",
         outputs: [
@@ -2261,6 +2214,45 @@ const contract = {
           },
         ],
         stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_nodeTierId",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "referralId",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "metadata",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "discountCouponId",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "quality",
+            type: "uint256",
+          },
+        ],
+        name: "multiBuyNode",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "payable",
         type: "function",
       },
       {
@@ -2546,24 +2538,6 @@ const contract = {
           },
         ],
         stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "nodeId",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "newOwner",
-            type: "address",
-          },
-        ],
-        name: "transferNode",
-        outputs: [],
-        stateMutability: "nonpayable",
         type: "function",
       },
       {
@@ -2703,5 +2677,5 @@ const contract = {
   },
 };
 
-const bachi_token_contract = contract[process.env.REACT_APP_ENV || "testnet"];
-export default bachi_token_contract;
+const node_manager_contract = contract[process.env.REACT_APP_ENV || "testnet"];
+export default node_manager_contract;

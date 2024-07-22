@@ -18,6 +18,7 @@ import CustomSelect from "../../../../../components/customdropdown";
 const ProductDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
+  const [count, setCount] = useState(0);
 
   const handlePayNow = () => {
     setIsLoading(true);
@@ -253,7 +254,7 @@ const ProductDetail = () => {
                   >
                     QUANTITY
                   </Text>
-                  <Quantity />
+                  <Quantity count={count} setCount={setCount} />
                 </Flex>
               </Flex>
               <Flex

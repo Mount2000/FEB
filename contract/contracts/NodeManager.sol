@@ -460,22 +460,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         emit Sale(nodeOwner, _nodeTierId, 0, 0);
     }
 
-    function transferNode(uint256 nodeId, address newOwner)
-        public
-        whenNotPaused
-    {
-        address currentOwner = nodeIdUserLinks[nodeId];
-        require(currentOwner != address(0), "Node does not exist");
-        require(
-            currentOwner == msg.sender,
-            "Only the owner can transfer the node"
-        );
-        userNodeIdLinks[currentOwner].remove(nodeId);
-        userNodeIdLinks[newOwner].add(nodeId);
-        nodeIdUserLinks[nodeId] = newOwner;
-        stakingContract.transferStake(nodeId, currentOwner, newOwner);
-        emit NodeTransferred(currentOwner, newOwner, nodeId);
-    }
+   
 
     function withdraw(address payable to, uint256 value) public onlyOwner {
         require(

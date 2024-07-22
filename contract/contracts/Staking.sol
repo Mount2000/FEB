@@ -168,19 +168,7 @@ contract Staking is Pausable, AccessControl, Ownable {
         emit Staked(staker, stakeId, _nodeId, currentTimestamp);
     }
 
-    function transferStake(
-        uint256 _nodeId,
-        address previousOwner,
-        address newOwner
-    ) external onlyNodeManager whenNotPaused {
-        uint256 _stakeId = nodeIdStakeIdLinks[_nodeId];
-        if (_stakeId > 0 && userStakes[previousOwner].contains(_stakeId)) {
-            userStakes[previousOwner].remove(_stakeId);
-            userStakes[newOwner].add(_stakeId);
-            stakeIdUserLinks[_stakeId] = newOwner;
-            emit NodeTransferred(previousOwner, newOwner, _nodeId);
-        }
-    }
+   
 
     function claimReward(
         uint256 _stakeId,

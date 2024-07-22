@@ -168,7 +168,27 @@ contract Staking is Pausable, AccessControl, Ownable {
         emit Staked(staker, stakeId, _nodeId, currentTimestamp);
     }
 
-   
+    function unstake(uint256 _stakeId) public whenNotPaused {
+        address staker = msg.sender;
+        uint256 nodeId = stakeInfors[_stakeId].nodeId;
+        require(
+            stakeIdUserLinks[_stakeId] == staker,
+            "Not the owner of this stake"
+        );
+        require(
+            nodeIdStakeIdLinks[nodeId] == _stakeId,
+            "Node is not staked with this stakeId"
+        );
+
+        delete stakeInfors[_stakeId];
+        userStakes[staker].remove(_stakeId);
+        nodeIdStakeIdLinks[nodeId] = 0;
+        stakeIdUserLinks[_stakeId] = address(0);
+
+        bachiNodeContract.transferFrom(address(this), staker, nodeId);
+
+        emit Staked(staker, _stakeId, nodeId, block.timestamp);
+    }
 
     function claimReward(
         uint256 _stakeId,

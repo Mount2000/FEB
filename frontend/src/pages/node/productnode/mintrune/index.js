@@ -16,6 +16,7 @@ import node_manager_contract from "../../../../utils/contracts/node_manager_cont
 import { useReadContract, useWriteContract } from "wagmi";
 import { config } from "../../../../components/wallets/config";
 import { getBalance, getChainId, getChains } from "@wagmi/core";
+import { formatNumDynDecimal } from "../../../../utils";
 
 const MintRune = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const MintRune = () => {
   const chainId = getChainId(config);
   const currentChain = chains.find((chain) => chain.id === chainId);
   const chainDecimal = currentChain?.nativeCurrency?.decimals;
+  const chainSymbol = currentChain?.nativeCurrency?.symbol;
   const [nodeId, setNodeId] = useState(1);
   const [count, setCount] = useState(0);
   const nodeManagerContract = {
@@ -42,21 +44,21 @@ const MintRune = () => {
       nameproduct: "Core i5",
       image: productCoreI5,
       power: "10 GH/s",
-      reward: "50.000 ETH",
+      reward: "50.000",
     },
     {
       tierId: 2,
       nameproduct: "Core i7",
       image: productCoreI7,
       power: "100 GH/s",
-      reward: "100.000 ETH",
+      reward: "100.000",
     },
     {
       tierId: 3,
       nameproduct: "Core i9",
       image: productCoreI9,
       power: "1000 GH/s",
-      reward: "150.000 ETH",
+      reward: "150.000",
     },
   ];
   const [selectProduct, setselectProduct] = useState(products[0]);
@@ -69,12 +71,9 @@ const MintRune = () => {
 
   //   navigate(tierUrl, { state: { selectedProduct: products } });
   // };
+  console.log({ currentChain });
   function convertAndDivide(data, chainDecimal) {
-    const value = data
-      ? typeof data === "bigint"
-        ? Number(data)
-        : data
-      : 0;
+    const value = data ? (typeof data === "bigint" ? Number(data) : data) : 0;
     return value / 10 ** chainDecimal;
   }
 
@@ -197,7 +196,12 @@ const MintRune = () => {
                   Rent Price
                 </Text>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
-                  {nodeData ? convertAndDivide(nodeData[2], chainDecimal) : 0} ETH
+                  {nodeData
+                    ? formatNumDynDecimal(
+                        convertAndDivide(nodeData[2], chainDecimal)
+                      )
+                    : 0}{" "}
+                  {chainSymbol}
                 </Text>
               </Flex>
               <Flex
@@ -217,9 +221,11 @@ const MintRune = () => {
                 </Flex>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                   {nodeData
-                    ? convertAndDivide(nodeData[4], chainDecimal) * 86400 * 30
+                    ? formatNumDynDecimal(
+                        convertAndDivide(nodeData[4], chainDecimal) * 86400 * 30
+                      )
                     : 0}{" "}
-                  ETH
+                  {chainSymbol}
                 </Text>
               </Flex>
               <Flex
@@ -240,9 +246,11 @@ const MintRune = () => {
                 </Flex>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                   {nodeData
-                    ? convertAndDivide(nodeData[4], chainDecimal) * 86400
+                    ? formatNumDynDecimal(
+                        convertAndDivide(nodeData[4], chainDecimal) * 86400
+                      )
                     : 0}{" "}
-                  ETH
+                  {chainSymbol}
                 </Text>
               </Flex>
               <Flex
@@ -254,9 +262,8 @@ const MintRune = () => {
                   BACHI Reward
                 </Text>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
-                  {/* {nodeData ? convertAndDivide(nodeData[4], chainDecimal) : 0}{" "} */}
-                  {selectProduct?.reward}
-                  Bachi
+                  {/* {nodeData ? formatNumDynDecimal(convertAndDivide(nodeData[4], chainDecimal)) : 0}{" "} */}
+                  {selectProduct?.reward} Bachi
                 </Text>
               </Flex>
               <Flex
@@ -278,8 +285,12 @@ const MintRune = () => {
                   Total Renting Price
                 </Text>
                 <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
-                  {nodeData ? convertAndDivide(nodeData[2], chainDecimal) * count : 0}{" "}
-                  ETH
+                  {nodeData
+                    ? formatNumDynDecimal(
+                        convertAndDivide(nodeData[2], chainDecimal) * count
+                      )
+                    : 0}{" "}
+                  {chainSymbol}
                 </Text>
               </Flex>
             </Flex>

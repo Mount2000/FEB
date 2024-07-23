@@ -1,7 +1,7 @@
 import { Box} from "@chakra-ui/react";
 import React from "react";
 
-const CommonButton = ({ children, ...props }) => {
+const CommonButton = ({children, ...props }) => {
   return (
     <Box
       {...props}

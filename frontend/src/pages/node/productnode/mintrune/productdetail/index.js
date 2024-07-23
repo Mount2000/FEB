@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Flex, Grid, Image, Input, Select, Text } from "@chakra-ui/react";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 //import component
 import SectionContainer from "../../../../../components/container";
 import CommonButton from "../../../../../components/button/commonbutton";
@@ -11,29 +11,45 @@ import Message from "../../../../../components/message";
 import backgroundNode from "../../../../../assets/img/node/background-node.png";
 import backgroundReferral from "../../../../../assets/img/node/background-referral.png";
 import iconNodedetail from "../../../../../assets/img/node/icon-node-detail.png";
-import productCoreI5 from "../../../../../assets/img/node/product-corei5.png";
+import iconSuccess from "../../../../../assets/img/node/icon-message-success.png";
+import iconError from "../../../../../assets/img/node/icon-message-error.png";
+// import productCoreI5 from "../../../../../assets/img/node/product-corei5.png";
 import iconReferral from "../../../../../assets/img/node/icon-referral-node.png";
+import iconFrame from "../../../../../assets/img/node/icon-node-Frame.png";
 import CustomSelect from "../../../../../components/customdropdown";
+import { flare } from "viem/chains";
 
 const ProductDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
-
+  // turn on message
   const handlePayNow = () => {
     setIsLoading(true);
     setPaymentStatus(null);
+    // console.log(isLoading, "isLoading");
 
-    // Giả sử gọi API thanh toán
     setTimeout(() => {
-      setIsLoading(false);
-      // Giả sử kết quả thanh toán thành công
-      const success = Math.random() > 0.5; // Giả lập kết quả thanh toán ngẫu nhiên
+      setIsLoading(true);
+      const success = 3 > 0.5; // Kết quả random để check
       if (success) {
         setPaymentStatus("success");
       } else {
         setPaymentStatus("failure");
       }
     }, 3000);
+  };
+  //
+  useEffect(() => {
+    if (isLoading == true || paymentStatus) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isLoading, paymentStatus]);
+  // close message
+  const handleCloseMessage = () => {
+    setIsLoading(false);
+    setPaymentStatus(null);
   };
 
   const location = useLocation();
@@ -321,7 +337,7 @@ const ProductDetail = () => {
                   display={"flex"}
                   alignItems={"center"}
                   justifyContent={"center"}
-                  onClick={() => handlePayNow()}
+                  onClick={handlePayNow}
                 >
                   <Text textAlign={"center"} fontSize={"32px"} fontWeight={500}>
                     PAY NOW
@@ -466,7 +482,135 @@ const ProductDetail = () => {
           </Flex>
         </Flex>
       </SectionContainer>
-      <Message />
+      <Message isVisible={isLoading && paymentStatus === null} onClose={handleCloseMessage}>
+        <Flex flexDirection={"column"} alignItems={"center"}>
+          <Image src={iconFrame} width={"250px"} />
+          <Text
+            fontSize={"24px"}
+            fontWeight={400}
+            fontFamily="var(--font-text-main)"
+            marginTop={"50px"}
+          >
+            Transaction is underway...
+          </Text>
+        </Flex>
+      </Message>
+      <Message
+        isVisible={isLoading && paymentStatus === "success"}
+        onClose={handleCloseMessage}
+      >
+        <Flex flexDirection={"column"} alignItems={"center"} gap={"30px"}>
+          <Image src={iconSuccess} />
+          <Text
+            fontSize={"28px"}
+            fontWeight={400}
+            fontFamily="var(--font-text-main)"
+          >
+            You have just unlocked a new world with this key!
+          </Text>
+          <Flex
+            alignItems={"center"}
+            justifyContent={"space-between"}
+            gap={"14px"}
+          >
+            <Text
+              fontSize={"28px"}
+              fontWeight={400}
+              fontFamily="var(--font-text-main)"
+            >
+              Link Referral:
+            </Text>
+            <Flex
+              alignItems={"center"}
+              gap={"10px"}
+              padding={"10px"}
+              border={"1px solid #FCDDEC"}
+            >
+              <Text fontSize={"24px"} fontWeight={300}>
+                http://bachi.swap.io/Bachi-Taiko-Swap?referral-code=153-2...
+              </Text>
+              <Image src={iconNodedetail} />
+            </Flex>
+          </Flex>
+          <Flex
+            alignItems={"center"}
+            width={"100%"}
+            gap={"30px"}
+            justifyContent={"space-between"}
+          >
+            <CommonButton
+              backgroundColor="var(--color-main)"
+              width="50%"
+              padding="10px"
+              display="flex"
+              justifyContent="center"
+            >
+              <Text fontSize={"20px"} fontWeight={500}>
+                Pay more and enjoy a moment
+              </Text>
+            </CommonButton>
+            <CommonButton
+              backgroundColor="#FFF"
+              width="50%"
+              padding="10px"
+              display="flex"
+              justifyContent="center"
+            >
+              <Text color={"#000"} fontSize={"20px"} fontWeight={500}>
+                History Let’s Goooo
+              </Text>
+            </CommonButton>
+          </Flex>
+          <Link>
+            <Text
+              fontSize="20px"
+              color="var(--color-main)"
+              fontWeight={500}
+              textDecoration={"underline"}
+            >
+              View on Taiko
+            </Text>
+          </Link>
+        </Flex>
+      </Message>
+
+      <Message
+        isVisible={isLoading && paymentStatus === "failure"}
+        onClose={handleCloseMessage}
+      >
+        <Flex flexDirection={"column"} alignItems={"center"} gap={"10px"}>
+          <Image src={iconError} />
+          <Text
+            fontSize={"24px"}
+            fontFamily="var(--font-text-main)"
+            fontWeight={400}
+          >
+            Transaction failed.
+          </Text>
+          <CommonButton
+            backgroundColor="#FFF"
+            width={"100%"}
+            display={"flex"}
+            justifyContent={"center"}
+            padding={"10px"}
+          >
+            <Text color={"#000"} fontSize={"20px"} fontWeight={600}>
+              Try again
+            </Text>
+          </CommonButton>
+        </Flex>
+      </Message>
+      {isLoading &&(
+        <Box 
+          position="fixed"
+          top="0"
+          left="0"
+          width="100vw"
+          height="100vh"
+          backgroundColor="rgba(0, 0, 0, 0.5)"
+          zIndex="999"
+        />
+      )}
     </>
   );
 };

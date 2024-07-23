@@ -30,7 +30,7 @@ const ProductDetail = () => {
 
     setTimeout(() => {
       setIsLoading(true);
-      const success = 3 > 0.5; // Kết quả random để check
+      const success = 0 > 0.5; // Kết quả random để check
       if (success) {
         setPaymentStatus("success");
       } else {

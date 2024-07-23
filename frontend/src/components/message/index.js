@@ -4,19 +4,19 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 //import component
 
 //import image
-import iconFrame from "../../assets/img/node/icon-node-Frame.png";
+
 import CloseButton from "../button/CloseButton";
 
-const Message = () => {
+const Message = ({ isVisible, onClose, children }) => {
+  if (!isVisible) return null;
   return (
     <Box
-      display={"none"}
-      position="absolute"
+      position="fixed"
       top="50%"
       left="50%"
       transform="translate(-50%, -50%)"
       border="1px solid #FCDDEC"
-      width={"30%"}
+      zIndex={"1000"}
       sx={{
         backdropFilter: "blur(10px) !important",
         clipPath:
@@ -51,18 +51,14 @@ const Message = () => {
       >
         <Box width={"100%"} marginBottom={"31px"}>
           <Flex justifyContent={"flex-end"}>
-            <CloseButton>x</CloseButton>
+            <CloseButton onClick={onClose}>
+              <Text fontSize="30px" color={"#000"} fontWeight={500}>
+                X
+              </Text>
+            </CloseButton>
           </Flex>
         </Box>
-        <Image src={iconFrame} width={"250px"} />
-        <Text
-          fontSize={"24px"}
-          fontWeight={400}
-          fontFamily="var(--font-text-main)"
-          marginTop={"50px"}
-        >
-          Transaction is underway...{" "}
-        </Text>
+        {children}
       </Flex>
     </Box>
   );

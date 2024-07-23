@@ -16,6 +16,7 @@ const Message = ({ isVisible, onClose, children }) => {
       left="50%"
       transform="translate(-50%, -50%)"
       border="1px solid #FCDDEC"
+      minW={{ base: "600px" }}
       zIndex={"1000"}
       sx={{
         backdropFilter: "blur(10px) !important",

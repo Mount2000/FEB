@@ -17,11 +17,16 @@ import iconError from "../../../../../assets/img/node/icon-message-error.png";
 import iconReferral from "../../../../../assets/img/node/icon-referral-node.png";
 import iconFrame from "../../../../../assets/img/node/icon-node-Frame.png";
 import CustomSelect from "../../../../../components/customdropdown";
-import { flare } from "viem/chains";
+import { selectBillNode } from "../../../../../store/slices/billNodeSlice";
+import { useSelector } from "react-redux";
+import { formatNumDynDecimal } from "../../../../../utils";
 
 const ProductDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
+  const [count, setCount] = useState(0);
+  const billNode = useSelector(selectBillNode);
+  console.log({ billNode });
 
   const handlePayNow = () => {
     setIsLoading(true);
@@ -300,7 +305,7 @@ const ProductDetail = () => {
                       lineHeight={"normal"}
                       color={"#B2B2B2"}
                     >
-                      6.15 ETH per key
+                      {formatNumDynDecimal(billNode?.price)} ETH per key
                     </Text>
                   </Flex>
                   <CustomSelect />
@@ -318,7 +323,7 @@ const ProductDetail = () => {
                     Pay
                   </Text>
                   <Text fontSize={"36"} fontWeight={600}>
-                    6.15 ETH
+                    {formatNumDynDecimal(billNode?.price)} ETH
                   </Text>
                 </Flex>
               </Flex>
@@ -482,7 +487,10 @@ const ProductDetail = () => {
           </Flex>
         </Flex>
       </SectionContainer>
-      <Message isVisible={isLoading && paymentStatus === null} onClose={handleCloseMessage}>
+      <Message
+        isVisible={isLoading && paymentStatus === null}
+        onClose={handleCloseMessage}
+      >
         <Flex flexDirection={"column"} alignItems={"center"}>
           <Image src={iconFrame} width={"250px"} />
           <Text
@@ -600,8 +608,8 @@ const ProductDetail = () => {
           </CommonButton>
         </Flex>
       </Message>
-      {isLoading &&(
-        <Box 
+      {isLoading && (
+        <Box
           position="fixed"
           top="0"
           left="0"

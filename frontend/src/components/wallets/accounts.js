@@ -7,7 +7,7 @@ import {
   useEnsAvatar,
   useEnsName,
 } from "wagmi";
-import { getBalance, getChainId, getChains } from "@wagmi/core";
+import { getBalance, getChainId, getChains, switchChain } from "@wagmi/core";
 import { config } from "./config";
 import { formatBalacne } from "../../utils";
 import { AddressCopier } from "../addressCopier";
@@ -37,16 +37,6 @@ export function Account() {
   console.log({ currentChain, chains });
 
   /** Example  */
-  /** Example query func */
-  const { data: nodeManagerContractAddress, error: getErr } = useReadContract({
-    address: bachi_node_contract.CONTRACT_ADDRESS,
-    abi: bachi_node_contract.CONTRACT_ABI,
-    functionName: "nodeManagerAddress",
-    args: [],
-  });
-
-  console.log({ nodeManagerContractAddress, getErr });
-
   /** Example tx func */
   const { data: hash, writeContract, error: setErr } = useWriteContract();
   const setNodeManagerAddress = async () => {
@@ -62,6 +52,11 @@ export function Account() {
   };
 
   /*******************/
+
+  const handleSwitchChange = async (event) => {
+    const { value } = event?.target;
+    await switchChain(config, { chainId: Number(value) });
+  };
   return (
     <Flex
       w={"100%"}
@@ -90,7 +85,9 @@ export function Account() {
         my="12px"
         w="250px"
         bgColor={"#FCDDEC"}
-        onClick={() => disconnect()}
+        onClick={() => {
+          window.open(currentChain?.blockExplorers?.default?.url, "_blank");
+        }}
       >
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
           <Text color={"black"} fontSize={"24px"} fontWeight={"500"}>
@@ -101,7 +98,7 @@ export function Account() {
           </Box>
         </Flex>
       </ActionButton>
-      <Select borderRadius={"0px"} size={"lg"}>
+      <Select borderRadius={"0px"} size={"lg"} defaultValue={currentChain?.id} onChange={handleSwitchChange}>
         {chains?.map((chain) => (
           <option value={chain?.id}>{chain?.name}</option>
         ))}
@@ -116,7 +113,7 @@ export function Account() {
           </Box>
         </Flex>
       </ActionButton>
-      <ActionButton w={"100%"} onClick={() => disconnect()}>
+      <ActionButton w={"100%"}>
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
           <Text fontSize={"24px"} fontWeight={"500"}>
             Activity

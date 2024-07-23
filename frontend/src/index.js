@@ -9,6 +9,8 @@ import { WagmiProvider, useAccount } from "wagmi";
 import { config } from "./components/wallets/config";
 import { ModalProvider } from "./contexts/useModal";
 import ConnectWalletModal from "./components/wallets/ConnectWallet";
+import { Provider as ReduxProvider } from "react-redux";
+import store from "./store/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient();
@@ -17,10 +19,12 @@ root.render(
     <ChakraProvider theme={customTheme}>
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
-          <ModalProvider>
-            <App />
-            <ConnectWalletModal />
-          </ModalProvider>
+          <ReduxProvider store={store}>
+            <ModalProvider>
+              <App />
+              <ConnectWalletModal />
+            </ModalProvider>
+          </ReduxProvider>
         </QueryClientProvider>
       </WagmiProvider>
     </ChakraProvider>

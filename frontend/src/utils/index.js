@@ -36,3 +36,18 @@ export const formatNumDynDecimal = (num = 0, dec = 4) => {
     return num?.toString();
   }
 };
+
+export const convertAndDivide = (data, chainDecimal) => {
+  const value = data ? (typeof data === "bigint" ? Number(data) : data) : 0;
+  return value / 10 ** chainDecimal;
+};
+
+export const isReferralCode = (code) => {
+  const regex = /^BachiSwap_\d+_\d+$/;
+  return regex.test(code);
+};
+
+export const formatBachiCode = (code) => {
+  const codeArr = code.split("_");
+  return Number(codeArr[1]);
+};

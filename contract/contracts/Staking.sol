@@ -17,8 +17,9 @@ contract Staking is Pausable, AccessControl, Ownable {
     BachiToken private tokenContract;
     NodeManager private nodeManagerContract;
 
+    uint64 public maxClaimNodeIds;
     uint256 public bachiMinClaimAmount = 0;
-    uint256 public taikoMinClaimAmount = 3 * (10 ** 18);
+    uint256 public taikoMinClaimAmount = 3 * (10**18);
     uint256 public stakeId;
 
     struct StakeInformation {
@@ -110,9 +111,10 @@ contract Staking is Pausable, AccessControl, Ownable {
         return address(bachiNodeContract);
     }
 
-    function setNodeContractAddress(
-        address _bachiNodeContract
-    ) public onlyRole(ADMIN_ROLE) {
+    function setNodeContractAddress(address _bachiNodeContract)
+        public
+        onlyRole(ADMIN_ROLE)
+    {
         bachiNodeContract = BachiNode(_bachiNodeContract);
     }
 
@@ -120,9 +122,10 @@ contract Staking is Pausable, AccessControl, Ownable {
         return address(tokenContract);
     }
 
-    function setTokenContractAddress(
-        address _tokenContract
-    ) public onlyRole(ADMIN_ROLE) {
+    function setTokenContractAddress(address _tokenContract)
+        public
+        onlyRole(ADMIN_ROLE)
+    {
         tokenContract = BachiToken(_tokenContract);
     }
 
@@ -130,22 +133,29 @@ contract Staking is Pausable, AccessControl, Ownable {
         return address(nodeManagerContract);
     }
 
-    function setNodeManagerContractAddress(
-        address _nodeManagerContract
-    ) public onlyRole(ADMIN_ROLE) {
+    function setNodeManagerContractAddress(address _nodeManagerContract)
+        public
+        onlyRole(ADMIN_ROLE)
+    {
         nodeManagerContract = NodeManager(_nodeManagerContract);
     }
 
-    function setBachiMinClaimAmount(
-        uint256 _bachiMinClaimAmount
-    ) public onlyRole(ADMIN_ROLE) {
+    function setBachiMinClaimAmount(uint256 _bachiMinClaimAmount)
+        public
+        onlyRole(ADMIN_ROLE)
+    {
         bachiMinClaimAmount = _bachiMinClaimAmount;
     }
 
-    function setTaikoMinClaimAmount(
-        uint256 _taikoMinClaimAmount
-    ) public onlyRole(ADMIN_ROLE) {
+    function setTaikoMinClaimAmount(uint256 _taikoMinClaimAmount)
+        public
+        onlyRole(ADMIN_ROLE)
+    {
         taikoMinClaimAmount = _taikoMinClaimAmount;
+    }
+
+    function setmaxClaimNodeIds(uint64 _leght) public onlyRole(ADMIN_ROLE) {
+        maxClaimNodeIds = _leght;
     }
 
     function stake(uint256 _nodeId) public onlyNftOwner(_nodeId) whenNotPaused {
@@ -197,77 +207,6 @@ contract Staking is Pausable, AccessControl, Ownable {
         emit Staked(staker, _stakeId, nodeId, block.timestamp);
     }
 
-     function claimAllRewards(uint256[] memory arr, uint8 claimMode)
-        public
-        whenNotPaused
-    {
-        uint256 totalBachiRewardAmount = 0;
-        uint256 totalTaikoRewardAmount = 0;
-        uint256 currentTimestamp = block.timestamp;
-
-        for (uint256 i = 0; i < arr.length; i++) {
-            uint256 _stakeId = arr[i];
-            StakeInformation memory stakeInfo = stakeInfors[_stakeId];
-            uint256 _nodeId = stakeInfo.nodeId;
-            address staker = nodeManagerContract.nodeIdUserLinks(_nodeId);
-            require(
-                staker == msg.sender,
-                "Unauthorized: Only staker can claim"
-            );
-
-            (
-                uint256 bachiRewardAmount,
-                uint256 taikoRewardAmount
-            ) = getRewardAmounts(_nodeId);
-
-            if (claimMode == 0) {
-                require(
-                    bachiRewardAmount >= bachiMinClaimAmount,
-                    "Claim amount is too small"
-                );
-                totalBachiRewardAmount += bachiRewardAmount;
-                stakeInfors[_stakeId].bachiStakeStartTime = currentTimestamp;
-                rewardClaimedInfors[msg.sender].bachiRewardAmount += bachiRewardAmount;
-            } else if (claimMode == 1) {
-                require(
-                    taikoRewardAmount >= taikoMinClaimAmount,
-                    "Claim amount is too small"
-                );
-                require(
-                    address(this).balance >= taikoRewardAmount,
-                    "Not enough balance"
-                );
-                totalTaikoRewardAmount += taikoRewardAmount;
-                stakeInfors[_stakeId].taikoStakeStartTime = currentTimestamp;
-                rewardClaimedInfors[msg.sender].taikoRewardAmount += taikoRewardAmount;
-            } else {
-                require(
-                    bachiRewardAmount >= bachiMinClaimAmount,
-                    "Claim amount is too small"
-                );
-                require(
-                    taikoRewardAmount >= taikoMinClaimAmount,
-                    "Claim amount is too small"
-                );
-                totalBachiRewardAmount += bachiRewardAmount;
-                totalTaikoRewardAmount += taikoRewardAmount;
-                stakeInfors[_stakeId].bachiStakeStartTime = currentTimestamp;
-                stakeInfors[_stakeId].taikoStakeStartTime = currentTimestamp;
-                rewardClaimedInfors[msg.sender].bachiRewardAmount += bachiRewardAmount;
-                rewardClaimedInfors[msg.sender].taikoRewardAmount += taikoRewardAmount;
-            }
-        }
-
-        emit Claimed(
-            msg.sender,
-            0,
-            currentTimestamp,
-            totalBachiRewardAmount,
-            totalTaikoRewardAmount
-        );
-    }
-
-
     function claimReward(uint256 _nodeId, uint8 claimMode)
         public
         whenNotPaused
@@ -276,14 +215,17 @@ contract Staking is Pausable, AccessControl, Ownable {
         StakeInformation memory stakeInfo = stakeInfors[_stakeId];
         address staker = nodeManagerContract.nodeIdUserLinks(_nodeId);
         require(staker == msg.sender, "Unauthorized: Only staker can claim");
-        require (_stakeId > 0,"stakeid does not exist");
+        require(_stakeId > 0, "stakeid does not exist");
         uint256 currentTimestamp = block.timestamp;
-        uint256 bachiTotalTimeStaking = currentTimestamp - stakeInfo.bachiStakeStartTime;
-        uint256 taikoTotalTimeStaking = currentTimestamp - stakeInfo.taikoStakeStartTime;
+        uint256 bachiTotalTimeStaking = currentTimestamp -
+            stakeInfo.bachiStakeStartTime;
+        uint256 taikoTotalTimeStaking = currentTimestamp -
+            stakeInfo.taikoStakeStartTime;
         uint256 bachiRewardAmount = 0;
         uint256 taikoRewardAmount = 0;
 
-        (uint256 farmSpeedBachi, uint256 farmSpeedTaiko) = nodeManagerContract.getFarmSpeed(_nodeId);
+        (uint256 farmSpeedBachi, uint256 farmSpeedTaiko) = nodeManagerContract
+            .getFarmSpeed(_nodeId);
 
         if (claimMode == 0) {
             bachiRewardAmount = farmSpeedBachi * bachiTotalTimeStaking;
@@ -293,7 +235,8 @@ contract Staking is Pausable, AccessControl, Ownable {
             );
             tokenContract.mint(staker, bachiRewardAmount);
             stakeInfors[stakeId].bachiStakeStartTime = currentTimestamp;
-            rewardClaimedInfors[msg.sender].bachiRewardAmount += bachiRewardAmount;
+            rewardClaimedInfors[msg.sender]
+                .bachiRewardAmount += bachiRewardAmount;
         } else if (claimMode == 1) {
             taikoRewardAmount = farmSpeedTaiko * taikoTotalTimeStaking;
             require(
@@ -326,8 +269,10 @@ contract Staking is Pausable, AccessControl, Ownable {
             require(sent, "Failed to send Ether");
             stakeInfors[stakeId].bachiStakeStartTime = currentTimestamp;
             stakeInfors[stakeId].taikoStakeStartTime = currentTimestamp;
-            rewardClaimedInfors[msg.sender].taikoRewardAmount += taikoRewardAmount;
-            rewardClaimedInfors[msg.sender].bachiRewardAmount += bachiRewardAmount;
+            rewardClaimedInfors[msg.sender]
+                .taikoRewardAmount += taikoRewardAmount;
+            rewardClaimedInfors[msg.sender]
+                .bachiRewardAmount += bachiRewardAmount;
         }
 
         emit Claimed(
@@ -339,32 +284,124 @@ contract Staking is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getRewardAmounts(
-        uint256 _nodeId
-    )
+    
+    function claimAllRewards(uint256[] memory nodeids, uint8 claimMode)
+        public
+        whenNotPaused
+    {
+        require(
+            nodeids.length <= maxClaimNodeIds,
+            "nodeidsay length exceeds the allowed limit"
+        );
+
+        uint256 totalBachiRewardAmount = 0;
+        uint256 totalTaikoRewardAmount = 0;
+        uint256 currentTimestamp = block.timestamp;
+
+        for (uint256 i = 0; i < nodeids.length; i++) {
+            uint256 _nodeId = nodeids[i];
+            uint256 _stakeId = nodeIdStakeIdLinks[_nodeId];
+            address staker = nodeManagerContract.nodeIdUserLinks(_nodeId);
+            require(
+                staker == msg.sender,
+                "Unauthorized: Only staker can claim"
+            );
+
+            (
+                uint256 bachiRewardAmount,
+                uint256 taikoRewardAmount
+            ) = getRewardAmounts(nodeids);
+
+            if (claimMode == 0) {
+                require(
+                    bachiRewardAmount >= bachiMinClaimAmount,
+                    "Claim amount is too small"
+                );
+                totalBachiRewardAmount += bachiRewardAmount;
+                stakeInfors[_stakeId].bachiStakeStartTime = currentTimestamp;
+                rewardClaimedInfors[msg.sender]
+                    .bachiRewardAmount += bachiRewardAmount;
+            } else if (claimMode == 1) {
+                require(
+                    taikoRewardAmount >= taikoMinClaimAmount,
+                    "Claim amount is too small"
+                );
+                require(
+                    address(this).balance >= taikoRewardAmount,
+                    "Not enough balance"
+                );
+                totalTaikoRewardAmount += taikoRewardAmount;
+                stakeInfors[_stakeId].taikoStakeStartTime = currentTimestamp;
+                rewardClaimedInfors[msg.sender]
+                    .taikoRewardAmount += taikoRewardAmount;
+            } else {
+                require(
+                    bachiRewardAmount >= bachiMinClaimAmount,
+                    "Claim amount is too small"
+                );
+                require(
+                    taikoRewardAmount >= taikoMinClaimAmount,
+                    "Claim amount is too small"
+                );
+                totalBachiRewardAmount += bachiRewardAmount;
+                totalTaikoRewardAmount += taikoRewardAmount;
+                stakeInfors[_stakeId].bachiStakeStartTime = currentTimestamp;
+                stakeInfors[_stakeId].taikoStakeStartTime = currentTimestamp;
+                rewardClaimedInfors[msg.sender]
+                    .bachiRewardAmount += bachiRewardAmount;
+                rewardClaimedInfors[msg.sender]
+                    .taikoRewardAmount += taikoRewardAmount;
+            }
+        }
+
+        emit Claimed(
+            msg.sender,
+            0,
+            currentTimestamp,
+            totalBachiRewardAmount,
+            totalTaikoRewardAmount
+        );
+    }
+
+    function getRewardAmounts(uint256[] memory _nodeIds)
         public
         view
-        returns (uint256 bachiRewardAmount, uint256 taikoRewardAmount)
+        returns (uint256 totalBachiRewardAmount, uint256 totalTaikoRewardAmount)
     {
-        uint256 _stakeId = nodeIdStakeIdLinks[_nodeId];
-        StakeInformation memory stakeInfo = stakeInfors[_stakeId];
-        uint256 currentTimestamp = block.timestamp;
-        uint256 bachiTotalTimeStaking = currentTimestamp - stakeInfo.bachiStakeStartTime;
-        uint256 taikoTotalTimeStaking = currentTimestamp - stakeInfo.taikoStakeStartTime;
-        (uint256 farmSpeedBachi, uint256 farmSpeedTaiko) = nodeManagerContract.getFarmSpeed(stakeInfo.nodeId);
-        bachiRewardAmount = farmSpeedBachi * bachiTotalTimeStaking;
-        taikoRewardAmount = farmSpeedTaiko * taikoTotalTimeStaking;
-        return (bachiRewardAmount, taikoRewardAmount);
+        uint256 totalBachiReward = 0;
+        uint256 totalTaikoReward = 0;
+
+        for (uint256 i = 0; i < _nodeIds.length; i++) {
+            uint256 _nodeId = _nodeIds[i];
+            uint256 _stakeId = nodeIdStakeIdLinks[_nodeId];
+            StakeInformation memory stakeInfo = stakeInfors[_stakeId];
+            uint256 currentTimestamp = block.timestamp;
+            uint256 bachiTotalTimeStaking = currentTimestamp -
+                stakeInfo.bachiStakeStartTime;
+            uint256 taikoTotalTimeStaking = currentTimestamp -
+                stakeInfo.taikoStakeStartTime;
+            (
+                uint256 farmSpeedBachi,
+                uint256 farmSpeedTaiko
+            ) = nodeManagerContract.getFarmSpeed(stakeInfo.nodeId);
+            uint256 bachiRewardAmount = farmSpeedBachi * bachiTotalTimeStaking;
+            uint256 taikoRewardAmount = farmSpeedTaiko * taikoTotalTimeStaking;
+            totalBachiReward += bachiRewardAmount;
+            totalTaikoReward += taikoRewardAmount;
+        }
+
+        return (totalBachiReward, totalTaikoReward);
     }
 
     function getTotalNodeStaked(address staker) public view returns (uint256) {
         return userStakes[staker].length();
     }
 
-    function getStakeIdByIndex(
-        address staker,
-        uint256 index
-    ) public view returns (uint256) {
+    function getStakeIdByIndex(address staker, uint256 index)
+        public
+        view
+        returns (uint256)
+    {
         require(index < userStakes[staker].length(), "Index out of bounds");
         return userStakes[staker].at(index);
     }

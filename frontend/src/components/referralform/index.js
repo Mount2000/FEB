@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Flex, Input, Button, Text } from "@chakra-ui/react";
 import CustomButton from "../button";
 
-const ReferralCodeForm = ({ title, value, onChange, onClick }) => {
+const ReferralCodeForm = ({ title, value, onChange, onClick, error }) => {
   return (
     <Box
       width="100%"
@@ -55,6 +55,11 @@ const ReferralCodeForm = ({ title, value, onChange, onClick }) => {
           </CustomButton>
         </Flex>
       </Flex>
+      {error && (
+        <Text color="red.500" mt="4">
+          {error}
+        </Text>
+      )}
     </Box>
   );
 };

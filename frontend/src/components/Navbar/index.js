@@ -48,6 +48,7 @@ const Navbar = () => {
                 lineHeight={{ base: "19.3px", md: "48.24px" }}
                 fontFamily="var(--font-heading-main)"
                 fontWeight={400}
+                
               >
                 BachiSwap
               </Text>

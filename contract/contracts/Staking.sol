@@ -287,6 +287,7 @@ contract Staking is Pausable, AccessControl, Ownable {
         (uint256 farmSpeedBachi, uint256 farmSpeedTaiko) = nodeManagerContract.getFarmSpeed(_nodeId);
         bachiRewardAmount = farmSpeedBachi * bachiTotalTimeStaking;
         taikoRewardAmount = farmSpeedTaiko * taikoTotalTimeStaking;
+         return (bachiRewardAmount, taikoRewardAmount);
     }
 
     function getTotalNodeStaked(address staker) public view returns (uint256) {

@@ -28,6 +28,8 @@ import {
   formatBachiCode,
   formatNumDynDecimal,
   isReferralCode,
+  isDiscountCode,
+  isDefaultAddress,
 } from "../../../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -45,6 +47,8 @@ import iconSuccess from "../../../../assets/img/node/icon-message-success.png";
 import iconError from "../../../../assets/img/node/icon-message-error.png";
 import { ERROR, FAIURE, PENDING, SUCCESS } from "../../../../utils/mesages";
 import ReferralCodeForm from "../../../../components/referralform";
+
+import { fromBlobs } from "viem";
 
 const MintRune = () => {
   const navigate = useNavigate();
@@ -71,9 +75,64 @@ const MintRune = () => {
 
   const [referralCode, setReferralCode] = useState("BACHISWAP_xxx_xxxx");
   const [referralCodeValue, setReferralCodeValue] = useState("");
+  const [discountCodeValue, setDiscountCodeValue] = useState("");
   const [referralId, setReferralId] = useState(0);
   const [discountCouponIdId, setDiscountCouponIdId] = useState(0);
+  const [referralCodeError, setReferralCodeError] = useState("");
+  const [discountCodeError, setDiscountCodeError] = useState("");
 
+  const handleReferralChange = (e) => {
+    setReferralCodeValue(e.target.value);
+  };
+  const handleDiscountChange = (e) => {
+    setDiscountCodeValue(e.target.value);
+  };
+
+  const handleReferralCodeApply = async () => {
+    if (!isReferralCode(referralCodeValue)) {
+      console.log("InvalidReferralCode");
+      return;
+    }
+    const referalId = Number(formatBachiCode(referralCodeValue));
+
+    const owner = await readContract(config, {
+      ...nodeManagerContract,
+      functionName: "referralIdUserLinks",
+      args: [referalId],
+    });
+
+    console.log(owner);
+
+    if (isDefaultAddress(owner)) {
+      console.log("Referral code not exist");
+      return;
+    }
+
+    setReferralId(referalId);
+  };
+
+  const handleDiscountCodeApply = async () => {
+    if (!isDiscountCode(discountCodeValue)) {
+      console.log("InvaliDiscountCode");
+      return;
+    }
+    const discountId = Number(formatBachiCode(discountCodeValue));
+
+    const owner = await readContract(config, {
+      ...nodeManagerContract,
+      functionName: "discountCouponsIdUserLinks",
+      args: [discountId],
+    });
+
+    console.log(owner);
+    if (isDefaultAddress(owner)) {
+      console.log("Discount code not exist");
+      return;
+    }
+
+    setDiscountCouponIdId(discountId);
+  };
+  console.log(discountCouponIdId);
   const products = [
     {
       tierId: 1,
@@ -133,6 +192,21 @@ const MintRune = () => {
   };
 
   const handlePayNow = async () => {
+    let price = billNode?.price * 10 ** chainDecimal;
+    console.log({ price });
+
+    const discountinfo = await readContract(config, {
+      ...nodeManagerContract,
+      functionName: "discountCoupons",
+      args: [discountCouponIdId],
+    });
+
+    const discountPercent = discountinfo[1];
+    console.log({ discountPercent });
+    if (discountPercent > 0) {
+      price = price - (price * discountPercent) / 100;
+    }
+    console.log({ price, referralId, discountCouponIdId });
     const balance = await getBalance(config, {
       address: address,
     });
@@ -156,7 +230,7 @@ const MintRune = () => {
           discountCouponIdId,
           billNode?.qty,
         ],
-        value: billNode?.price * 10 ** chainDecimal,
+        value: price,
       });
       if (hash) {
         console.log({ hash });
@@ -360,8 +434,7 @@ const MintRune = () => {
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
                       ? formatNumDynDecimal(
-                          convertAndDivide(nodeData[5], chainDecimal) *
-                            86400
+                          convertAndDivide(nodeData[5], chainDecimal) * 86400
                         )
                       : 0}{" "}
                     {chainSymbol}
@@ -413,9 +486,26 @@ const MintRune = () => {
                 </Flex>
               </Flex>
             </Box>
-            <Flex alignItems={"center"} gap={"20px"} padding={"47px 58px 55px 58px"} border={"0.5px solid var(--color-main)"}>
-              <ReferralCodeForm title={"Referrer’s Code"} />
-              <ReferralCodeForm title={"Discount Code"} />
+            <Flex
+              alignItems={"center"}
+              gap={"20px"}
+              padding={"47px 58px 55px 58px"}
+              border={"0.5px solid var(--color-main)"}
+            >
+              <ReferralCodeForm
+                value={referralCodeValue}
+                title={"Referrer’s Code"}
+                onChange={handleReferralChange}
+                onClick={handleReferralCodeApply}
+                error={referralCodeError}
+              />
+              <ReferralCodeForm
+                value={discountCodeValue}
+                title={"Discount Code"}
+                onChange={handleDiscountChange}
+                onClick={handleDiscountCodeApply}
+                error={discountCodeError}
+              />
             </Flex>
             <Flex
               alignItems={"center"}

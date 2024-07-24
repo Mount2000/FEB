@@ -108,6 +108,7 @@ const MintRune = () => {
     if (address) dispatch(setCaller(address));
   }, [selectProduct, count]);
 
+  console.log({ nodeData });
   const [isLoading, setIsLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
 
@@ -330,7 +331,7 @@ const MintRune = () => {
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
                       ? formatNumDynDecimal(
-                          convertAndDivide(nodeData[4], chainDecimal) *
+                          convertAndDivide(nodeData[5], chainDecimal) *
                             86400 *
                             30
                         )
@@ -357,7 +358,9 @@ const MintRune = () => {
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
                       ? formatNumDynDecimal(
-                          convertAndDivide(nodeData[4], chainDecimal) * 86400
+                          convertAndDivide(nodeData[5], chainDecimal) *
+                            86400 *
+                            30
                         )
                       : 0}{" "}
                     {chainSymbol}
@@ -372,8 +375,12 @@ const MintRune = () => {
                     BACHI Reward
                   </Text>
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
-                    {/* {nodeData ? formatNumDynDecimal(convertAndDivide(nodeData[4], chainDecimal)) : 0}{" "} */}
-                    {selectProduct?.reward} Bachi
+                    {nodeData
+                      ? formatNumDynDecimal(
+                          convertAndDivide(nodeData[4], chainDecimal) * 86400
+                        )
+                      : 0}{" "}
+                    Bachi
                   </Text>
                 </Flex>
                 <Flex

@@ -1,6 +1,6 @@
 const contract = {
   testnet: {
-    CONTRACT_ADDRESS: "0x69631fBd744Ca5498Ff5AeD7448787373309824A",
+    CONTRACT_ADDRESS: "0xbFBfa78E3480c466F5299519E9aA6514e3902430",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -444,6 +444,30 @@ const contract = {
       {
         inputs: [
           {
+            internalType: "uint256",
+            name: "_nodeId",
+            type: "uint256",
+          },
+        ],
+        name: "getRewardAmounts",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "bachiRewardAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "taikoRewardAmount",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
             internalType: "bytes32",
             name: "role",
             type: "bytes32",
@@ -656,6 +680,30 @@ const contract = {
       {
         inputs: [
           {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        name: "rewardClaimedInfors",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "bachiRewardAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "taikoRewardAmount",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
             internalType: "uint256",
             name: "_bachiMinClaimAmount",
             type: "uint256",
@@ -838,31 +886,21 @@ const contract = {
         type: "function",
       },
       {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_nodeId",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "previousOwner",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "newOwner",
-            type: "address",
-          },
-        ],
-        name: "transferStake",
+        inputs: [],
+        name: "unpause",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
       },
       {
-        inputs: [],
-        name: "unpause",
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_stakeId",
+            type: "uint256",
+          },
+        ],
+        name: "unstake",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
@@ -888,7 +926,7 @@ const contract = {
     ],
   },
   mainnet: {
-    CONTRACT_ADDRESS: "0x69631fBd744Ca5498Ff5AeD7448787373309824A",
+    CONTRACT_ADDRESS: "0xbFBfa78E3480c466F5299519E9aA6514e3902430",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -1332,6 +1370,30 @@ const contract = {
       {
         inputs: [
           {
+            internalType: "uint256",
+            name: "_nodeId",
+            type: "uint256",
+          },
+        ],
+        name: "getRewardAmounts",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "bachiRewardAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "taikoRewardAmount",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
             internalType: "bytes32",
             name: "role",
             type: "bytes32",
@@ -1544,6 +1606,30 @@ const contract = {
       {
         inputs: [
           {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        name: "rewardClaimedInfors",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "bachiRewardAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "taikoRewardAmount",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
             internalType: "uint256",
             name: "_bachiMinClaimAmount",
             type: "uint256",
@@ -1726,31 +1812,21 @@ const contract = {
         type: "function",
       },
       {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_nodeId",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "previousOwner",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "newOwner",
-            type: "address",
-          },
-        ],
-        name: "transferStake",
+        inputs: [],
+        name: "unpause",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
       },
       {
-        inputs: [],
-        name: "unpause",
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_stakeId",
+            type: "uint256",
+          },
+        ],
+        name: "unstake",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",

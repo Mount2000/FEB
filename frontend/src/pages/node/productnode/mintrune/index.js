@@ -44,6 +44,7 @@ import iconNodedetail from "../../../../assets/img/node/icon-node-detail.png";
 import iconSuccess from "../../../../assets/img/node/icon-message-success.png";
 import iconError from "../../../../assets/img/node/icon-message-error.png";
 import { ERROR, FAIURE, PENDING, SUCCESS } from "../../../../utils/mesages";
+import ReferralCodeForm from "../../../../components/referralform";
 
 const MintRune = () => {
   const navigate = useNavigate();
@@ -264,6 +265,7 @@ const MintRune = () => {
             width={"100%"}
             height={"100%"}
             marginTop={"65px"}
+            backgroundColor="var(--color-background-popup)"
           >
             <Box margin={"58px 58px 44px 59px"}>
               <Flex
@@ -405,6 +407,10 @@ const MintRune = () => {
                 </Flex>
               </Flex>
             </Box>
+            <Flex alignItems={"center"} gap={"20px"} padding={"47px 58px 55px 58px"} border={"0.5px solid var(--color-main)"}>
+              <ReferralCodeForm title={"Referrer’s Code"} />
+              <ReferralCodeForm title={"Discount Code"} />
+            </Flex>
             <Flex
               alignItems={"center"}
               justifyContent={"center"}

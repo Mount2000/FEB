@@ -47,6 +47,11 @@ export const isReferralCode = (code) => {
   return regex.test(code);
 };
 
+export const isDiscountCode = (code) => {
+  const regex = /^BachiSwapCP_\d+_\d+$/;
+  return regex.test(code);
+};
+
 export const formatBachiCode = (code) => {
   const codeArr = code.split("_");
   return Number(codeArr[1]);

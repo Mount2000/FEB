@@ -310,7 +310,7 @@ contract Staking is Pausable, AccessControl, Ownable {
             (
                 uint256 bachiRewardAmount,
                 uint256 taikoRewardAmount
-            ) = getRewardAmounts(nodeids);
+            ) = getRewardAmounts(_nodeId);
 
             if (claimMode == 0) {
                 require(
@@ -363,7 +363,7 @@ contract Staking is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getRewardAmounts(uint256[] memory _nodeIds)
+    function getRewardAmountsIncremental(uint256[] memory _nodeIds)
         public
         view
         returns (uint256 totalBachiRewardAmount, uint256 totalTaikoRewardAmount)
@@ -391,6 +391,25 @@ contract Staking is Pausable, AccessControl, Ownable {
         }
 
         return (totalBachiReward, totalTaikoReward);
+    }
+
+
+     function getRewardAmounts(
+        uint256 _nodeId
+    )
+        public
+        view
+        returns (uint256 bachiRewardAmount, uint256 taikoRewardAmount)
+    {
+        uint256 _stakeId = nodeIdStakeIdLinks[_nodeId];
+        StakeInformation memory stakeInfo = stakeInfors[_stakeId];
+        uint256 currentTimestamp = block.timestamp;
+        uint256 bachiTotalTimeStaking = currentTimestamp - stakeInfo.bachiStakeStartTime;
+        uint256 taikoTotalTimeStaking = currentTimestamp - stakeInfo.taikoStakeStartTime;
+        (uint256 farmSpeedBachi, uint256 farmSpeedTaiko) = nodeManagerContract.getFarmSpeed(stakeInfo.nodeId);
+        bachiRewardAmount = farmSpeedBachi * bachiTotalTimeStaking;
+        taikoRewardAmount = farmSpeedTaiko * taikoTotalTimeStaking;
+        return (bachiRewardAmount, taikoRewardAmount);
     }
 
     function getTotalNodeStaked(address staker) public view returns (uint256) {

@@ -197,23 +197,22 @@ contract Staking is Pausable, AccessControl, Ownable {
         emit Staked(staker, _stakeId, nodeId, block.timestamp);
     }
 
-    function claimReward(
-        uint256 _stakeId,
-        uint8 claimMode
-    ) public whenNotPaused {
+    function claimReward(uint256 _nodeId, uint8 claimMode)
+        public
+        whenNotPaused
+    {
+        uint256 _stakeId = nodeIdStakeIdLinks[_nodeId];
         StakeInformation memory stakeInfo = stakeInfors[_stakeId];
-        uint256 _nodeId = stakeInfo.nodeId;
         address staker = nodeManagerContract.nodeIdUserLinks(_nodeId);
         require(staker == msg.sender, "Unauthorized: Only staker can claim");
+        require (_stakeId > 0,"stakeid does not exist");
         uint256 currentTimestamp = block.timestamp;
-        uint256 bachiTotalTimeStaking = currentTimestamp -
-            stakeInfo.bachiStakeStartTime;
-        uint256 taikoTotalTimeStaking = currentTimestamp -
-            stakeInfo.taikoStakeStartTime;
+        uint256 bachiTotalTimeStaking = currentTimestamp - stakeInfo.bachiStakeStartTime;
+        uint256 taikoTotalTimeStaking = currentTimestamp - stakeInfo.taikoStakeStartTime;
         uint256 bachiRewardAmount = 0;
         uint256 taikoRewardAmount = 0;
-        (uint256 farmSpeedBachi, uint256 farmSpeedTaiko) = nodeManagerContract
-            .getFarmSpeed(_nodeId);
+
+        (uint256 farmSpeedBachi, uint256 farmSpeedTaiko) = nodeManagerContract.getFarmSpeed(_nodeId);
 
         if (claimMode == 0) {
             bachiRewardAmount = farmSpeedBachi * bachiTotalTimeStaking;
@@ -222,9 +221,8 @@ contract Staking is Pausable, AccessControl, Ownable {
                 "Claim amount is too small"
             );
             tokenContract.mint(staker, bachiRewardAmount);
-            stakeInfors[_stakeId].bachiStakeStartTime = currentTimestamp;
-            rewardClaimedInfors[msg.sender]
-                .bachiRewardAmount += bachiRewardAmount;
+            stakeInfors[stakeId].bachiStakeStartTime = currentTimestamp;
+            rewardClaimedInfors[msg.sender].bachiRewardAmount += bachiRewardAmount;
         } else if (claimMode == 1) {
             taikoRewardAmount = farmSpeedTaiko * taikoTotalTimeStaking;
             require(
@@ -237,7 +235,7 @@ contract Staking is Pausable, AccessControl, Ownable {
             );
             (bool sent, ) = staker.call{value: taikoRewardAmount}("");
             require(sent, "Failed to send Ether");
-            stakeInfors[_stakeId].taikoStakeStartTime = currentTimestamp;
+            stakeInfors[stakeId].taikoStakeStartTime = currentTimestamp;
             rewardClaimedInfors[msg.sender]
                 .taikoRewardAmount += taikoRewardAmount;
         } else {
@@ -255,17 +253,15 @@ contract Staking is Pausable, AccessControl, Ownable {
             );
             (bool sent, ) = staker.call{value: taikoRewardAmount}("");
             require(sent, "Failed to send Ether");
-            stakeInfors[_stakeId].bachiStakeStartTime = currentTimestamp;
-            stakeInfors[_stakeId].taikoStakeStartTime = currentTimestamp;
-            rewardClaimedInfors[msg.sender]
-                .taikoRewardAmount += taikoRewardAmount;
-            rewardClaimedInfors[msg.sender]
-                .bachiRewardAmount += bachiRewardAmount;
+            stakeInfors[stakeId].bachiStakeStartTime = currentTimestamp;
+            stakeInfors[stakeId].taikoStakeStartTime = currentTimestamp;
+            rewardClaimedInfors[msg.sender].taikoRewardAmount += taikoRewardAmount;
+            rewardClaimedInfors[msg.sender].bachiRewardAmount += bachiRewardAmount;
         }
 
         emit Claimed(
             staker,
-            _stakeId,
+            stakeId,
             currentTimestamp,
             bachiRewardAmount,
             taikoRewardAmount

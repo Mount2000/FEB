@@ -1853,5 +1853,5 @@ const contract = {
   },
 };
 
-const bachi_token_contract = contract[process.env.REACT_APP_ENV || "testnet"];
-export default bachi_token_contract;
+const staking_contract = contract[process.env.REACT_APP_ENV || "testnet"];
+export default staking_contract;

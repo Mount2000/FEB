@@ -56,3 +56,8 @@ export const formatBachiCode = (code) => {
   const codeArr = code.split("_");
   return Number(codeArr[1]);
 };
+
+export const isDefaultAddress = (address) => {
+  const address0 = "0x0000000000000000000000000000000000000000";
+  return address == address0;
+};

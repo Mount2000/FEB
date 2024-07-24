@@ -36,23 +36,6 @@ export function Account() {
   const currentChain = chains.find((chain) => chain.id === chainId);
   console.log({ currentChain, chains });
 
-  /** Example  */
-  /** Example tx func */
-  const { data: hash, writeContract, error: setErr } = useWriteContract();
-  const setNodeManagerAddress = async () => {
-    const nodeManagerAddress = "0x654Af47D0Bbef73d9Da23fACbea6e1c191Cb8dD9";
-    writeContract({
-      address: bachi_node_contract.CONTRACT_ADDRESS,
-      abi: bachi_node_contract.CONTRACT_ABI,
-      functionName: "setNodeManagerAddress",
-      args: [nodeManagerAddress],
-    });
-    if (setErr) console.log({ setErr });
-    if (hash) console.log({ hash });
-  };
-
-  /*******************/
-
   const handleSwitchChange = async (event) => {
     const { value } = event?.target;
     await switchChain(config, { chainId: Number(value) });
@@ -103,7 +86,7 @@ export function Account() {
           <option value={chain?.id}>{chain?.name}</option>
         ))}
       </Select>
-      <ActionButton w={"100%"} onClick={setNodeManagerAddress}>
+      <ActionButton w={"100%"}>
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
           <Text fontSize={"24px"} fontWeight={"500"}>
             Buy Crypto

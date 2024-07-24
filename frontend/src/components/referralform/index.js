@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Flex, Input, Button, Text } from "@chakra-ui/react";
 import CustomButton from "../button";
 
-const ReferralCodeForm = ({ value, onChange, onClick }) => {
+const ReferralCodeForm = ({ title, value, onChange, onClick }) => {
   return (
     <Box
       width="100%"
@@ -20,7 +20,7 @@ const ReferralCodeForm = ({ value, onChange, onClick }) => {
         fontSize={"24px"}
         fontWeight={500}
       >
-        Referrer's Code
+        {title}
       </Text>
       <Flex
         alignItems="center"
@@ -42,7 +42,7 @@ const ReferralCodeForm = ({ value, onChange, onClick }) => {
           />
           <CustomButton
             height={"70px"}
-            width={"15%"}
+            width={"30%"}
             bg="#EC4899"
             color="#FFFFFF"
             borderRadius="0"

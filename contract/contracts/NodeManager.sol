@@ -292,7 +292,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         _code = string(
             abi.encodePacked(
                 "BachiSwapCP_",
-                uint256str(referenceId),
+                uint256str(couponId),
                 "_",
                 uint256str(currentTimestamp)
             )

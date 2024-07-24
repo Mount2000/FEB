@@ -359,8 +359,7 @@ const MintRune = () => {
                     {nodeData
                       ? formatNumDynDecimal(
                           convertAndDivide(nodeData[5], chainDecimal) *
-                            86400 *
-                            30
+                            86400
                         )
                       : 0}{" "}
                     {chainSymbol}

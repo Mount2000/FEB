@@ -291,7 +291,7 @@ contract Staking is Pausable, AccessControl, Ownable {
     {
         require(
             nodeids.length <= maxClaimNodeIds,
-            "nodeidsay length exceeds the allowed limit"
+            "nodeids length exceeds the allowed limit"
         );
 
         uint256 totalBachiRewardAmount = 0;
@@ -321,6 +321,7 @@ contract Staking is Pausable, AccessControl, Ownable {
                 stakeInfors[_stakeId].bachiStakeStartTime = currentTimestamp;
                 rewardClaimedInfors[msg.sender]
                     .bachiRewardAmount += bachiRewardAmount;
+                tokenContract.mint(staker, bachiRewardAmount);
             } else if (claimMode == 1) {
                 require(
                     taikoRewardAmount >= taikoMinClaimAmount,
@@ -334,14 +335,17 @@ contract Staking is Pausable, AccessControl, Ownable {
                 stakeInfors[_stakeId].taikoStakeStartTime = currentTimestamp;
                 rewardClaimedInfors[msg.sender]
                     .taikoRewardAmount += taikoRewardAmount;
+                (bool sent, ) = staker.call{value: taikoRewardAmount}("");
+                require(sent, "Failed to send Ether");
             } else {
                 require(
-                    bachiRewardAmount >= bachiMinClaimAmount,
+                    bachiRewardAmount >= bachiMinClaimAmount &&
+                        taikoRewardAmount >= taikoMinClaimAmount,
                     "Claim amount is too small"
                 );
                 require(
-                    taikoRewardAmount >= taikoMinClaimAmount,
-                    "Claim amount is too small"
+                    address(this).balance >= taikoRewardAmount,
+                    "Not enough balance"
                 );
                 totalBachiRewardAmount += bachiRewardAmount;
                 totalTaikoRewardAmount += taikoRewardAmount;
@@ -351,6 +355,9 @@ contract Staking is Pausable, AccessControl, Ownable {
                     .bachiRewardAmount += bachiRewardAmount;
                 rewardClaimedInfors[msg.sender]
                     .taikoRewardAmount += taikoRewardAmount;
+                tokenContract.mint(staker, bachiRewardAmount);
+                (bool sent, ) = staker.call{value: taikoRewardAmount}("");
+                require(sent, "Failed to send Ether");
             }
         }
 

@@ -31,6 +31,7 @@ import {
   isReferralCode,
   isDiscountCode,
   isDefaultAddress,
+  formatTokenBalance,
 } from "../../../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -248,7 +249,6 @@ const MintRune = () => {
       value: price * 10 ** chainDecimal,
     };
 
-    
     const gasFee = await taikoHeklaClient.estimateContractGas({
       ...txObj,
       account: address,
@@ -446,7 +446,7 @@ const MintRune = () => {
                   </Flex>
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
-                      ? formatNumDynDecimal(
+                      ? formatTokenBalance(
                           convertAndDivide(nodeData[5], chainDecimal) *
                             86400 *
                             30
@@ -473,7 +473,7 @@ const MintRune = () => {
                   </Flex>
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
-                      ? formatNumDynDecimal(
+                      ? formatTokenBalance(
                           convertAndDivide(nodeData[5], chainDecimal) * 86400
                         )
                       : 0}{" "}
@@ -490,7 +490,7 @@ const MintRune = () => {
                   </Text>
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
-                      ? formatNumDynDecimal(
+                      ? formatTokenBalance(
                           convertAndDivide(nodeData[4], chainDecimal) * 86400
                         )
                       : 0}{" "}

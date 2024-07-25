@@ -18,7 +18,11 @@ import {
 } from "@wagmi/core";
 import { config } from "../../../../components/wallets/config";
 import useInterval from "../../../../hooks/useInterval";
-import { convertAndDivide, formatNumDynDecimal } from "../../../../utils";
+import {
+  convertAndDivide,
+  formatNumDynDecimal,
+  formatTokenBalance,
+} from "../../../../utils";
 import MessageBox from "../../../../components/message/messageBox";
 import { FAIURE, PENDING } from "../../../../utils/mesages";
 import { useModal } from "../../../../contexts/useModal";
@@ -48,12 +52,19 @@ const Earning = () => {
   const { setConnectWalletModalVisible } = useModal();
   const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
   const getFirstNodeId = async () => {
-    const nodeId = await readContract(config, {
+    const totalNode = await readContract(config, {
       ...nodeManagerContract,
-      functionName: "getNodeIdByIndex",
-      args: [address, 0],
+      functionName: "getUserTotalNode",
+      args: [address],
     });
-    setFirstNodeId(Number(nodeId));
+    if (Number(totalNode) > 0) {
+      const nodeId = await readContract(config, {
+        ...nodeManagerContract,
+        functionName: "getNodeIdByIndex",
+        args: [address, 0],
+      });
+      setFirstNodeId(Number(nodeId));
+    }
   };
 
   useEffect(() => {
@@ -104,13 +115,13 @@ const Earning = () => {
       name: "Taiko",
       speed: nodeData ? Number(nodeData[3]) : 0,
       level: "1",
-      amount: formatNumDynDecimal(convertAndDivide(taikoAmount, chainDecimal)),
+      amount: formatTokenBalance(convertAndDivide(taikoAmount, chainDecimal)),
     },
     {
       name: "Bachi",
       speed: nodeData ? Number(nodeData[3]) : 0,
       level: "1",
-      amount: formatNumDynDecimal(convertAndDivide(bachiAmount, chainDecimal)),
+      amount: formatTokenBalance(convertAndDivide(bachiAmount, chainDecimal)),
     },
   ];
 
@@ -270,7 +281,7 @@ const Earning = () => {
                 </CommonButton>
               </Flex>
               <Text fontSize={"40px"} fontWeight={700}>
-                {formatNumDynDecimal(
+                {formatTokenBalance(
                   convertAndDivide(bachiClaimedAmount, chainDecimal)
                 )}
               </Text>
@@ -306,7 +317,7 @@ const Earning = () => {
                 </CommonButton>
               </Flex>
               <Text fontSize={"40px"} fontWeight={700}>
-                {formatNumDynDecimal(
+                {formatTokenBalance(
                   convertAndDivide(taikoClaimedAmount, chainDecimal)
                 )}
               </Text>

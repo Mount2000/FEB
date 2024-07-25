@@ -22,12 +22,13 @@ const ReferralCodeForm = ({ title, value, onChange, onClick, error }) => {
       >
         {title}
       </Text>
-      <Flex
-        alignItems="center"
-        justifyContent="space-between"
-        padding={"25px 28px 25px 34px"}
-      >
-        <Flex height={"70px"} width={"100%"}>
+      <Flex padding={"25px 28px 25px 34px"} flexDirection={"column"}>
+        <Flex
+          height={"70px"}
+          width={"100%"}
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <Input
             placeholder="Input"
             border="none"
@@ -54,12 +55,12 @@ const ReferralCodeForm = ({ title, value, onChange, onClick, error }) => {
             Apply
           </CustomButton>
         </Flex>
+        {error && (
+          <Text color="red.500" mt="4">
+            {error}
+          </Text>
+        )}
       </Flex>
-      {error && (
-        <Text color="red.500" mt="4">
-          {error}
-        </Text>
-      )}
     </Box>
   );
 };

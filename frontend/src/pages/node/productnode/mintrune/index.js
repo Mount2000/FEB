@@ -90,7 +90,7 @@ const MintRune = () => {
 
   const handleReferralCodeApply = async () => {
     if (!isReferralCode(referralCodeValue)) {
-      console.log("InvalidReferralCode");
+      setReferralCodeError("InvalidReferralCode");
       return;
     }
     const referalId = Number(formatBachiCode(referralCodeValue));
@@ -104,7 +104,7 @@ const MintRune = () => {
     console.log(owner);
 
     if (isDefaultAddress(owner)) {
-      console.log("Referral code not exist");
+      setReferralCodeError("Referral code not exist");
       return;
     }
 
@@ -113,7 +113,7 @@ const MintRune = () => {
 
   const handleDiscountCodeApply = async () => {
     if (!isDiscountCode(discountCodeValue)) {
-      console.log("InvaliDiscountCode");
+      setDiscountCodeError("InvaliDiscountCode");
       return;
     }
     const discountId = Number(formatBachiCode(discountCodeValue));
@@ -126,7 +126,7 @@ const MintRune = () => {
 
     console.log(owner);
     if (isDefaultAddress(owner)) {
-      console.log("Discount code not exist");
+      setDiscountCodeError("Discount code not exist");
       return;
     }
 

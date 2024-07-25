@@ -52,7 +52,7 @@ const Earning = () => {
   };
 
   useEffect(() => {
-    getFirstNodeId();
+    address && getFirstNodeId();
   }, [address]);
   //
   const getFarmAmounts = async () => {
@@ -87,11 +87,11 @@ const Earning = () => {
   });
 
   useEffect(() => {
-    getClaimedAmount();
+    address && getClaimedAmount();
   }, [address]);
 
   useInterval(() => {
-    getFarmAmounts();
+    address && getFarmAmounts();
   }, 3000);
 
   const mining = [

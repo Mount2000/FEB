@@ -48,7 +48,6 @@ const Navbar = () => {
                 lineHeight={{ base: "19.3px", md: "48.24px" }}
                 fontFamily="var(--font-heading-main)"
                 fontWeight={400}
-                
               >
                 BachiSwap
               </Text>
@@ -63,13 +62,15 @@ const Navbar = () => {
             justifyContent={"center"}
           >
             <Flex alignItems={"center"} gap={"10px"}>
-              <Text
-                fontSize={{ base: "20px", md: "24px" }}
-                fontWeight={400}
-                fontFamily="var(--font-text-main)"
-              >
-                Mine TAIKO
-              </Text>
+              <Link to="/">
+                <Text
+                  fontSize={{ base: "20px", md: "24px" }}
+                  fontWeight={400}
+                  fontFamily="var(--font-text-main)"
+                >
+                  Mine TAIKO
+                </Text>
+              </Link>
             </Flex>
             <Flex alignItems={"center"} gap={"10px"}>
               <Link to="/node">
@@ -96,7 +97,7 @@ const Navbar = () => {
                 fontSize={{ base: "20px", md: "24px" }}
                 fontFamily="var(--font-text-main)"
               >
-                Airdrop
+                Staking
               </Text>
             </Flex>
           </Flex>
@@ -133,9 +134,9 @@ const Navbar = () => {
         </Grid>
       </SectionContainer>
 
-      {shownav && <NavbarMobile  zIndex="10000"  handleShowNav={handleShowNav} />}
-      {shownav &&(
-        <Box 
+      {shownav && <NavbarMobile zIndex="10000" handleShowNav={handleShowNav} />}
+      {shownav && (
+        <Box
           position="fixed"
           top="0"
           left="0"

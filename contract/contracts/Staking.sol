@@ -19,7 +19,7 @@ contract Staking is Pausable, AccessControl, Ownable {
 
     uint64 public maxClaimNodeIds;
     uint256 public bachiMinClaimAmount = 0;
-    uint256 public taikoMinClaimAmount = 3 * (10**18);
+    uint256 public taikoMinClaimAmount = 3 * (10 ** 18);
     uint256 public stakeId;
 
     struct StakeInformation {
@@ -47,6 +47,12 @@ contract Staking is Pausable, AccessControl, Ownable {
         uint256 indexed _stakeId,
         uint256 indexed nodeId,
         uint256 stakeTime
+    );
+    event UnStaked(
+        address indexed user,
+        uint256 indexed _stakeId,
+        uint256 indexed nodeId,
+        uint256 unStakeTime
     );
     event Claimed(
         address indexed user,
@@ -111,10 +117,9 @@ contract Staking is Pausable, AccessControl, Ownable {
         return address(bachiNodeContract);
     }
 
-    function setNodeContractAddress(address _bachiNodeContract)
-        public
-        onlyRole(ADMIN_ROLE)
-    {
+    function setNodeContractAddress(
+        address _bachiNodeContract
+    ) public onlyRole(ADMIN_ROLE) {
         bachiNodeContract = BachiNode(_bachiNodeContract);
     }
 
@@ -122,10 +127,9 @@ contract Staking is Pausable, AccessControl, Ownable {
         return address(tokenContract);
     }
 
-    function setTokenContractAddress(address _tokenContract)
-        public
-        onlyRole(ADMIN_ROLE)
-    {
+    function setTokenContractAddress(
+        address _tokenContract
+    ) public onlyRole(ADMIN_ROLE) {
         tokenContract = BachiToken(_tokenContract);
     }
 
@@ -133,24 +137,21 @@ contract Staking is Pausable, AccessControl, Ownable {
         return address(nodeManagerContract);
     }
 
-    function setNodeManagerContractAddress(address _nodeManagerContract)
-        public
-        onlyRole(ADMIN_ROLE)
-    {
+    function setNodeManagerContractAddress(
+        address _nodeManagerContract
+    ) public onlyRole(ADMIN_ROLE) {
         nodeManagerContract = NodeManager(_nodeManagerContract);
     }
 
-    function setBachiMinClaimAmount(uint256 _bachiMinClaimAmount)
-        public
-        onlyRole(ADMIN_ROLE)
-    {
+    function setBachiMinClaimAmount(
+        uint256 _bachiMinClaimAmount
+    ) public onlyRole(ADMIN_ROLE) {
         bachiMinClaimAmount = _bachiMinClaimAmount;
     }
 
-    function setTaikoMinClaimAmount(uint256 _taikoMinClaimAmount)
-        public
-        onlyRole(ADMIN_ROLE)
-    {
+    function setTaikoMinClaimAmount(
+        uint256 _taikoMinClaimAmount
+    ) public onlyRole(ADMIN_ROLE) {
         taikoMinClaimAmount = _taikoMinClaimAmount;
     }
 
@@ -185,16 +186,33 @@ contract Staking is Pausable, AccessControl, Ownable {
         emit Staked(staker, stakeId, _nodeId, currentTimestamp);
     }
 
-    function unstake(uint256 _stakeId) public whenNotPaused {
+    function autoStake(uint256 _nodeId, address staker) external whenNotPaused {
+        uint256 currentTimestamp = block.timestamp;
+        require(msg.sender == address(this), "Not authority");
+        stakeId++;
+        StakeInformation memory stakeInfo = StakeInformation({
+            bachiStakeStartTime: currentTimestamp,
+            taikoStakeStartTime: currentTimestamp,
+            nodeId: _nodeId
+        });
+
+        stakeInfors[stakeId] = stakeInfo;
+        userStakes[staker].add(stakeId);
+        nodeIdStakeIdLinks[_nodeId] = stakeId;
+        stakeIdUserLinks[stakeId] = staker;
+
+        emit Staked(staker, stakeId, _nodeId, currentTimestamp);
+    }
+
+    function unstake(
+        uint256 nodeId
+    ) public onlyNodeOwner(nodeId) whenNotPaused {
         address staker = msg.sender;
-        uint256 nodeId = stakeInfors[_stakeId].nodeId;
+        uint256 _stakeId = nodeIdStakeIdLinks[nodeId];
+        require(_stakeId > 0, "Not stake node id");
         require(
             stakeIdUserLinks[_stakeId] == staker,
             "Not the owner of this stake"
-        );
-        require(
-            nodeIdStakeIdLinks[nodeId] == _stakeId,
-            "Node is not staked with this stakeId"
         );
 
         delete stakeInfors[_stakeId];
@@ -204,13 +222,13 @@ contract Staking is Pausable, AccessControl, Ownable {
 
         bachiNodeContract.transferFrom(address(this), staker, nodeId);
 
-        emit Staked(staker, _stakeId, nodeId, block.timestamp);
+        emit UnStaked(staker, _stakeId, nodeId, block.timestamp);
     }
 
-    function claimReward(uint256 _nodeId, uint8 claimMode)
-        public
-        whenNotPaused
-    {
+    function claimReward(
+        uint256 _nodeId,
+        uint8 claimMode
+    ) public whenNotPaused {
         uint256 _stakeId = nodeIdStakeIdLinks[_nodeId];
         StakeInformation memory stakeInfo = stakeInfors[_stakeId];
         address staker = nodeManagerContract.nodeIdUserLinks(_nodeId);
@@ -284,11 +302,10 @@ contract Staking is Pausable, AccessControl, Ownable {
         );
     }
 
-    
-    function claimAllRewards(uint256[] memory nodeids, uint8 claimMode)
-        public
-        whenNotPaused
-    {
+    function claimAllRewards(
+        uint256[] memory nodeids,
+        uint8 claimMode
+    ) public whenNotPaused {
         require(
             nodeids.length <= maxClaimNodeIds,
             "nodeids length exceeds the allowed limit"
@@ -374,7 +391,9 @@ contract Staking is Pausable, AccessControl, Ownable {
         );
     }
 
-    function getRewardAmountsIncremental(uint256[] memory _nodeIds)
+    function getRewardAmountsIncremental(
+        uint256[] memory _nodeIds
+    )
         public
         view
         returns (uint256 totalBachiRewardAmount, uint256 totalTaikoRewardAmount)
@@ -404,8 +423,7 @@ contract Staking is Pausable, AccessControl, Ownable {
         return (totalBachiReward, totalTaikoReward);
     }
 
-
-     function getRewardAmounts(
+    function getRewardAmounts(
         uint256 _nodeId
     )
         public
@@ -415,9 +433,12 @@ contract Staking is Pausable, AccessControl, Ownable {
         uint256 _stakeId = nodeIdStakeIdLinks[_nodeId];
         StakeInformation memory stakeInfo = stakeInfors[_stakeId];
         uint256 currentTimestamp = block.timestamp;
-        uint256 bachiTotalTimeStaking = currentTimestamp - stakeInfo.bachiStakeStartTime;
-        uint256 taikoTotalTimeStaking = currentTimestamp - stakeInfo.taikoStakeStartTime;
-        (uint256 farmSpeedBachi, uint256 farmSpeedTaiko) = nodeManagerContract.getFarmSpeed(stakeInfo.nodeId);
+        uint256 bachiTotalTimeStaking = currentTimestamp -
+            stakeInfo.bachiStakeStartTime;
+        uint256 taikoTotalTimeStaking = currentTimestamp -
+            stakeInfo.taikoStakeStartTime;
+        (uint256 farmSpeedBachi, uint256 farmSpeedTaiko) = nodeManagerContract
+            .getFarmSpeed(stakeInfo.nodeId);
         bachiRewardAmount = farmSpeedBachi * bachiTotalTimeStaking;
         taikoRewardAmount = farmSpeedTaiko * taikoTotalTimeStaking;
         return (bachiRewardAmount, taikoRewardAmount);
@@ -427,11 +448,10 @@ contract Staking is Pausable, AccessControl, Ownable {
         return userStakes[staker].length();
     }
 
-    function getStakeIdByIndex(address staker, uint256 index)
-        public
-        view
-        returns (uint256)
-    {
+    function getStakeIdByIndex(
+        address staker,
+        uint256 index
+    ) public view returns (uint256) {
         require(index < userStakes[staker].length(), "Index out of bounds");
         return userStakes[staker].at(index);
     }

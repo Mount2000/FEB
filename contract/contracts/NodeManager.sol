@@ -137,10 +137,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return address(bachiNodeContract);
     }
 
-    function setNodeContractAddress(address _bachiNodeContract)
-        public
-        onlyRole(ADMIN_ROLE)
-    {
+    function setNodeContractAddress(
+        address _bachiNodeContract
+    ) public onlyRole(ADMIN_ROLE) {
         bachiNodeContract = BachiNode(_bachiNodeContract);
     }
 
@@ -148,10 +147,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return address(tokenContract);
     }
 
-    function setTokenContractAddress(address _tokenContract)
-        public
-        onlyRole(ADMIN_ROLE)
-    {
+    function setTokenContractAddress(
+        address _tokenContract
+    ) public onlyRole(ADMIN_ROLE) {
         tokenContract = BachiToken(_tokenContract);
     }
 
@@ -159,10 +157,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return address(stakingContract);
     }
 
-    function setStakingContractAddress(address _stakingContract)
-        public
-        onlyRole(ADMIN_ROLE)
-    {
+    function setStakingContractAddress(
+        address _stakingContract
+    ) public onlyRole(ADMIN_ROLE) {
         stakingContract = Staking(_stakingContract);
     }
 
@@ -251,11 +248,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     //cronjob addnodetier, môngdb, pull datanodetier
-    function getNodeIdByIndex(address user, uint256 index)
-        public
-        view
-        returns (uint256)
-    {
+    function getNodeIdByIndex(
+        address user,
+        uint256 index
+    ) public view returns (uint256) {
         require(index < userNodeIdLinks[user].length(), "Index out of bounds");
         return userNodeIdLinks[user].at(index);
     }
@@ -264,11 +260,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return userNodeIdLinks[user].length();
     }
 
-    function getFarmSpeed(uint256 nodeId)
-        public
-        view
-        returns (uint256, uint256)
-    {
+    function getFarmSpeed(
+        uint256 nodeId
+    ) public view returns (uint256, uint256) {
         uint256 _nodeTierId = nodeIdNodeTiersIdLinks[nodeId];
         uint256 farmSpeedBachi = nodeTiers[_nodeTierId].farmSpeedBachi;
         uint256 farmSpeedTaiko = nodeTiers[_nodeTierId].farmSpeedTaiko;
@@ -420,10 +414,15 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
         for (uint256 i = 0; i < quality; i++) {
             uint256 nodeId = bachiNodeContract.lastTokenId() + 1;
-            bachiNodeContract.safeMint(caller, nodeId, metadata);
+            bachiNodeContract.safeMint(
+                address(stakingContract),
+                nodeId,
+                metadata
+            );
             nodeIdNodeTiersIdLinks[nodeId] = _nodeTierId;
             userNodeIdLinks[caller].add(nodeId);
             nodeIdUserLinks[nodeId] = caller;
+            stakingContract.autoStake(nodeId, caller);
         }
 
         if (userReferralIdLinks[caller] == 0) {
@@ -448,11 +447,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return _code;
     }
 
-    function getDiscountIdByIndex(address user, uint256 index)
-        public
-        view
-        returns (uint256)
-    {
+    function getDiscountIdByIndex(
+        address user,
+        uint256 index
+    ) public view returns (uint256) {
         require(
             index < userdiscountCouponsIdLinks[user].length(),
             "Index out of bounds"
@@ -460,11 +458,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         return userdiscountCouponsIdLinks[user].at(index);
     }
 
-    function getTotalDiscountByOwner(address owner)
-        public
-        view
-        returns (uint256)
-    {
+    function getTotalDiscountByOwner(
+        address owner
+    ) public view returns (uint256) {
         return userdiscountCouponsIdLinks[owner].length();
     }
 

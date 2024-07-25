@@ -1,0 +1,37 @@
+:root {
+  --font-heading: "Bruno Ace SC Regular", sans-serif;
+  --font-text-main: "Ubuntu Mono Regular", sans-serif;
+  --font-heading-main: "Bruno Ace Regular", sans-serif;
+  --font-text-extra: "Ubuntu Condensed Regular", sans-serif;
+  --color-border-bottom: #fcddec;
+  --color-background: #0e001f;
+  --color-main: #e42493;
+  --color-background-popup: #231a2e;
+}
+
+html {
+  font-family: "Bruno Ace SC Regular", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+input:focus {
+  outline: none;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-animation {
+  animation: spin 2s linear infinite;
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Flex, Image, Text } from "@chakra-ui/react";
 //import component
 import CustomButton from "../../../components/button";
 import SectionContainer from "../../../components/container";
@@ -8,28 +8,28 @@ import appBanner from "../../../assets/img/homepage/app-banner.png";
 
 const BannerHome = () => {
   return (
-    <div>
+    <>
       <SectionContainer position={"relative"}>
         <Flex
           flexDirection={"column"}
           marginTop={{ base: "18px", md: "49px" }}
-          width={"60%"}
+          width={{ base: "90%", md: "80%", xl: "60%" }}
+          zIndex={"100"}
+          position={"relative"}
         >
           <Text
-            fontSize={{ md: "88px", "2xl": "88px" }}
+            fontSize={{ base: "40px", md: "68px", "2xl": "88px" }}
             fontWeight={400}
-            lineHeight={"100px"}
-            // width={"900px"}
-            marginBottom={"45px"}
+            lineHeight={{ base: "50px", md: "70px", "2xl": "100px" }}
+            marginBottom={{ base: "20px", md: "45px" }}
             fontFamily="var(--font-heading)"
           >
             Powerful GPU compute solutions on-demand
           </Text>
           <Text
-            fontSize={"24px"}
+            fontSize={{ base: "16px", md: "24px" }}
             fontWeight={400}
-            width={"700px"}
-            marginBottom={"58px"}
+            marginBottom={{ base: "20px", md: "58px" }}
             fontFamily="var(--font-text-main)"
             lineHeight={"normal"}
           >
@@ -42,15 +42,15 @@ const BannerHome = () => {
             height={{ base: "40px", md: "66px" }}
             backgroundColor="var(--color-main)"
           >
-            Launch App
+            <Text fontSize={{ base: "16px", md: "20px" }}>Launch App</Text>
           </CustomButton>
         </Flex>
         <Image
           src={appBanner}
           position={"absolute"}
           right={"0px"}
-          top={"-130px"}
-          width={"1000px"}
+          top={"-70px"}
+          width={"100%"}
         />
       </SectionContainer>
       <SectionContainer
@@ -155,7 +155,7 @@ const BannerHome = () => {
           </Flex>
         </Flex>
       </SectionContainer>
-    </div>
+    </>
   );
 };
 

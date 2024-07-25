@@ -16,6 +16,7 @@ contract BachiNode is
     Ownable
 {
     address public nodeManagerAddress;
+    uint256 public lastTokenId;
 
     constructor(
         string memory name,
@@ -43,7 +44,8 @@ contract BachiNode is
         uint256 tokenId,
         string memory uri
     ) public onlyNodeManager {
-        _safeMint(to, tokenId);
+        lastTokenId = tokenId;
+        _safeMint(to, lastTokenId);
         _setTokenURI(tokenId, uri);
     }
 

@@ -5,7 +5,6 @@ const ModalContext = createContext();
 export const ModalProvider = ({ children }) => {
   const [connectWalletModalVisible, setConnectWalletModalVisible] =
     useState(false);
-  console.log(connectWalletModalVisible);
   return (
     <ModalContext.Provider
       value={{

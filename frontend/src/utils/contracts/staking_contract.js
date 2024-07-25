@@ -1,6 +1,6 @@
 const contract = {
   testnet: {
-    CONTRACT_ADDRESS: "0xbFBfa78E3480c466F5299519E9aA6514e3902430",
+    CONTRACT_ADDRESS: "0xBEa6BaE728562F69C7B26449d6B2efaEA3D2C94a",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -223,6 +223,37 @@ const contract = {
         anonymous: false,
         inputs: [
           {
+            indexed: false,
+            internalType: "address",
+            name: "operator",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "address",
+            name: "from",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "tokenId",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "bytes",
+            name: "data",
+            type: "bytes",
+          },
+        ],
+        name: "Received",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
             indexed: true,
             internalType: "bytes32",
             name: "role",
@@ -329,6 +360,37 @@ const contract = {
         anonymous: false,
         inputs: [
           {
+            indexed: true,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "uint256",
+            name: "_stakeId",
+            type: "uint256",
+          },
+          {
+            indexed: true,
+            internalType: "uint256",
+            name: "nodeId",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "unStakeTime",
+            type: "uint256",
+          },
+        ],
+        name: "UnStaked",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
             indexed: false,
             internalType: "address",
             name: "account",
@@ -365,6 +427,24 @@ const contract = {
         type: "function",
       },
       {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_nodeId",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "staker",
+            type: "address",
+          },
+        ],
+        name: "autoStake",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
         inputs: [],
         name: "bachiMinClaimAmount",
         outputs: [
@@ -393,8 +473,26 @@ const contract = {
       {
         inputs: [
           {
+            internalType: "uint256[]",
+            name: "nodeids",
+            type: "uint256[]",
+          },
+          {
+            internalType: "uint8",
+            name: "claimMode",
+            type: "uint8",
+          },
+        ],
+        name: "claimAllRewards",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
             internalType: "uint256",
-            name: "_stakeId",
+            name: "_nodeId",
             type: "uint256",
           },
           {
@@ -459,6 +557,30 @@ const contract = {
           {
             internalType: "uint256",
             name: "taikoRewardAmount",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256[]",
+            name: "_nodeIds",
+            type: "uint256[]",
+          },
+        ],
+        name: "getRewardAmountsIncremental",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "totalBachiRewardAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "totalTaikoRewardAmount",
             type: "uint256",
           },
         ],
@@ -583,6 +705,19 @@ const contract = {
         type: "function",
       },
       {
+        inputs: [],
+        name: "maxClaimNodeIds",
+        outputs: [
+          {
+            internalType: "uint64",
+            name: "",
+            type: "uint64",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
         inputs: [
           {
             internalType: "uint256",
@@ -599,6 +734,40 @@ const contract = {
           },
         ],
         stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "operator",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "from",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "tokenId",
+            type: "uint256",
+          },
+          {
+            internalType: "bytes",
+            name: "data",
+            type: "bytes",
+          },
+        ],
+        name: "onERC721Received",
+        outputs: [
+          {
+            internalType: "bytes4",
+            name: "",
+            type: "bytes4",
+          },
+        ],
+        stateMutability: "nonpayable",
         type: "function",
       },
       {
@@ -769,6 +938,19 @@ const contract = {
       {
         inputs: [
           {
+            internalType: "uint64",
+            name: "_leght",
+            type: "uint64",
+          },
+        ],
+        name: "setmaxClaimNodeIds",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
             internalType: "uint256",
             name: "_nodeId",
             type: "uint256",
@@ -896,7 +1078,7 @@ const contract = {
         inputs: [
           {
             internalType: "uint256",
-            name: "_stakeId",
+            name: "nodeId",
             type: "uint256",
           },
         ],
@@ -926,7 +1108,7 @@ const contract = {
     ],
   },
   mainnet: {
-    CONTRACT_ADDRESS: "0xbFBfa78E3480c466F5299519E9aA6514e3902430",
+    CONTRACT_ADDRESS: "0xBEa6BaE728562F69C7B26449d6B2efaEA3D2C94a",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -1149,6 +1331,37 @@ const contract = {
         anonymous: false,
         inputs: [
           {
+            indexed: false,
+            internalType: "address",
+            name: "operator",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "address",
+            name: "from",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "tokenId",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "bytes",
+            name: "data",
+            type: "bytes",
+          },
+        ],
+        name: "Received",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
             indexed: true,
             internalType: "bytes32",
             name: "role",
@@ -1255,6 +1468,37 @@ const contract = {
         anonymous: false,
         inputs: [
           {
+            indexed: true,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "uint256",
+            name: "_stakeId",
+            type: "uint256",
+          },
+          {
+            indexed: true,
+            internalType: "uint256",
+            name: "nodeId",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "unStakeTime",
+            type: "uint256",
+          },
+        ],
+        name: "UnStaked",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
             indexed: false,
             internalType: "address",
             name: "account",
@@ -1291,6 +1535,24 @@ const contract = {
         type: "function",
       },
       {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_nodeId",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "staker",
+            type: "address",
+          },
+        ],
+        name: "autoStake",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
         inputs: [],
         name: "bachiMinClaimAmount",
         outputs: [
@@ -1319,8 +1581,26 @@ const contract = {
       {
         inputs: [
           {
+            internalType: "uint256[]",
+            name: "nodeids",
+            type: "uint256[]",
+          },
+          {
+            internalType: "uint8",
+            name: "claimMode",
+            type: "uint8",
+          },
+        ],
+        name: "claimAllRewards",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
             internalType: "uint256",
-            name: "_stakeId",
+            name: "_nodeId",
             type: "uint256",
           },
           {
@@ -1385,6 +1665,30 @@ const contract = {
           {
             internalType: "uint256",
             name: "taikoRewardAmount",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256[]",
+            name: "_nodeIds",
+            type: "uint256[]",
+          },
+        ],
+        name: "getRewardAmountsIncremental",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "totalBachiRewardAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "totalTaikoRewardAmount",
             type: "uint256",
           },
         ],
@@ -1509,6 +1813,19 @@ const contract = {
         type: "function",
       },
       {
+        inputs: [],
+        name: "maxClaimNodeIds",
+        outputs: [
+          {
+            internalType: "uint64",
+            name: "",
+            type: "uint64",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
         inputs: [
           {
             internalType: "uint256",
@@ -1525,6 +1842,40 @@ const contract = {
           },
         ],
         stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "operator",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "from",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "tokenId",
+            type: "uint256",
+          },
+          {
+            internalType: "bytes",
+            name: "data",
+            type: "bytes",
+          },
+        ],
+        name: "onERC721Received",
+        outputs: [
+          {
+            internalType: "bytes4",
+            name: "",
+            type: "bytes4",
+          },
+        ],
+        stateMutability: "nonpayable",
         type: "function",
       },
       {
@@ -1695,6 +2046,19 @@ const contract = {
       {
         inputs: [
           {
+            internalType: "uint64",
+            name: "_leght",
+            type: "uint64",
+          },
+        ],
+        name: "setmaxClaimNodeIds",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
             internalType: "uint256",
             name: "_nodeId",
             type: "uint256",
@@ -1822,7 +2186,7 @@ const contract = {
         inputs: [
           {
             internalType: "uint256",
-            name: "_stakeId",
+            name: "nodeId",
             type: "uint256",
           },
         ],

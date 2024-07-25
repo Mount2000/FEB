@@ -134,7 +134,7 @@ const Navbar = () => {
         </Grid>
       </SectionContainer>
 
-      {shownav && <NavbarMobile zIndex="10000" handleShowNav={handleShowNav} />}
+      {shownav && <NavbarMobile zIndex="1000" handleShowNav={handleShowNav} />}
       {shownav && (
         <Box
           position="fixed"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Box, Flex, Image, Link, Text } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 //import component
 import SectionContainer from "../../../../components/container";
 import CommonButton from "../../../../components/button/commonbutton";
@@ -22,6 +22,7 @@ import {
   writeContract,
   waitForTransactionReceipt,
   readContract,
+  estimateGas,
 } from "@wagmi/core";
 import {
   convertAndDivide,
@@ -30,6 +31,7 @@ import {
   isReferralCode,
   isDiscountCode,
   isDefaultAddress,
+  formatTokenBalance,
 } from "../../../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -47,8 +49,9 @@ import iconSuccess from "../../../../assets/img/node/icon-message-success.png";
 import iconError from "../../../../assets/img/node/icon-message-error.png";
 import { ERROR, FAIURE, PENDING, SUCCESS } from "../../../../utils/mesages";
 import ReferralCodeForm from "../../../../components/referralform";
-
-import { fromBlobs } from "viem";
+import { useModal } from "../../../../contexts/useModal";
+import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
+const chain_env = process.env.REACT_APP_ENV;
 
 const MintRune = () => {
   const navigate = useNavigate();
@@ -90,7 +93,7 @@ const MintRune = () => {
 
   const handleReferralCodeApply = async () => {
     if (!isReferralCode(referralCodeValue)) {
-      setReferralCodeError("InvalidReferralCode");
+      setReferralCodeError("Invalid referral code");
       return;
     }
     const referalId = Number(formatBachiCode(referralCodeValue));
@@ -107,13 +110,13 @@ const MintRune = () => {
       setReferralCodeError("Referral code not exist");
       return;
     }
-
+    setReferralCodeError("");
     setReferralId(referalId);
   };
 
   const handleDiscountCodeApply = async () => {
     if (!isDiscountCode(discountCodeValue)) {
-      setDiscountCodeError("InvaliDiscountCode");
+      setDiscountCodeError("Invalid discount code");
       return;
     }
     const discountId = Number(formatBachiCode(discountCodeValue));
@@ -130,6 +133,7 @@ const MintRune = () => {
       return;
     }
 
+    setReferralCodeError("");
     setDiscountCouponIdId(discountId);
   };
   console.log(discountCouponIdId);
@@ -171,6 +175,10 @@ const MintRune = () => {
   console.log({ nodeData });
   const [isLoading, setIsLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
+  const [disabled, setDisabled] = useState(false);
+  const { setConnectWalletModalVisible } = useModal();
+  const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
+  const [txHash, setTxHash] = useState("");
 
   const handleCloseMessage = () => {
     setIsLoading(false);
@@ -192,7 +200,25 @@ const MintRune = () => {
   };
 
   const handlePayNow = async () => {
-    let price = billNode?.price * 10 ** chainDecimal;
+    let price = billNode?.price;
+    if (!address) {
+      dispatch(setMessage("You not connected wallet"));
+      setPaymentStatus("failure");
+      setIsLoading(true);
+      return;
+    }
+    if (count === 0) {
+      dispatch(setMessage("Invalid quantity"));
+      setPaymentStatus("failure");
+      setIsLoading(true);
+      return;
+    }
+    if (billNode?.price === 0) {
+      dispatch(setMessage("Invalid price"));
+      setPaymentStatus("failure");
+      setIsLoading(true);
+      return;
+    }
     console.log({ price });
 
     const discountinfo = await readContract(config, {
@@ -206,11 +232,30 @@ const MintRune = () => {
     if (discountPercent > 0) {
       price = price - (price * discountPercent) / 100;
     }
-    console.log({ price, referralId, discountCouponIdId });
     const balance = await getBalance(config, {
       address: address,
     });
-    if (Number(balance.formatted) < billNode?.price || billNode?.price === 0) {
+
+    const txObj = {
+      ...nodeManagerContract,
+      functionName: "multiBuyNode",
+      args: [
+        billNode?.nodeId,
+        referralId,
+        "metadata",
+        discountCouponIdId,
+        billNode?.qty,
+      ],
+      value: price * 10 ** chainDecimal,
+    };
+
+    const gasFee = await taikoHeklaClient.estimateContractGas({
+      ...txObj,
+      account: address,
+    });
+    const gasFeeToEther = Number(gasFee) / 10 ** chainDecimal;
+
+    if (Number(balance.formatted) < price + gasFeeToEther) {
       dispatch(setMessage(ERROR.notBalance));
       setPaymentStatus("failure");
       setIsLoading(true);
@@ -218,22 +263,14 @@ const MintRune = () => {
     }
     dispatch(setMessage(PENDING.txAwait));
     setIsLoading(true);
+    setDisabled(true);
     setPaymentStatus(null);
     try {
       const hash = await writeContract(config, {
-        ...nodeManagerContract,
-        functionName: "multiBuyNode",
-        args: [
-          billNode?.nodeId,
-          referralId,
-          "metadata",
-          discountCouponIdId,
-          billNode?.qty,
-        ],
-        value: price,
+        ...txObj,
       });
       if (hash) {
-        console.log({ hash });
+        setTxHash(hash);
         const result = await waitForTransactionReceipt(config, {
           hash: hash,
         });
@@ -243,11 +280,13 @@ const MintRune = () => {
           dispatch(setMessage(SUCCESS.txBuySuccess));
           setPaymentStatus("success");
           setIsLoading(true);
+          setDisabled(false);
           return;
         } else {
           dispatch(setMessage(FAIURE.txFalure));
           setPaymentStatus("failure");
           setIsLoading(true);
+          setDisabled(false);
           return;
         }
       }
@@ -256,6 +295,7 @@ const MintRune = () => {
       dispatch(setMessage(FAIURE.txFalure));
       setPaymentStatus("failure");
       setIsLoading(true);
+      setDisabled(false);
       return;
     }
   };
@@ -357,7 +397,7 @@ const MintRune = () => {
                     Minting Power
                   </Text>
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
-                    {nodeData ? nodeData[3] : 0} GH/s
+                    {nodeData ? Number(nodeData[3]) : 0} GH/s
                   </Text>
                 </Flex>
                 <Flex
@@ -406,7 +446,7 @@ const MintRune = () => {
                   </Flex>
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
-                      ? formatNumDynDecimal(
+                      ? formatTokenBalance(
                           convertAndDivide(nodeData[5], chainDecimal) *
                             86400 *
                             30
@@ -433,7 +473,7 @@ const MintRune = () => {
                   </Flex>
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
-                      ? formatNumDynDecimal(
+                      ? formatTokenBalance(
                           convertAndDivide(nodeData[5], chainDecimal) * 86400
                         )
                       : 0}{" "}
@@ -450,7 +490,7 @@ const MintRune = () => {
                   </Text>
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
-                      ? formatNumDynDecimal(
+                      ? formatTokenBalance(
                           convertAndDivide(nodeData[4], chainDecimal) * 86400
                         )
                       : 0}{" "}
@@ -515,16 +555,17 @@ const MintRune = () => {
               <CommonButton
                 width={"750px"}
                 height={"100px"}
-                backgroundColor="var(--color-main)"
+                backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
                 margin={"58px 0 52px 0"}
                 display={"flex"}
                 alignItems={"center"}
                 justifyContent={"center"}
-                onClick={handlePayNow}
+                onClick={address ? handlePayNow : onOpenConnectWalletModal}
                 cursor={"pointer"}
+                isDisabled={disabled}
               >
                 <Text textAlign={"center"} fontSize={"32px"} fontWeight={500}>
-                  PAY NOW
+                  {address ? "PAY NOW" : "CONNECT WALLET NOW"}
                 </Text>
               </CommonButton>
             </Flex>
@@ -615,7 +656,14 @@ const MintRune = () => {
                 </Text>
               </CommonButton>
             </Flex>
-            <Link>
+            <Link
+              target="_blank"
+              href={
+                chain_env == "testnet"
+                  ? `https://hekla.taikoscan.io/tx/${txHash}`
+                  : `https://taikoscan.io/tx/${txHash}`
+              }
+            >
               <Text
                 fontSize="20px"
                 color="var(--color-main)"
@@ -653,6 +701,7 @@ const MintRune = () => {
               display={"flex"}
               justifyContent={"center"}
               padding={"10px"}
+              onClick={handlePayNow}
             >
               <Text color={"#000"} fontSize={"20px"} fontWeight={600}>
                 Try again

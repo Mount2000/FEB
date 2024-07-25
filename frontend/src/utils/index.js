@@ -61,3 +61,16 @@ export const isDefaultAddress = (address) => {
   const address0 = "0x0000000000000000000000000000000000000000";
   return address == address0;
 };
+
+export const formatTokenBalance = (result, number = 4) => {
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: number, 
+  });
+
+  let formatted = formatter.format(result).replace(/^\$/, "");
+  formatted = parseFloat(formatted).toString();
+  return formatted;
+};

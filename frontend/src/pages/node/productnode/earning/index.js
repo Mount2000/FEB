@@ -18,9 +18,15 @@ import {
 } from "@wagmi/core";
 import { config } from "../../../../components/wallets/config";
 import useInterval from "../../../../hooks/useInterval";
-import { convertAndDivide, formatNumDynDecimal } from "../../../../utils";
+import {
+  convertAndDivide,
+  formatNumDynDecimal,
+  formatTokenBalance,
+} from "../../../../utils";
 import MessageBox from "../../../../components/message/messageBox";
 import { FAIURE, PENDING } from "../../../../utils/mesages";
+import { useModal } from "../../../../contexts/useModal";
+import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
 
 const stakingContract = {
   address: staking_contract.CONTRACT_ADDRESS,
@@ -42,13 +48,23 @@ const Earning = () => {
   const chainSymbol = currentChain?.nativeCurrency?.symbol;
   //
   const [firstNodeId, setFirstNodeId] = useState(0);
+  const [disabled, setDisabled] = useState(false);
+  const { setConnectWalletModalVisible } = useModal();
+  const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
   const getFirstNodeId = async () => {
-    const nodeId = await readContract(config, {
+    const totalNode = await readContract(config, {
       ...nodeManagerContract,
-      functionName: "getNodeIdByIndex",
-      args: [address, 0],
+      functionName: "getUserTotalNode",
+      args: [address],
     });
-    setFirstNodeId(Number(nodeId));
+    if (Number(totalNode) > 0) {
+      const nodeId = await readContract(config, {
+        ...nodeManagerContract,
+        functionName: "getNodeIdByIndex",
+        args: [address, 0],
+      });
+      setFirstNodeId(Number(nodeId));
+    }
   };
 
   useEffect(() => {
@@ -58,8 +74,8 @@ const Earning = () => {
   const getFarmAmounts = async () => {
     const farmAmounts = await readContract(config, {
       ...stakingContract,
-      functionName: "getRewardAmounts",
-      args: [firstNodeId],
+      functionName: "getRewardAmountsIncremental",
+      args: [[firstNodeId]],
     });
 
     setBachiAmount(Number(farmAmounts[0]));
@@ -99,13 +115,13 @@ const Earning = () => {
       name: "Taiko",
       speed: nodeData ? Number(nodeData[3]) : 0,
       level: "1",
-      amount: formatNumDynDecimal(convertAndDivide(taikoAmount, chainDecimal)),
+      amount: formatTokenBalance(convertAndDivide(taikoAmount, chainDecimal)),
     },
     {
       name: "Bachi",
       speed: nodeData ? Number(nodeData[3]) : 0,
       level: "1",
-      amount: formatNumDynDecimal(convertAndDivide(bachiAmount, chainDecimal)),
+      amount: formatTokenBalance(convertAndDivide(bachiAmount, chainDecimal)),
     },
   ];
 
@@ -123,6 +139,15 @@ const Earning = () => {
     if (mining[tab].name == "Taiko") {
       claimMode = 1;
     } else claimMode = 0;
+    const balance = await getBalance(config, {
+      address: address,
+    });
+    if (!address) {
+      setMessage("You not connected wallet");
+      setStatus("failure");
+      setIsLoading(true);
+      return;
+    }
 
     if (claimMode == 0) {
       const bachiMinClaimAmount = await readContract(config, {
@@ -159,19 +184,31 @@ const Earning = () => {
         return;
       }
     }
+    const txObj = {
+      ...stakingContract,
+      functionName: "claimAllRewards",
+      args: [[Number(firstNodeId)], claimMode],
+    };
+    const gasFee = await taikoHeklaClient.estimateContractGas({
+      ...txObj,
+      account: address,
+    });
+    const gasFeeToEther = Number(gasFee) / 10 ** chainDecimal;
+
+    if (Number(balance.formatted) < gasFeeToEther) {
+      setMessage("Not enough balance");
+      setStatus("failure");
+      setIsLoading(true);
+      return;
+    }
+
     setMessage(PENDING.txAwait);
     setStatus(null);
     setIsLoading(true);
-    const stakeId = await readContract(config, {
-      ...stakingContract,
-      functionName: "nodeIdStakeIdLinks",
-      args: [firstNodeId],
-    });
+    setDisabled(true);
     try {
       const hash = await writeContract(config, {
-        ...stakingContract,
-        functionName: "claimReward",
-        args: [Number(stakeId), claimMode],
+        ...txObj,
       });
       if (hash) {
         console.log({ hash });
@@ -184,11 +221,13 @@ const Earning = () => {
           setMessage("Claim successful");
           setStatus("success");
           setIsLoading(true);
+          setDisabled(false);
           return;
         } else {
           setMessage(FAIURE.txFalure);
           setStatus("failure");
           setIsLoading(true);
+          setDisabled(false);
           return;
         }
       }
@@ -238,7 +277,7 @@ const Earning = () => {
                 </CommonButton>
               </Flex>
               <Text fontSize={"40px"} fontWeight={700}>
-                {formatNumDynDecimal(
+                {formatTokenBalance(
                   convertAndDivide(bachiClaimedAmount, chainDecimal)
                 )}
               </Text>
@@ -274,7 +313,7 @@ const Earning = () => {
                 </CommonButton>
               </Flex>
               <Text fontSize={"40px"} fontWeight={700}>
-                {formatNumDynDecimal(
+                {formatTokenBalance(
                   convertAndDivide(taikoClaimedAmount, chainDecimal)
                 )}
               </Text>
@@ -426,16 +465,17 @@ const Earning = () => {
                   </Text>
                 </CommonButton>
                 <CommonButton
-                  backgroundColor="var(--color-main)"
+                  backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
                   width={"50%"}
                   display={"flex"}
                   justifyContent={"center"}
                   paddingTop={"10px"}
                   paddingBottom={"10px"}
-                  onClick={handleClaim}
+                  onClick={address ? handleClaim : onOpenConnectWalletModal}
+                  isDisabled={disabled}
                 >
                   <Text fontSize={"24px"} fontWeight={500}>
-                    Claim
+                    {address ? "Claim" : "CONNECT WALLET NOW"}
                   </Text>
                 </CommonButton>
               </Flex>

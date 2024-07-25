@@ -22,6 +22,7 @@ import { convertAndDivide, formatNumDynDecimal } from "../../../../utils";
 import MessageBox from "../../../../components/message/messageBox";
 import { FAIURE, PENDING } from "../../../../utils/mesages";
 import { useModal } from "../../../../contexts/useModal";
+import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
 
 const stakingContract = {
   address: staking_contract.CONTRACT_ADDRESS,
@@ -129,6 +130,26 @@ const Earning = () => {
       setIsLoading(true);
       return;
     }
+    const balance = await getBalance(config, {
+      address: address,
+    });
+    const txObj = {
+      ...stakingContract,
+      functionName: "claimReward",
+      args: [Number(stakeId), claimMode],
+    };
+    const gasFee = await taikoHeklaClient.estimateContractGas({
+      ...txObj,
+      account: address,
+    });
+    const gasFeeToEther = Number(gasFee) / 10 ** chainDecimal;
+
+    if (Number(balance.formatted) < gasFeeToEther) {
+      setMessage("Not enough balance");
+      setStatus("failure");
+      setIsLoading(true);
+      return;
+    }
     let claimMode = 0;
     if (mining[tab].name == "Taiko") {
       claimMode = 1;
@@ -180,9 +201,7 @@ const Earning = () => {
     });
     try {
       const hash = await writeContract(config, {
-        ...stakingContract,
-        functionName: "claimReward",
-        args: [Number(stakeId), claimMode],
+        ...txObj,
       });
       if (hash) {
         console.log({ hash });

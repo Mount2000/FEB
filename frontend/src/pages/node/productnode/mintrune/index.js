@@ -22,6 +22,7 @@ import {
   writeContract,
   waitForTransactionReceipt,
   readContract,
+  estimateGas,
 } from "@wagmi/core";
 import {
   convertAndDivide,
@@ -48,6 +49,7 @@ import iconError from "../../../../assets/img/node/icon-message-error.png";
 import { ERROR, FAIURE, PENDING, SUCCESS } from "../../../../utils/mesages";
 import ReferralCodeForm from "../../../../components/referralform";
 import { useModal } from "../../../../contexts/useModal";
+import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
 const chain_env = process.env.REACT_APP_ENV;
 
 const MintRune = () => {
@@ -232,8 +234,28 @@ const MintRune = () => {
     const balance = await getBalance(config, {
       address: address,
     });
-    if (Number(balance.formatted) < price) {
-      console.log({ a: Number(balance.formatted), price });
+
+    const txObj = {
+      ...nodeManagerContract,
+      functionName: "multiBuyNode",
+      args: [
+        billNode?.nodeId,
+        referralId,
+        "metadata",
+        discountCouponIdId,
+        billNode?.qty,
+      ],
+      value: price * 10 ** chainDecimal,
+    };
+
+    
+    const gasFee = await taikoHeklaClient.estimateContractGas({
+      ...txObj,
+      account: address,
+    });
+    const gasFeeToEther = Number(gasFee) / 10 ** chainDecimal;
+
+    if (Number(balance.formatted) < price + gasFeeToEther) {
       dispatch(setMessage(ERROR.notBalance));
       setPaymentStatus("failure");
       setIsLoading(true);
@@ -245,16 +267,7 @@ const MintRune = () => {
     setPaymentStatus(null);
     try {
       const hash = await writeContract(config, {
-        ...nodeManagerContract,
-        functionName: "multiBuyNode",
-        args: [
-          billNode?.nodeId,
-          referralId,
-          "metadata",
-          discountCouponIdId,
-          billNode?.qty,
-        ],
-        value: price * 10 ** chainDecimal,
+        ...txObj,
       });
       if (hash) {
         setTxHash(hash);

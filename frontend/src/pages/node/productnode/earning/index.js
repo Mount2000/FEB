@@ -135,6 +135,10 @@ const Earning = () => {
   };
 
   const handleClaim = async () => {
+    let claimMode = 0;
+    if (mining[tab].name == "Taiko") {
+      claimMode = 1;
+    } else claimMode = 0;
     if (!address) {
       setMessage("You not connected wallet");
       setStatus("failure");
@@ -146,8 +150,8 @@ const Earning = () => {
     });
     const txObj = {
       ...stakingContract,
-      functionName: "claimReward",
-      args: [Number(stakeId), claimMode],
+      functionName: "claimAllRewards",
+      args: [[Number(firstNodeId)], claimMode],
     };
     const gasFee = await taikoHeklaClient.estimateContractGas({
       ...txObj,
@@ -161,10 +165,6 @@ const Earning = () => {
       setIsLoading(true);
       return;
     }
-    let claimMode = 0;
-    if (mining[tab].name == "Taiko") {
-      claimMode = 1;
-    } else claimMode = 0;
 
     if (claimMode == 0) {
       const bachiMinClaimAmount = await readContract(config, {
@@ -205,11 +205,6 @@ const Earning = () => {
     setStatus(null);
     setIsLoading(true);
     setDisabled(true);
-    const stakeId = await readContract(config, {
-      ...stakingContract,
-      functionName: "nodeIdStakeIdLinks",
-      args: [firstNodeId],
-    });
     try {
       const hash = await writeContract(config, {
         ...txObj,

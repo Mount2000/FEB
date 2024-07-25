@@ -8,8 +8,9 @@ import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
-contract Staking is Pausable, AccessControl, Ownable {
+contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
     using EnumerableSet for EnumerableSet.UintSet;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
@@ -17,7 +18,7 @@ contract Staking is Pausable, AccessControl, Ownable {
     BachiToken private tokenContract;
     NodeManager private nodeManagerContract;
 
-    uint64 public maxClaimNodeIds;
+    uint64 public maxClaimNodeIds = 10;
     uint256 public bachiMinClaimAmount = 0;
     uint256 public taikoMinClaimAmount = 3 * (10 ** 18);
     uint256 public stakeId;
@@ -67,6 +68,7 @@ contract Staking is Pausable, AccessControl, Ownable {
         address indexed newOwner,
         uint256 indexed nodeId
     );
+    event Received(address operator, address from, uint256 tokenId, bytes data);
     error AlreadyStaked(uint256 nodeId);
 
     constructor(
@@ -186,9 +188,11 @@ contract Staking is Pausable, AccessControl, Ownable {
         emit Staked(staker, stakeId, _nodeId, currentTimestamp);
     }
 
-    function autoStake(uint256 _nodeId, address staker) external whenNotPaused {
+    function autoStake(
+        uint256 _nodeId,
+        address staker
+    ) external onlyNodeManager whenNotPaused {
         uint256 currentTimestamp = block.timestamp;
-        require(msg.sender == address(this), "Not authority");
         stakeId++;
         StakeInformation memory stakeInfo = StakeInformation({
             bachiStakeStartTime: currentTimestamp,
@@ -454,6 +458,16 @@ contract Staking is Pausable, AccessControl, Ownable {
     ) public view returns (uint256) {
         require(index < userStakes[staker].length(), "Index out of bounds");
         return userStakes[staker].at(index);
+    }
+
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes calldata data
+    ) external override returns (bytes4) {
+        emit Received(operator, from, tokenId, data);
+        return this.onERC721Received.selector;
     }
 
     function deposit() external payable {

@@ -74,8 +74,8 @@ const Earning = () => {
   const getFarmAmounts = async () => {
     const farmAmounts = await readContract(config, {
       ...stakingContract,
-      functionName: "getRewardAmounts",
-      args: [firstNodeId],
+      functionName: "getRewardAmountsIncremental",
+      args: [[firstNodeId]],
     });
 
     setBachiAmount(Number(farmAmounts[0]));
@@ -139,28 +139,11 @@ const Earning = () => {
     if (mining[tab].name == "Taiko") {
       claimMode = 1;
     } else claimMode = 0;
-    if (!address) {
-      setMessage("You not connected wallet");
-      setStatus("failure");
-      setIsLoading(true);
-      return;
-    }
     const balance = await getBalance(config, {
       address: address,
     });
-    const txObj = {
-      ...stakingContract,
-      functionName: "claimAllRewards",
-      args: [[Number(firstNodeId)], claimMode],
-    };
-    const gasFee = await taikoHeklaClient.estimateContractGas({
-      ...txObj,
-      account: address,
-    });
-    const gasFeeToEther = Number(gasFee) / 10 ** chainDecimal;
-
-    if (Number(balance.formatted) < gasFeeToEther) {
-      setMessage("Not enough balance");
+    if (!address) {
+      setMessage("You not connected wallet");
       setStatus("failure");
       setIsLoading(true);
       return;
@@ -201,6 +184,24 @@ const Earning = () => {
         return;
       }
     }
+    const txObj = {
+      ...stakingContract,
+      functionName: "claimAllRewards",
+      args: [[Number(firstNodeId)], claimMode],
+    };
+    const gasFee = await taikoHeklaClient.estimateContractGas({
+      ...txObj,
+      account: address,
+    });
+    const gasFeeToEther = Number(gasFee) / 10 ** chainDecimal;
+
+    if (Number(balance.formatted) < gasFeeToEther) {
+      setMessage("Not enough balance");
+      setStatus("failure");
+      setIsLoading(true);
+      return;
+    }
+
     setMessage(PENDING.txAwait);
     setStatus(null);
     setIsLoading(true);

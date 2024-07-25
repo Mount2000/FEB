@@ -21,6 +21,7 @@ import useInterval from "../../../../hooks/useInterval";
 import { convertAndDivide, formatNumDynDecimal } from "../../../../utils";
 import MessageBox from "../../../../components/message/messageBox";
 import { FAIURE, PENDING } from "../../../../utils/mesages";
+import { useModal } from "../../../../contexts/useModal";
 
 const stakingContract = {
   address: staking_contract.CONTRACT_ADDRESS,
@@ -42,6 +43,9 @@ const Earning = () => {
   const chainSymbol = currentChain?.nativeCurrency?.symbol;
   //
   const [firstNodeId, setFirstNodeId] = useState(0);
+  const [disabled, setDisabled] = useState(false);
+  const { setConnectWalletModalVisible } = useModal();
+  const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
   const getFirstNodeId = async () => {
     const nodeId = await readContract(config, {
       ...nodeManagerContract,
@@ -119,6 +123,12 @@ const Earning = () => {
   };
 
   const handleClaim = async () => {
+    if (!address) {
+      setMessage("You not connected wallet");
+      setStatus("failure");
+      setIsLoading(true);
+      return;
+    }
     let claimMode = 0;
     if (mining[tab].name == "Taiko") {
       claimMode = 1;
@@ -162,6 +172,7 @@ const Earning = () => {
     setMessage(PENDING.txAwait);
     setStatus(null);
     setIsLoading(true);
+    setDisabled(true);
     const stakeId = await readContract(config, {
       ...stakingContract,
       functionName: "nodeIdStakeIdLinks",
@@ -184,11 +195,13 @@ const Earning = () => {
           setMessage("Claim successful");
           setStatus("success");
           setIsLoading(true);
+          setDisabled(false);
           return;
         } else {
           setMessage(FAIURE.txFalure);
           setStatus("failure");
           setIsLoading(true);
+          setDisabled(false);
           return;
         }
       }
@@ -426,16 +439,17 @@ const Earning = () => {
                   </Text>
                 </CommonButton>
                 <CommonButton
-                  backgroundColor="var(--color-main)"
+                  backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
                   width={"50%"}
                   display={"flex"}
                   justifyContent={"center"}
                   paddingTop={"10px"}
                   paddingBottom={"10px"}
-                  onClick={handleClaim}
+                  onClick={address ? handleClaim : onOpenConnectWalletModal}
+                  isDisabled={disabled}
                 >
                   <Text fontSize={"24px"} fontWeight={500}>
-                    Claim
+                    {address ? "Claim" : "CONNECT WALLET NOW"}
                   </Text>
                 </CommonButton>
               </Flex>

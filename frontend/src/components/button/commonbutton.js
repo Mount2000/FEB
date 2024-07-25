@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
 
-const CommonButton = ({ children, onClick, ...props }) => {
+const CommonButton = ({ children, onClick, isDisabled, ...props }) => {
   return (
     <Box
       {...props}
@@ -33,8 +33,9 @@ const CommonButton = ({ children, onClick, ...props }) => {
           clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
         },
       }}
-      cursor={"pointer"}
-      onClick={onClick}
+      cursor={isDisabled ? "not-allowed" : "pointer"}
+      onClick={isDisabled ? undefined : onClick}
+      aria-disabled={isDisabled}
     >
       {children}
     </Box>

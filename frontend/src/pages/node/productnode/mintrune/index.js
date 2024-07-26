@@ -23,6 +23,7 @@ import {
   waitForTransactionReceipt,
   readContract,
   estimateGas,
+  getGasPrice,
 } from "@wagmi/core";
 import {
   convertAndDivide,
@@ -249,11 +250,15 @@ const MintRune = () => {
       value: price * 10 ** chainDecimal,
     };
 
+    const gasPrice = await getGasPrice(config);
+
     const gasFee = await taikoHeklaClient.estimateContractGas({
       ...txObj,
       account: address,
     });
-    const gasFeeToEther = Number(gasFee) / 10 ** chainDecimal;
+    const gasFeeToEther = Number(gasFee * gasPrice) / 10 ** chainDecimal;
+
+    console.log({gasFeeToEther})
 
     if (Number(balance.formatted) < price + gasFeeToEther) {
       dispatch(setMessage(ERROR.notBalance));

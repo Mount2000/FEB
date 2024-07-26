@@ -49,7 +49,7 @@ const NavbarMobile = ({ zIndex, handleShowNav }) => {
             </Flex>
           </Link>
 
-          <Image src={iconClose} onClick={handleShowNav} />
+          <Image src={iconClose} onClick={handleShowNav} cursor={"pointer"} />
         </Flex>
         <Flex flexDirection={"column"}>
           <Box
@@ -78,7 +78,7 @@ const NavbarMobile = ({ zIndex, handleShowNav }) => {
             paddingLeft={"25px"}
             borderBottom={"0.25px solid #5B5B5B"}
           >
-            <Link to="">
+            <Link to="/">
               <Text>Mine TAIKO</Text>
             </Link>
           </Box>
@@ -88,7 +88,7 @@ const NavbarMobile = ({ zIndex, handleShowNav }) => {
             paddingLeft={"25px"}
             borderBottom={"0.25px solid #5B5B5B"}
           >
-            <Link to="">
+            <Link to="/node">
               <Text>Airdrop</Text>
             </Link>
           </Box>

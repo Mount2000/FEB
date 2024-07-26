@@ -15,6 +15,7 @@ import {
   getChainId,
   getChains,
   readContract,
+  getGasPrice
 } from "@wagmi/core";
 import { config } from "../../../../components/wallets/config";
 import useInterval from "../../../../hooks/useInterval";
@@ -189,11 +190,15 @@ const Earning = () => {
       functionName: "claimAllRewards",
       args: [[Number(firstNodeId)], claimMode],
     };
-    const gasFee = await taikoHeklaClient.estimateContractGas({
-      ...txObj,
-      account: address,
-    });
-    const gasFeeToEther = Number(gasFee) / 10 ** chainDecimal;
+    const [gasPrice, gasLimit] = await Promise.all([
+      getGasPrice(config),
+      taikoHeklaClient.estimateContractGas({
+        ...txObj,
+        account: address,
+      }),
+    ]);
+
+    const gasFeeToEther = Number(gasLimit * gasPrice) / 10 ** chainDecimal;
 
     if (Number(balance.formatted) < gasFeeToEther) {
       setMessage("Not enough balance");

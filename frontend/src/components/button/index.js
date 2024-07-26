@@ -14,7 +14,8 @@ const CustomButton = ({ children, onClick, ...props }) => {
       borderRadius="3px"
       // height={"60px"}
       sx={{
-        clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))",
+        clipPath:
+          "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))",
         "::before": {
           content: '""',
           position: "absolute",
@@ -34,6 +35,18 @@ const CustomButton = ({ children, onClick, ...props }) => {
           height: "20px",
           // backgroundColor: "pink.500",
           clipPath: "polygon(100% 0, 0 0, 100% 100%)",
+        },
+        "@media (max-width: 768px)": {
+          clipPath:
+            "polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))",
+          "::before": {
+            width: "10px",
+            height: "10px",
+          },
+          "::after": {
+            width: "10px",
+            height: "10px",
+          },
         },
       }}
       minWidth={"max-content"}

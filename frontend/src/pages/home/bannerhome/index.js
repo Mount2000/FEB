@@ -5,23 +5,36 @@ import CustomButton from "../../../components/button";
 import SectionContainer from "../../../components/container";
 //import image
 import appBanner from "../../../assets/img/homepage/app-banner.png";
-
+import appBannerMobile from "../../../assets/img/homepage/banner-homemobile.png";
 const BannerHome = () => {
   return (
     <>
       <SectionContainer position={"relative"}>
         <Flex
           flexDirection={"column"}
-          marginTop={{ base: "18px", md: "49px" }}
-          width={{ base: "90%", md: "80%", xl: "60%" }}
+          marginTop={{ base: "18px", md: "24px", "2xl": "49px" }}
+          width={{ base: "95%", sm: "93%", md: "70%", xl: "62%", "3xl": "59%" }}
           zIndex={"100"}
           position={"relative"}
         >
           <Text
-            fontSize={{ base: "40px", md: "68px", "2xl": "88px" }}
+            width={{ base: "87%", sm: "93%", xl: "100%" }}
+            fontSize={{
+              base: "36px",
+              sm: "40px",
+              md: "48px",
+              xl: "88px",
+              "3xl": "128px",
+            }}
             fontWeight={400}
-            lineHeight={{ base: "50px", md: "70px", "2xl": "100px" }}
-            marginBottom={{ base: "20px", md: "45px" }}
+            lineHeight={{
+              base: "40px",
+              sm: "50px",
+              md: "60px",
+              xl: "100px",
+              "2xl": "120px",
+            }}
+            marginBottom={{ base: "10px", sm: "20px", md: "30px", xl: "40px" }}
             fontFamily="var(--font-heading)"
           >
             Powerful GPU compute solutions on-demand
@@ -29,9 +42,10 @@ const BannerHome = () => {
           <Text
             fontSize={{ base: "16px", md: "24px" }}
             fontWeight={400}
-            marginBottom={{ base: "20px", md: "58px" }}
+            marginBottom={{ base: "20px", md: "45px" }}
             fontFamily="var(--font-text-main)"
             lineHeight={"normal"}
+            width={{ "3xl": "90%" }}
           >
             Accelerate growth and get closer to the edge with Aethir's
             distributed cloud compute infrastructure. We provide secure,
@@ -46,11 +60,19 @@ const BannerHome = () => {
           </CustomButton>
         </Flex>
         <Image
+          display={{ base: "none", md: "block" }}
           src={appBanner}
           position={"absolute"}
           right={"0px"}
-          top={"-70px"}
-          width={"100%"}
+          top={{ base: "-90px", xl: "-130px" }}
+          width={"1000px"}
+        />
+        <Image
+          display={{ base: "block", md: "none" }}
+          src={appBannerMobile}
+          position={"absolute"}
+          top={"-80px"}
+          right={"0px"}
         />
       </SectionContainer>
       <SectionContainer

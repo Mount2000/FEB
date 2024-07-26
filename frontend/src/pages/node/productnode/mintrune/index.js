@@ -22,7 +22,7 @@ import {
   writeContract,
   waitForTransactionReceipt,
   readContract,
-  estimateGas,
+  getGasPrice,
 } from "@wagmi/core";
 import {
   convertAndDivide,
@@ -219,7 +219,6 @@ const MintRune = () => {
       setIsLoading(true);
       return;
     }
-    console.log({ price });
 
     const discountinfo = await readContract(config, {
       ...nodeManagerContract,
@@ -249,11 +248,17 @@ const MintRune = () => {
       value: price * 10 ** chainDecimal,
     };
 
-    const gasFee = await taikoHeklaClient.estimateContractGas({
-      ...txObj,
-      account: address,
-    });
-    const gasFeeToEther = Number(gasFee) / 10 ** chainDecimal;
+    const [gasPrice, gasLimit] = await Promise.all([
+      getGasPrice(config),
+      taikoHeklaClient.estimateContractGas({
+        ...txObj,
+        account: address,
+      }),
+    ]);
+
+    const gasFeeToEther = Number(gasLimit * gasPrice) / 10 ** chainDecimal;
+
+    console.log({ gasFeeToEther });
 
     if (Number(balance.formatted) < price + gasFeeToEther) {
       dispatch(setMessage(ERROR.notBalance));

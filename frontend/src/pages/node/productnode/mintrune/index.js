@@ -51,12 +51,14 @@ import { ERROR, FAIURE, PENDING, SUCCESS } from "../../../../utils/mesages";
 import ReferralCodeForm from "../../../../components/referralform";
 import { useModal } from "../../../../contexts/useModal";
 import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
+
 const chain_env = process.env.REACT_APP_ENV;
 
 const MintRune = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const billNode = useSelector(selectBillNode);
+
   console.log({ billNode });
   const chains = getChains(config);
   const chainId = getChainId(config);
@@ -126,8 +128,8 @@ const MintRune = () => {
       functionName: "discountCouponsIdUserLinks",
       args: [discountId],
     });
-
     console.log(owner);
+
     if (isDefaultAddress(owner)) {
       setDiscountCodeError("Discount code not exist");
       return;
@@ -219,6 +221,32 @@ const MintRune = () => {
       setIsLoading(true);
       return;
     }
+
+    // const referalId = Number(formatBachiCode(referralCodeValue));
+
+    // const owner = await readContract(config, {
+    //   ...nodeManagerContract,
+    //   functionName: "referralIdUserLinks",
+    //   args: [referalId],
+    // });
+
+    // console.log(owner);
+
+    // const ReferralCode = await readContract(config, {
+    //   ...nodeManagerContract,
+    //   functionName: "userReferralIdLinks",
+    //   args: [owner],
+    // });
+    // console.log({ ReferralCode });
+
+    // const ReferralInformation = await readContract(config, {
+    //   ...nodeManagerContract,
+    //   functionName: "referrals",
+    //   args: [ReferralCode],
+    // });
+    // console.log({ ReferralInformation });
+
+    // setReferralInformation(ReferralInformation);
 
     const discountinfo = await readContract(config, {
       ...nodeManagerContract,
@@ -633,7 +661,7 @@ const MintRune = () => {
               </Flex>
             </Flex>
             <Flex
-              alignItems={"center"}
+              alignItems={"center"} 
               width={"100%"}
               gap={"30px"}
               justifyContent={"space-between"}

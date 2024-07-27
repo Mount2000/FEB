@@ -32,6 +32,20 @@ const CommonButton = ({ children, onClick, isDisabled, ...props }) => {
           backgroundColor: "pink.500",
           clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
         },
+        "@media (max-width: 992px)": {
+          clipPath:
+            "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
+          "::before": {
+            width: "10px",
+            height: "10px",
+            backgroundColor: "pink.500",
+          },
+          "::after": {
+            width: "10px",
+            height: "10px",
+            backgroundColor: "pink.500",
+          },
+        },
       }}
       cursor={isDisabled ? "not-allowed" : "pointer"}
       onClick={isDisabled ? undefined : onClick}

@@ -13,6 +13,7 @@ const CloseButton = ({ children, onClick, ...props }) => {
       borderRadius="0px"
       w={{ base: "60px", xl: "60px" }}
       h={{ base: "60px", xl: "60px" }}
+      _hover={{ bg: "var(--color-main)" }}
       sx={{
         clipPath:
           "polygon(0 16px, 16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%)",

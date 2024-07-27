@@ -12,6 +12,7 @@ import ConnectWalletModal from "./components/wallets/ConnectWallet";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "./store/store";
 
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient();
 root.render(
@@ -21,8 +22,10 @@ root.render(
         <QueryClientProvider client={queryClient}>
           <ReduxProvider store={store}>
             <ModalProvider>
-              <App />
-              <ConnectWalletModal />
+              
+                <App />
+                <ConnectWalletModal />
+              
             </ModalProvider>
           </ReduxProvider>
         </QueryClientProvider>

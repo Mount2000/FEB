@@ -10,6 +10,7 @@ import { HiArrowSmRight } from "react-icons/hi";
 //import image
 import resourcesHome from "../../../assets/img/homepage/resources-home.png";
 import backgroundResources from "../../../assets/img/homepage/background-resources-home.png";
+import { base } from "viem/chains";
 const ResourcesHome = () => {
   return (
     <>
@@ -22,20 +23,32 @@ const ResourcesHome = () => {
           src={resourcesHome}
           position={"absolute"}
           left={"0"}
-          top={"-159.69px"}
+          top={{
+            base: "30px",
+            md: "-20px",
+            lg: "-140px",
+            xl: "-200px",
+            "2xl": "-159.69px",
+          }}
         />
         <Flex
           flexDirection={"column"}
-          width={"50%"}
-          paddingTop={"311.31px"}
+          width={{ base: "100%", md: "50%" }}
+          paddingTop={{
+            base: "48px",
+            md: "86px",
+            lg: "186px",
+            xl: "200px",
+            "2xl": "311.31px",
+          }}
           position={"relative"}
-          marginBottom={"180px"}
+          marginBottom={{ base: "110px", "2xl": "180px" }}
         >
           <Text
-            fontSize={"86px"}
+            fontSize={{ base: "40px", "2xl": "86px" }}
             lineHeight={"normal"}
             fontFamily="var(--font-heading)"
-            marginBottom={"48px"}
+            paddingBottom={{ base: "50px", "2xl": "48px" }}
           >
             resources
           </Text>
@@ -67,6 +80,20 @@ const ResourcesHome = () => {
                   backgroundColor: "pink.500",
                   clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                 },
+                "@media (max-width: 992px)": {
+                  clipPath:
+                    "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
+                  "::before": {
+                    width: "10px",
+                    height: "10px",
+                    backgroundColor: "pink.500",
+                  },
+                  "::after": {
+                    width: "10px",
+                    height: "10px",
+                    backgroundColor: "pink.500",
+                  },
+                },
               }}
             >
               <CommonButton
@@ -83,26 +110,33 @@ const ResourcesHome = () => {
                 >
                   <Flex alignItems={"center"} justifyContent={"space-between"}>
                     <Text
-                      fontSize={"36px"}
+                      fontSize={{
+                        base: "24px",
+                        lg: "32px",
+                        "2xl": "36px",
+                      }}
                       fontFamily="var(--font-heading-main)"
                       lineHeight={"normal"}
                     >
                       Ecosystem
                     </Text>
                     <CommonButton
-                      width={"61px"}
-                      height={"61px"}
+                      width={{ base: "40px", lg: "50px", xl: "61px" }}
+                      height={{ base: "40px", lg: "50px", xl: "61px" }}
                       backgroundColor="var(--color-main)"
                       display={"flex"}
                       alignItems={"center"}
                       justifyContent={"center"}
                     >
                       <Box sx={{ transform: "rotate(-45deg)" }}>
-                        <HiArrowSmRight fontSize={"40px"} color="#000" />
+                        <HiArrowSmRight fontSize={"30px"} color="#000" />
                       </Box>
                     </CommonButton>
                   </Flex>
-                  <Text fontSize={"24px"} fontFamily="var(--font-text-main)">
+                  <Text
+                    fontSize={{ base: "16px", "2xl": "24px" }}
+                    fontFamily="var(--font-text-main)"
+                  >
                     Be a part of the growing Bachi community.
                   </Text>
                 </Flex>
@@ -135,6 +169,20 @@ const ResourcesHome = () => {
                   backgroundColor: "pink.500",
                   clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                 },
+                "@media (max-width: 992px)": {
+                  clipPath:
+                    "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
+                  "::before": {
+                    width: "10px",
+                    height: "10px",
+                    backgroundColor: "pink.500",
+                  },
+                  "::after": {
+                    width: "10px",
+                    height: "10px",
+                    backgroundColor: "pink.500",
+                  },
+                },
               }}
             >
               <CommonButton
@@ -151,29 +199,33 @@ const ResourcesHome = () => {
                 >
                   <Flex alignItems={"center"} justifyContent={"space-between"}>
                     <Text
-                      fontSize={"36px"}
+                      fontSize={{
+                        base: "24px",
+                        lg: "32px",
+                        "2xl": "36px",
+                      }}
                       fontFamily="var(--font-heading-main)"
                       lineHeight={"normal"}
                     >
                       Docs
                     </Text>
                     <CommonButton
-                      width={"61px"}
-                      height={"61px"}
+                      width={{ base: "40px", lg: "50px", xl: "61px" }}
+                      height={{ base: "40px", lg: "50px", xl: "61px" }}
                       backgroundColor="var(--color-main)"
                       display={"flex"}
                       alignItems={"center"}
                       justifyContent={"center"}
                     >
                       <Box sx={{ transform: "rotate(-45deg)" }}>
-                        <HiArrowSmRight fontSize={"40px"} color="#000" />
+                        <HiArrowSmRight fontSize={"30px"} color="#000" />
                       </Box>
                     </CommonButton>
                   </Flex>
                   <Text
-                    fontSize={"24px"}
+                    fontSize={{ base: "16px", "2xl": "24px" }}
                     fontFamily="var(--font-text-main)"
-                    width={"70%"}
+                    width={{ base: "100%", "2xl": "70%" }}
                   >
                     Learn more about our architecture, technology and
                     tokenomics.
@@ -188,24 +240,27 @@ const ResourcesHome = () => {
         position={"relative"}
         backgroundColor="var(--color-main)"
         backgroundImage={`url(${backgroundResources})`}
-        height={"680px"}
+        backgroundSize={"cover"}
+        backgroundPosition={"center"}
+        backgroundRepeat={"no-repeat"}
       >
         <Flex
           flexDirection={"column"}
           alignItems={"center"}
-          paddingTop={"160px"}
-          gap={"100px"}
+          paddingTop={"210px"}
+          paddingBottom={"210px"}
+          gap={{ base: "40px", "2xl": "100px" }}
         >
           <Text
-            fontSize={"86px"}
+            fontSize={{ base: "40px", "2xl": "86px" }}
             textAlign={"center"}
             fontFamily="var(--font-heading)"
           >
             The next evolution of cloud compute
           </Text>
           <CommonButton
-            width={"230px"}
-            height={"70px"}
+            width={{ base: "142px", "2xl": "230px" }}
+            height={{ base: "46", "2xl": "70px" }}
             backgroundColor="var(--color-background)"
             display={"flex"}
             justifyContent={"center"}

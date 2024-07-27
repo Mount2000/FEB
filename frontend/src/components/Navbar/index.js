@@ -62,7 +62,7 @@ const Navbar = () => {
             justifyContent={"center"}
           >
             <Flex alignItems={"center"} gap={"10px"}>
-              <Link to="/">
+              <Link to="/node">
                 <Text
                   fontSize={{ base: "20px", md: "24px" }}
                   fontWeight={400}
@@ -73,7 +73,7 @@ const Navbar = () => {
               </Link>
             </Flex>
             <Flex alignItems={"center"} gap={"10px"}>
-              <Link to="/node">
+              <Link to="">
                 <Text
                   fontSize={{ base: "20px", md: "24px" }}
                   fontFamily="var(--font-text-main)"

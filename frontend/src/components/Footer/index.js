@@ -5,15 +5,27 @@ import CustomButton from "../button";
 import SectionContainer from "../container";
 //import image
 import appLogo from "../../assets/img/app-logo.png";
-
+import { base } from "viem/chains";
 
 const BachiSwapFooter = () => {
   return (
     <>
       <SectionContainer>
-        <Flex flexDirection={"column"} gap={"102px"} paddingBottom={"132px"}>
-          <Flex justifyContent={"space-between"} marginTop={"187px"}>
-            <Flex flexDirection={"column"} gap={"82px"}>
+        <Flex
+          flexDirection={"column"}
+          gap={{ base: "42px", "2xl": "102px" }}
+          paddingBottom={"132px"}
+        >
+          <Flex
+            justifyContent={"space-between"}
+            paddingTop={{ base: "61px", "2xl": "187" }}
+            flexDirection={{ base: "column", md: "row" }}
+            gap={{ base: "49px" }}
+          >
+            <Flex
+              flexDirection={"column"}
+              gap={{ base: "41px", "2xl": "82px" }}
+            >
               <Flex alignItems={"center"} gap={"24.14px"}>
                 <Image src={appLogo} />
                 <Text
@@ -23,11 +35,11 @@ const BachiSwapFooter = () => {
                   BachiSwap
                 </Text>
               </Flex>
-              <Flex alignItems={"center"} gap={"19px"}>
+              <Flex alignItems={"center"}>
                 <CustomButton
                   backgroundColor="var(--color-main)"
-                  width={"240px"}
-                  height={"70px"}
+                  width={{ base: "179px", "2xl": "240px" }}
+                  height={{ base: "46px", "2xl": "70px" }}
                 >
                   Become a partner
                 </CustomButton>
@@ -59,7 +71,11 @@ const BachiSwapFooter = () => {
                   <ListItem>Blog</ListItem>
                 </UnorderedList>
               </Flex> */}
-                <Flex flexDirection={"column"} gap={"22px"} marginRight={"43px"}>
+                <Flex
+                  flexDirection={"column"}
+                  gap={"22px"}
+                  marginRight={"43px"}
+                >
                   <Text
                     fontSize={{ base: "24px", md: "32px" }}
                     color="var(--color-main)"
@@ -118,7 +134,7 @@ const BachiSwapFooter = () => {
           </Flex>
           <Flex
             gap={{ base: "0px", md: "145px" }}
-            fontSize={"20px"}
+            fontSize={{ base: "16px", "2xl": "20px" }}
             fontWeight={500}
             color={"#757575"}
           >

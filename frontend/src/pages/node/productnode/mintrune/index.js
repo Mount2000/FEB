@@ -51,6 +51,7 @@ import { ERROR, FAIURE, PENDING, SUCCESS } from "../../../../utils/mesages";
 import ReferralCodeForm from "../../../../components/referralform";
 import { useModal } from "../../../../contexts/useModal";
 import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
+import toast from "react-hot-toast";
 
 const chain_env = process.env.REACT_APP_ENV;
 
@@ -643,32 +644,9 @@ const MintRune = () => {
             >
               {billNode?.message}
             </Text>
+            <ReferralCopier referralCode={referralCode} />
             <Flex
               alignItems={"center"}
-              justifyContent={"space-between"}
-              gap={"14px"}
-            >
-              <Text
-                fontSize={"28px"}
-                fontWeight={400}
-                fontFamily="var(--font-text-main)"
-              >
-                Link Referral:
-              </Text>
-              <Flex
-                alignItems={"center"}
-                gap={"10px"}
-                padding={"10px"}
-                border={"1px solid #FCDDEC"}
-              >
-                <Text fontSize={"24px"} fontWeight={300}>
-                  {`http://bachi.swap.io/Bachi-Taiko-Swap?referral-code=${referralCode}`}
-                </Text>
-                <Image src={iconNodedetail} />
-              </Flex>
-            </Flex>
-            <Flex
-              alignItems={"center"} 
               width={"100%"}
               gap={"30px"}
               justifyContent={"space-between"}
@@ -761,6 +739,40 @@ const MintRune = () => {
           />
         )}
       </Box>
+    </>
+  );
+};
+
+const ReferralCopier = ({ referralCode }) => {
+  const handleCopy = (label, text) => {
+    toast.success(`${label} copied!`);
+    navigator.clipboard.writeText(text);
+  };
+
+  return (
+    <>
+      <Flex alignItems={"center"} justifyContent={"space-between"} gap={"14px"}>
+        <Text
+          fontSize={"28px"}
+          fontWeight={400}
+          fontFamily="var(--font-text-main)"
+        >
+          Link Referral:
+        </Text>
+        <Flex
+          alignItems={"center"}
+          gap={"10px"}
+          padding={"10px"}
+          border={"1px solid #FCDDEC"}
+          onClick={() => handleCopy("referral", referralCode)}
+          cursor={"pointer"}
+        >
+          <Text fontSize={"24px"} fontWeight={300}>
+            {`http://bachi.swap.io/Bachi-Taiko-Swap?referral-code=${referralCode}`}
+          </Text>
+          <Image src={iconNodedetail} />
+        </Flex>
+      </Flex>
     </>
   );
 };

@@ -248,15 +248,22 @@ const MintRune = () => {
 
     // setReferralInformation(ReferralInformation);
 
-    const discountinfo = await readContract(config, {
-      ...nodeManagerContract,
-      functionName: "discountCoupons",
-      args: [discountCouponIdId],
-    });
+    const [discountinfo, ownerDiscount] = await Promise.all([
+      readContract(config, {
+        ...nodeManagerContract,
+        functionName: "discountCoupons",
+        args: [discountCouponIdId],
+      }),
+      readContract(config, {
+        ...nodeManagerContract,
+        functionName: "discountCouponsIdUserLinks",
+        args: [discountCouponIdId],
+      }),
+    ]);
 
     const discountPercent = discountinfo[1];
-    console.log({ discountPercent });
-    if (discountPercent > 0) {
+    console.log({ ownerDiscount });
+    if (discountPercent > 0 && ownerDiscount !== address) {
       price = price - (price * discountPercent) / 100;
     }
     const balance = await getBalance(config, {

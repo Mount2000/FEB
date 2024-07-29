@@ -51,6 +51,7 @@ import { ERROR, FAIURE, PENDING, SUCCESS } from "../../../../utils/mesages";
 import ReferralCodeForm from "../../../../components/referralform";
 import { useModal } from "../../../../contexts/useModal";
 import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
+import { parseGwei, parseEther, parseUnits } from "viem";
 import toast from "react-hot-toast";
 
 const chain_env = process.env.REACT_APP_ENV;
@@ -68,7 +69,7 @@ const MintRune = () => {
   const chainDecimal = currentChain?.nativeCurrency?.decimals;
   const chainSymbol = currentChain?.nativeCurrency?.symbol;
   // const [nodeId, setNodeId] = useState(1);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const nodeManagerContract = {
     address: node_manager_contract.CONTRACT_ADDRESS,
     abi: node_manager_contract.CONTRACT_ABI,
@@ -173,7 +174,12 @@ const MintRune = () => {
     if (nodeData)
       dispatch(setPrice(convertAndDivide(nodeData[2], chainDecimal) * count));
     if (address) dispatch(setCaller(address));
-  }, [selectProduct, count]);
+  }, [selectProduct, count, address]);
+
+  useEffect(() => {
+    if (nodeData)
+      dispatch(setPrice(convertAndDivide(nodeData[2], chainDecimal) * count));
+  }, [billNode?.nodeId, nodeData]);
 
   console.log({ nodeData });
   const [isLoading, setIsLoading] = useState(false);
@@ -227,32 +233,6 @@ const MintRune = () => {
       return;
     }
 
-    // const referalId = Number(formatBachiCode(referralCodeValue));
-
-    // const owner = await readContract(config, {
-    //   ...nodeManagerContract,
-    //   functionName: "referralIdUserLinks",
-    //   args: [referalId],
-    // });
-
-    // console.log(owner);
-
-    // const ReferralCode = await readContract(config, {
-    //   ...nodeManagerContract,
-    //   functionName: "userReferralIdLinks",
-    //   args: [owner],
-    // });
-    // console.log({ ReferralCode });
-
-    // const ReferralInformation = await readContract(config, {
-    //   ...nodeManagerContract,
-    //   functionName: "referrals",
-    //   args: [ReferralCode],
-    // });
-    // console.log({ ReferralInformation });
-
-    // setReferralInformation(ReferralInformation);
-
     const [discountinfo, ownerDiscount] = await Promise.all([
       readContract(config, {
         ...nodeManagerContract,
@@ -276,6 +256,7 @@ const MintRune = () => {
     });
 
     const priceValue = parseInt(price * 10 ** chainDecimal);
+
     const txObj = {
       ...nodeManagerContract,
       functionName: "multiBuyNode",

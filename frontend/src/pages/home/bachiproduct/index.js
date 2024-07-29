@@ -33,7 +33,7 @@ const ProductHome = () => {
             paddingBottom={"35px"}
             fontFamily="var(--font-text-extra)"
           >
-            BACHI EARTH
+            BACHI Product
           </Text>
           <Text
             fontSize={{
@@ -58,10 +58,10 @@ const ProductHome = () => {
             lineHeight={"normal"}
             fontFamily="var(--font-text-main)"
           >
-            Earth leverages a innovative bare metal GPU cloud designed to
-            provide raw GPU computing power, ensuring high performance without
-            the overhead of virtualization. Ideal for compute-intensive tasks
-            such as AI model training, fine-tuning, and inference.
+            BACHI provides innovative products that empower users to engage in
+            trading. Swap tokens and contribute liquidity to various protocols
+            seamlessly. But that's not all! Users can earn rewards for providing
+            liquidity and actively participate in the BACHI DAO
           </Text>
         </SectionContainer>
       </Flex>
@@ -90,7 +90,7 @@ const ProductHome = () => {
             paddingBottom={{ base: "20px", "2xl": "32px", "3xl": "36px" }}
             fontFamily="var(--font-text-extra)"
           >
-            BACHI ATMOSPHERE
+            BACHI Swap
           </Text>
           <Text
             fontSize={{
@@ -103,7 +103,7 @@ const ProductHome = () => {
             paddingBottom={{ base: "28px", "2xl": "36px", "3xl": "43px" }}
             fontFamily="var(--font-heading)"
           >
-            Leveling up the gaming industry
+            Swap everything in ONE click
           </Text>
           <Text
             fontSize={{
@@ -115,8 +115,8 @@ const ProductHome = () => {
             lineHeight={"normal"}
             fontFamily="var(--font-text-main)"
           >
-            Atmosphere utilizes a highly performant network of low-latency GPUs
-            to enable real-time, high-quality gaming experiences in the cloud.
+            As a Taiko’s native DEX, BACHI allows users to easily trade tokens
+            across the TAIKO network
           </Text>
         </SectionContainer>
         <Image

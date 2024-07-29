@@ -43,7 +43,7 @@ const BackgroundHome = () => {
           textAlign={"center"}
           marginBottom={{ base: "51px", "2xl": "112px" }}
         >
-          Our distributed cloud brings compute closer to the edge.
+          Earn $TAIKO and $BACHI by using BachiSwap today
         </Text>
         <Flex
           alignItems={"center"}
@@ -116,7 +116,7 @@ const BackgroundHome = () => {
                     fontFamily="var(--font-text-extra)"
                     color="var(--color-main)"
                   >
-                    DOCUMENTATION
+                    CLICK TO EARN!
                   </Text>
                   <CommonButton
                     width={{ base: "40px", lg: "50px", xl: "61px" }}
@@ -136,7 +136,7 @@ const BackgroundHome = () => {
                   fontSize={{ base: "20px", "2xl": "24px", "3xl": "36px" }}
                   fontFamily="var(--font-heading-main)"
                 >
-                  Learn about cost effective edge gaming
+                  Setup your gears and earn $TAIKO and $BACHI today
                 </Text>
               </Flex>
             </CommonButton>
@@ -207,7 +207,7 @@ const BackgroundHome = () => {
                     fontFamily="var(--font-text-extra)"
                     color="var(--color-main)"
                   >
-                    DOCUMENTATION
+                    AIRDROP SEASON I
                   </Text>
                   <CommonButton
                     width={{ base: "40px", lg: "50px", xl: "61px" }}
@@ -227,7 +227,7 @@ const BackgroundHome = () => {
                   fontSize={{ base: "20px", "2xl": "24px", "3xl": "36px" }}
                   fontFamily="var(--font-heading-main)"
                 >
-                  Learn about cost effective edge gaming
+                  Join the Bachi communities and win our Airdrop!
                 </Text>
               </Flex>
             </CommonButton>

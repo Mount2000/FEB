@@ -38,7 +38,7 @@ const BannerHome = () => {
             marginBottom={{ base: "10px", sm: "20px", md: "30px", xl: "40px" }}
             fontFamily="var(--font-heading)"
           >
-            Powerful GPU compute solutions on-demand
+            Swap everything on TAIKO
           </Text>
           <Text
             fontSize={{ base: "16px", md: "24px" }}
@@ -48,9 +48,10 @@ const BannerHome = () => {
             lineHeight={"normal"}
             width={{ "3xl": "90%" }}
           >
-            Accelerate growth and get closer to the edge with Aethir's
-            distributed cloud compute infrastructure. We provide secure,
-            cost-effective access to enterprise grade GPUs around the world.
+            Welcome to BachiSwap, the ultimate AMM DEX. Including Layer 1 and
+            Layer 2 solutions, as well as both EVM and non-EVM environments.
+            With BachiSwap, effortlessly swap any token and transfer your assets
+            across different networks with ease
           </Text>
           <CustomButton
             width={{ base: "140px", md: "230px" }}
@@ -113,7 +114,7 @@ const BannerHome = () => {
               fontFamily="var(--font-heading)"
               marginBottom={{ base: "27px", "3xl": "41px" }}
             >
-              43,000+
+              100+
             </Text>
             <Text
               fontSize={{
@@ -128,7 +129,7 @@ const BannerHome = () => {
               marginBottom={{ base: "21px", "3xl": "32px" }}
               textAlign={{ base: "center", md: "start" }}
             >
-              Enterprise grade GPUs on-demand
+              Supported Tokens Pair
             </Text>
             <Text
               fontSize={{
@@ -142,7 +143,7 @@ const BannerHome = () => {
               fontFamily="var(--font-text-main)"
               textAlign={{ base: "center", md: "start" }}
             >
-              Over $400m worth of compute capacity.
+              Exchange everything with BachiSwap
             </Text>
           </Flex>
           <Flex
@@ -162,7 +163,7 @@ const BannerHome = () => {
               fontFamily="var(--font-heading)"
               marginBottom={{ base: "27px", "3xl": "41px" }}
             >
-              23+
+              Easy
             </Text>
             <Text
               fontSize={{
@@ -176,7 +177,7 @@ const BannerHome = () => {
               marginBottom={{ base: "21px", "3xl": "32px" }}
               textAlign={{ base: "center", md: "start" }}
             >
-              Countries supported around the World
+              To use BachiSwap on both EVM and non-EVM evviroments
             </Text>
             <Text
               fontSize={{
@@ -209,7 +210,7 @@ const BannerHome = () => {
               fontFamily="var(--font-heading)"
               marginBottom={{ base: "27px", "3xl": "41px" }}
             >
-              99.99+
+              Grow
             </Text>
             <Text
               fontSize={{
@@ -222,7 +223,7 @@ const BannerHome = () => {
               marginBottom={{ base: "21px", "3xl": "58px" }}
               fontFamily="var(--font-text-extra)"
             >
-              Uptime
+              With Bachi Ecosystem
             </Text>
             <Text
               fontSize={{
@@ -235,7 +236,7 @@ const BannerHome = () => {
               fontFamily="var(--font-text-main)"
               textAlign={{ base: "center", md: "start" }}
             >
-              Exceptional architecture for superior reliability.
+              Grow with us!
             </Text>
           </Flex>
         </Flex>

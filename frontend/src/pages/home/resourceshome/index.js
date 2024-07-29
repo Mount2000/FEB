@@ -118,7 +118,7 @@ const ResourcesHome = () => {
                       fontFamily="var(--font-heading-main)"
                       lineHeight={"normal"}
                     >
-                      Ecosystem
+                      BachiSwap Mining Program
                     </Text>
                     <CommonButton
                       width={{ base: "40px", lg: "50px", xl: "61px" }}
@@ -136,9 +136,7 @@ const ResourcesHome = () => {
                   <Text
                     fontSize={{ base: "16px", "2xl": "24px" }}
                     fontFamily="var(--font-text-main)"
-                  >
-                    Be a part of the growing Bachi community.
-                  </Text>
+                  ></Text>
                 </Flex>
               </CommonButton>
             </Box>
@@ -227,8 +225,7 @@ const ResourcesHome = () => {
                     fontFamily="var(--font-text-main)"
                     width={{ base: "100%", "2xl": "70%" }}
                   >
-                    Learn more about our architecture, technology and
-                    tokenomics.
+                    Learn more with BachiSwap
                   </Text>
                 </Flex>
               </CommonButton>
@@ -256,7 +253,7 @@ const ResourcesHome = () => {
             textAlign={"center"}
             fontFamily="var(--font-heading)"
           >
-            The next evolution of cloud compute
+            The next evolution of Decentralized Exchange
           </Text>
           <CommonButton
             width={{ base: "142px", "2xl": "230px" }}
@@ -272,7 +269,7 @@ const ResourcesHome = () => {
               color={"#FCDDEC"}
               fontWeight={500}
             >
-              Let Do It
+              Join Now
             </Text>
           </CommonButton>
         </Flex>

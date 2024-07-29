@@ -226,7 +226,7 @@ const MintRune = () => {
       setDisabled(false);
       return;
     }
-    
+
     const [discountinfo, ownerDiscount] = await Promise.all([
       readContract(config, {
         ...nodeManagerContract,

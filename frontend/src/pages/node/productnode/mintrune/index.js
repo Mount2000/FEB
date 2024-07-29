@@ -68,7 +68,7 @@ const MintRune = () => {
   const chainDecimal = currentChain?.nativeCurrency?.decimals;
   const chainSymbol = currentChain?.nativeCurrency?.symbol;
   // const [nodeId, setNodeId] = useState(1);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const nodeManagerContract = {
     address: node_manager_contract.CONTRACT_ADDRESS,
     abi: node_manager_contract.CONTRACT_ABI,
@@ -173,7 +173,7 @@ const MintRune = () => {
     if (nodeData)
       dispatch(setPrice(convertAndDivide(nodeData[2], chainDecimal) * count));
     if (address) dispatch(setCaller(address));
-  }, [selectProduct, count]);
+  }, [selectProduct, count, address]);
 
   console.log({ nodeData });
   const [isLoading, setIsLoading] = useState(false);

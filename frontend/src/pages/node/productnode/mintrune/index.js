@@ -232,7 +232,7 @@ const MintRune = () => {
       setDisabled(false);
       return;
     }
-    
+
     const [discountinfo, ownerDiscount] = await Promise.all([
       readContract(config, {
         ...nodeManagerContract,
@@ -255,8 +255,8 @@ const MintRune = () => {
       address: address,
     });
 
-    const priceValue = parseInt(price * 10 ** chainDecimal);
-
+    const priceValue = parseUnits(String(price), chainDecimal);
+    console.log({ priceValue });
     const txObj = {
       ...nodeManagerContract,
       functionName: "multiBuyNode",
@@ -449,8 +449,9 @@ const MintRune = () => {
                   </Text>
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
-                      ? formatNumDynDecimal(
-                          convertAndDivide(nodeData[2], chainDecimal)
+                      ? formatTokenBalance(
+                          convertAndDivide(nodeData[2], chainDecimal),
+                          6
                         )
                       : 0}{" "}
                     {chainSymbol}
@@ -544,8 +545,9 @@ const MintRune = () => {
                   </Text>
                   <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
                     {nodeData
-                      ? formatNumDynDecimal(
-                          convertAndDivide(nodeData[2], chainDecimal) * count
+                      ? formatTokenBalance(
+                          convertAndDivide(nodeData[2], chainDecimal) * count,
+                          6
                         )
                       : 0}{" "}
                     {chainSymbol}

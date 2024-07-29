@@ -1,4 +1,4 @@
-import { extendTheme } from "@chakra-ui/react";
+import { Button, extendTheme } from "@chakra-ui/react";
 
 const customTheme = extendTheme({
   styles: {
@@ -17,6 +17,7 @@ const customTheme = extendTheme({
     "2xl": "96em", // 1536px
     "3xl": "120em", // 1920px
   },
+
   // fonts: {
   //   heading: `'Bruno Ace SC Regular', sans-serif`,
   //   body: `'Bruno Ace SC Regular', sans-serif`,

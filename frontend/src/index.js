@@ -11,6 +11,7 @@ import { ModalProvider } from "./contexts/useModal";
 import ConnectWalletModal from "./components/wallets/ConnectWallet";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "./store/store";
+import { Toaster } from "react-hot-toast";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ root.render(
             <ModalProvider>
               <App />
               <ConnectWalletModal />
+              <Toaster position="bottom-right" reverseOrder={true} />
             </ModalProvider>
           </ReduxProvider>
         </QueryClientProvider>

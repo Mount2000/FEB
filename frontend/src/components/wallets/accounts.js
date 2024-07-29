@@ -81,12 +81,21 @@ export function Account() {
           </Box>
         </Flex>
       </ActionButton>
-      <Select borderRadius={"0px"} size={"lg"} defaultValue={currentChain?.id} onChange={handleSwitchChange}>
+      <Select
+        borderRadius={"0px"}
+        size={"lg"}
+        defaultValue={currentChain?.id}
+        onChange={handleSwitchChange}
+        _focus={{ border: "1px solid var(--color-border-bottom)" }}
+      >
         {chains?.map((chain) => (
-          <option value={chain?.id}>{chain?.name}</option>
+          <option style={{ color: "#000" }} value={chain?.id}>
+            {chain?.name}
+          </option>
         ))}
       </Select>
-      <ActionButton w={"100%"}>
+      {/* <CustomSelect network={chains} handleSwitchChange={handleSwitchChange} currentChain={currentChain}/> */}
+      <ActionButton w={"100%"} _hover={{ bg: "var(--color-main)" }}>
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
           <Text fontSize={"24px"} fontWeight={"500"}>
             Buy Crypto
@@ -96,7 +105,7 @@ export function Account() {
           </Box>
         </Flex>
       </ActionButton>
-      <ActionButton w={"100%"}>
+      <ActionButton w={"100%"} _hover={{ bg: "var(--color-main)" }}>
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
           <Text fontSize={"24px"} fontWeight={"500"}>
             Activity
@@ -106,7 +115,11 @@ export function Account() {
           </Box>
         </Flex>
       </ActionButton>
-      <ActionButton w={"100%"} onClick={() => disconnect()}>
+      <ActionButton
+        w={"100%"}
+        onClick={() => disconnect()}
+        _hover={{ bg: "var(--color-main)" }}
+      >
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
           <Text fontSize={"24px"} fontWeight={"500"}>
             Disconnect

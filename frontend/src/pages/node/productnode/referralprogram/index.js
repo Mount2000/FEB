@@ -1,13 +1,53 @@
 // export default ReferralProgram;
 import { Box, Flex, Grid, Image, Text } from "@chakra-ui/react";
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import { readContract } from "@wagmi/core";
 //import component
 import CommonButton from "../../../../components/button/commonbutton";
 //import image
 import iconReferral from "../../../../assets/img/node/icon-referral-node.png";
 
+import { useAccount } from "wagmi";
+import { config } from "../../../../components/wallets/config";
+import node_manager_contract from "../../../../utils/contracts/node_manager_contract";
+import { useClient } from "wagmi";
+
 const ReferralProgram = () => {
+  const { address } = useAccount();
+  const client = useClient();
+  const chainDecimal = client.chain.nativeCurrency.decimals;
+  console.log(client);
+  const nodeManagerContract = {
+    address: node_manager_contract.CONTRACT_ADDRESS,
+    abi: node_manager_contract.CONTRACT_ABI,
+  };
+
+  const [totalEth, setTotalEth] = useState(0);
+
+  useEffect(() => {
+    if (address) {
+      getTotal();
+    }
+  }, [address]);
+
+  const getTotal = async () => {
+    const ReferralCode = await readContract(config, {
+      ...nodeManagerContract,
+      functionName: "userReferralIdLinks",
+      args: [address],
+    });
+    console.log({ ReferralCode });
+
+    const ReferralInformation = await readContract(config, {
+      ...nodeManagerContract,
+      functionName: "referrals",
+      args: [ReferralCode],
+    });
+    console.log({ ReferralInformation });
+    setTotalEth(Number(ReferralInformation[1]) / 10 ** chainDecimal);
+  };
+  console.log(totalEth);
+
   return (
     <>
       <Flex flexDirection={"column"} gap={"66px"} marginBottom={"600px"}>
@@ -98,7 +138,7 @@ const ReferralProgram = () => {
                         fontWeight={600}
                         lineHeight={"normal"}
                       >
-                        0 {index === 1 ? "BACHI" : "ETH"}
+                        {index === 1 ? "BACHI" : `${totalEth} ETH`}
                       </Text>
                     </Flex>
                   )}
@@ -109,7 +149,7 @@ const ReferralProgram = () => {
         </Flex>
         <CommonButton
           border="0.5px solid var(--color-main)"
-          backgroundColor="var(--color--background--extra)"
+          backgroundColor="var(--color-background-popup)"
         >
           <Grid
             templateColumns="repeat(3, 1fr)"

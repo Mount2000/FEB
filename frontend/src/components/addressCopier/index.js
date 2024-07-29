@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { addressShortener } from "../../utils";
+import toast from "react-hot-toast";
 
 export const AddressCopier = ({
   address,
@@ -17,6 +18,7 @@ export const AddressCopier = ({
   fontSize,
 }) => {
   const handleCopy = (label, text) => {
+    toast.success(`${label} copied!`);
     navigator.clipboard.writeText(text);
   };
 

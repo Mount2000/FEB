@@ -51,12 +51,15 @@ import { ERROR, FAIURE, PENDING, SUCCESS } from "../../../../utils/mesages";
 import ReferralCodeForm from "../../../../components/referralform";
 import { useModal } from "../../../../contexts/useModal";
 import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
+import toast from "react-hot-toast";
+
 const chain_env = process.env.REACT_APP_ENV;
 
 const MintRune = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const billNode = useSelector(selectBillNode);
+
   console.log({ billNode });
   const chains = getChains(config);
   const chainId = getChainId(config);
@@ -126,8 +129,8 @@ const MintRune = () => {
       functionName: "discountCouponsIdUserLinks",
       args: [discountId],
     });
-
     console.log(owner);
+
     if (isDefaultAddress(owner)) {
       setDiscountCodeError("Discount code not exist");
       return;
@@ -223,6 +226,32 @@ const MintRune = () => {
       setDisabled(false);
       return;
     }
+
+    // const referalId = Number(formatBachiCode(referralCodeValue));
+
+    // const owner = await readContract(config, {
+    //   ...nodeManagerContract,
+    //   functionName: "referralIdUserLinks",
+    //   args: [referalId],
+    // });
+
+    // console.log(owner);
+
+    // const ReferralCode = await readContract(config, {
+    //   ...nodeManagerContract,
+    //   functionName: "userReferralIdLinks",
+    //   args: [owner],
+    // });
+    // console.log({ ReferralCode });
+
+    // const ReferralInformation = await readContract(config, {
+    //   ...nodeManagerContract,
+    //   functionName: "referrals",
+    //   args: [ReferralCode],
+    // });
+    // console.log({ ReferralInformation });
+
+    // setReferralInformation(ReferralInformation);
 
     const [discountinfo, ownerDiscount] = await Promise.all([
       readContract(config, {
@@ -620,30 +649,7 @@ const MintRune = () => {
             >
               {billNode?.message}
             </Text>
-            <Flex
-              alignItems={"center"}
-              justifyContent={"space-between"}
-              gap={"14px"}
-            >
-              <Text
-                fontSize={"28px"}
-                fontWeight={400}
-                fontFamily="var(--font-text-main)"
-              >
-                Link Referral:
-              </Text>
-              <Flex
-                alignItems={"center"}
-                gap={"10px"}
-                padding={"10px"}
-                border={"1px solid #FCDDEC"}
-              >
-                <Text fontSize={"24px"} fontWeight={300}>
-                  {`http://bachi.swap.io/Bachi-Taiko-Swap?referral-code=${referralCode}`}
-                </Text>
-                <Image src={iconNodedetail} />
-              </Flex>
-            </Flex>
+            <ReferralCopier referralCode={referralCode} />
             <Flex
               alignItems={"center"}
               width={"100%"}
@@ -738,6 +744,40 @@ const MintRune = () => {
           />
         )}
       </Box>
+    </>
+  );
+};
+
+const ReferralCopier = ({ referralCode }) => {
+  const handleCopy = (label, text) => {
+    toast.success(`${label} copied!`);
+    navigator.clipboard.writeText(text);
+  };
+
+  return (
+    <>
+      <Flex alignItems={"center"} justifyContent={"space-between"} gap={"14px"}>
+        <Text
+          fontSize={"28px"}
+          fontWeight={400}
+          fontFamily="var(--font-text-main)"
+        >
+          Link Referral:
+        </Text>
+        <Flex
+          alignItems={"center"}
+          gap={"10px"}
+          padding={"10px"}
+          border={"1px solid #FCDDEC"}
+          onClick={() => handleCopy("referral", referralCode)}
+          cursor={"pointer"}
+        >
+          <Text fontSize={"24px"} fontWeight={300}>
+            {`http://bachi.swap.io/Bachi-Taiko-Swap?referral-code=${referralCode}`}
+          </Text>
+          <Image src={iconNodedetail} />
+        </Flex>
+      </Flex>
     </>
   );
 };

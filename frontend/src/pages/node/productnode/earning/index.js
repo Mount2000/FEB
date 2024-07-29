@@ -136,6 +136,7 @@ const Earning = () => {
   };
 
   const handleClaim = async () => {
+    setDisabled(true);
     let claimMode = 0;
     if (mining[tab].name == "Taiko") {
       claimMode = 1;
@@ -147,6 +148,7 @@ const Earning = () => {
       setMessage("You not connected wallet");
       setStatus("failure");
       setIsLoading(true);
+      setDisabled(false);
       return;
     }
 
@@ -159,6 +161,7 @@ const Earning = () => {
         setMessage("The minimum quantity has not been reached");
         setStatus("failure");
         setIsLoading(true);
+        setDisabled(false);
         return;
       }
     } else {
@@ -176,12 +179,14 @@ const Earning = () => {
         setMessage("The minimum quantity has not been reached");
         setStatus("failure");
         setIsLoading(true);
+        setDisabled(false);
         return;
       }
       if (Number(stakingContractBalance.formatted) < taikoAmount) {
         setMessage("Not enough balance");
         setStatus("failure");
         setIsLoading(true);
+        setDisabled(false);
         return;
       }
     }
@@ -204,13 +209,13 @@ const Earning = () => {
       setMessage("Not enough balance");
       setStatus("failure");
       setIsLoading(true);
+      setDisabled(false);
       return;
     }
 
     setMessage(PENDING.txAwait);
     setStatus(null);
     setIsLoading(true);
-    setDisabled(true);
     try {
       const hash = await writeContract(config, {
         ...txObj,
@@ -241,6 +246,7 @@ const Earning = () => {
       setMessage(FAIURE.txFalure);
       setStatus("failure");
       setIsLoading(true);
+      setDisabled(false);
     }
   };
 

@@ -203,23 +203,27 @@ const MintRune = () => {
   };
 
   const handlePayNow = async () => {
+    setDisabled(true);
     let price = billNode?.price;
     if (!address) {
       dispatch(setMessage("You not connected wallet"));
       setPaymentStatus("failure");
       setIsLoading(true);
+      setDisabled(false);
       return;
     }
     if (count === 0) {
       dispatch(setMessage("Invalid quantity"));
       setPaymentStatus("failure");
       setIsLoading(true);
+      setDisabled(false);
       return;
     }
     if (billNode?.price === 0) {
       dispatch(setMessage("Invalid price"));
       setPaymentStatus("failure");
       setIsLoading(true);
+      setDisabled(false);
       return;
     }
     
@@ -245,6 +249,7 @@ const MintRune = () => {
       address: address,
     });
 
+    const priceValue = parseInt(price * 10 ** chainDecimal);
     const txObj = {
       ...nodeManagerContract,
       functionName: "multiBuyNode",
@@ -255,7 +260,7 @@ const MintRune = () => {
         discountCouponIdId,
         billNode?.qty,
       ],
-      value: price * 10 ** chainDecimal,
+      value: priceValue,
     };
 
     const [gasPrice, gasLimit] = await Promise.all([
@@ -274,11 +279,11 @@ const MintRune = () => {
       dispatch(setMessage(ERROR.notBalance));
       setPaymentStatus("failure");
       setIsLoading(true);
+      setDisabled(false);
       return;
     }
     dispatch(setMessage(PENDING.txAwait));
     setIsLoading(true);
-    setDisabled(true);
     setPaymentStatus(null);
     try {
       const hash = await writeContract(config, {

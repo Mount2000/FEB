@@ -78,7 +78,7 @@ const NavbarMobile = ({ zIndex, handleShowNav }) => {
             paddingLeft={"25px"}
             borderBottom={"0.25px solid #5B5B5B"}
           >
-            <Link to="/">
+            <Link to="/node">
               <Text>Mine TAIKO</Text>
             </Link>
           </Box>
@@ -88,7 +88,7 @@ const NavbarMobile = ({ zIndex, handleShowNav }) => {
             paddingLeft={"25px"}
             borderBottom={"0.25px solid #5B5B5B"}
           >
-            <Link to="/node">
+            <Link to="">
               <Text>Airdrop</Text>
             </Link>
           </Box>

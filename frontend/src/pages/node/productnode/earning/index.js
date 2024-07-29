@@ -117,13 +117,13 @@ const Earning = () => {
       name: "Taiko",
       speed: nodeData ? Number(nodeData[3]) : 0,
       level: "1",
-      amount: formatTokenBalance(convertAndDivide(taikoAmount, chainDecimal)),
+      amount: formatTokenBalance(convertAndDivide(taikoAmount, chainDecimal), 6),
     },
     {
       name: "Bachi",
       speed: nodeData ? Number(nodeData[3]) : 0,
       level: "1",
-      amount: formatTokenBalance(convertAndDivide(bachiAmount, chainDecimal)),
+      amount: formatTokenBalance(convertAndDivide(bachiAmount, chainDecimal), 6),
     },
   ];
 

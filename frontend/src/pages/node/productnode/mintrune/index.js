@@ -51,6 +51,7 @@ import { ERROR, FAIURE, PENDING, SUCCESS } from "../../../../utils/mesages";
 import ReferralCodeForm from "../../../../components/referralform";
 import { useModal } from "../../../../contexts/useModal";
 import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
+import { parseGwei, parseEther, parseUnits } from "viem";
 import toast from "react-hot-toast";
 
 const chain_env = process.env.REACT_APP_ENV;
@@ -175,6 +176,11 @@ const MintRune = () => {
     if (address) dispatch(setCaller(address));
   }, [selectProduct, count, address]);
 
+  useEffect(() => {
+    if (nodeData)
+      dispatch(setPrice(convertAndDivide(nodeData[2], chainDecimal) * count));
+  }, [billNode?.nodeId, nodeData]);
+
   console.log({ nodeData });
   const [isLoading, setIsLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -226,7 +232,7 @@ const MintRune = () => {
       setDisabled(false);
       return;
     }
-
+    
     const [discountinfo, ownerDiscount] = await Promise.all([
       readContract(config, {
         ...nodeManagerContract,
@@ -250,6 +256,7 @@ const MintRune = () => {
     });
 
     const priceValue = parseInt(price * 10 ** chainDecimal);
+
     const txObj = {
       ...nodeManagerContract,
       functionName: "multiBuyNode",

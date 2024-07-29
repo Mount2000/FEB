@@ -2,13 +2,11 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 const Quantity = ({ count, setCount }) => {
-  // const [count, setCount] = useState(0);
-
   const increaseCount = () => {
     if (count < 10) setCount(count + 1);
   };
   const reduceCount = () => {
-    if (count > 0) setCount(count - 1);
+    if (count > 1) setCount(count - 1);
   };
   return (
     <Flex alignItems={"center"}>

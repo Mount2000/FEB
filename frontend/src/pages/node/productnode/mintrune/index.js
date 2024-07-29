@@ -233,6 +233,32 @@ const MintRune = () => {
       return;
     }
 
+    // const referalId = Number(formatBachiCode(referralCodeValue));
+
+    // const owner = await readContract(config, {
+    //   ...nodeManagerContract,
+    //   functionName: "referralIdUserLinks",
+    //   args: [referalId],
+    // });
+
+    // console.log(owner);
+
+    // const ReferralCode = await readContract(config, {
+    //   ...nodeManagerContract,
+    //   functionName: "userReferralIdLinks",
+    //   args: [owner],
+    // });
+    // console.log({ ReferralCode });
+
+    // const ReferralInformation = await readContract(config, {
+    //   ...nodeManagerContract,
+    //   functionName: "referrals",
+    //   args: [ReferralCode],
+    // });
+    // console.log({ ReferralInformation });
+
+    // setReferralInformation(ReferralInformation);
+
     const [discountinfo, ownerDiscount] = await Promise.all([
       readContract(config, {
         ...nodeManagerContract,

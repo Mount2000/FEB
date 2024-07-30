@@ -15,7 +15,7 @@ import {
   getChainId,
   getChains,
   readContract,
-  getGasPrice
+  getGasPrice,
 } from "@wagmi/core";
 import { config } from "../../../../components/wallets/config";
 import useInterval from "../../../../hooks/useInterval";
@@ -117,13 +117,19 @@ const Earning = () => {
       name: "Taiko",
       speed: nodeData ? Number(nodeData[3]) : 0,
       level: "1",
-      amount: formatTokenBalance(convertAndDivide(taikoAmount, chainDecimal), 6),
+      amount: formatTokenBalance(
+        convertAndDivide(taikoAmount, chainDecimal),
+        6
+      ),
     },
     {
       name: "Bachi",
       speed: nodeData ? Number(nodeData[3]) : 0,
       level: "1",
-      amount: formatTokenBalance(convertAndDivide(bachiAmount, chainDecimal), 6),
+      amount: formatTokenBalance(
+        convertAndDivide(bachiAmount, chainDecimal),
+        6
+      ),
     },
   ];
 
@@ -253,26 +259,26 @@ const Earning = () => {
 
   return (
     <>
-      <SectionContainer>
+      <SectionContainer padding={"0px"}>
         <Flex
           flexDirection={"column"}
           alignItems={"center"}
-          paddingTop={"108px"}
+          paddingTop={{ base: "60px", "2xl": "108px" }}
         >
           <CommonButton
             marginBottom={"34px"}
             padding={"37px 35px 34px 35px"}
             border="0.5px solid var(--color-main) !important"
-            width={"40%"}
+            width={{ base: "100%", "2xl": "40%" }}
           >
             <Flex flexDirection={"column"}>
               <Flex
                 alignItems={"center"}
                 justifyContent={"space-between"}
-                gap={"30px"}
+                gap={{ base: "15px", "2xl": "30px" }}
               >
                 <Text
-                  fontSize={"40px"}
+                  fontSize={{ base: "24px", "2xl": "40px" }}
                   fontWeight={400}
                   fontFamily="var(--font-text-extra)"
                   color="var(--color-main)"
@@ -283,12 +289,15 @@ const Earning = () => {
                   backgroundColor="var(--color-main)"
                   padding={"16px 30px 15px 30px"}
                 >
-                  <Text fontSize={"24px"} fontWeight={400}>
+                  <Text
+                    fontSize={{ base: "18px", "2xl": "24px" }}
+                    fontWeight={400}
+                  >
                     Withdraw
                   </Text>
                 </CommonButton>
               </Flex>
-              <Text fontSize={"40px"} fontWeight={700}>
+              <Text fontSize={{ base: "24px", "2xl": "40px" }} fontWeight={700}>
                 {formatTokenBalance(
                   convertAndDivide(bachiClaimedAmount, chainDecimal)
                 )}
@@ -299,16 +308,16 @@ const Earning = () => {
             marginBottom={"42px"}
             padding={"37px 35px 34px 35px"}
             border="0.5px solid var(--color-main)"
-            width={"40%"}
+            width={{ base: "100%", "2xl": "40%" }}
           >
             <Flex flexDirection={"column"}>
               <Flex
                 alignItems={"center"}
                 justifyContent={"space-between"}
-                gap={"30px"}
+                gap={{ base: "15px", "2xl": "30px" }}
               >
                 <Text
-                  fontSize={"40px"}
+                  fontSize={{ base: "24px", "2xl": "40px" }}
                   fontWeight={400}
                   fontFamily="var(--font-text-extra)"
                   color="var(--color-main)"
@@ -319,12 +328,15 @@ const Earning = () => {
                   backgroundColor="var(--color-main)"
                   padding={"16px 30px 15px 30px"}
                 >
-                  <Text fontSize={"24px"} fontWeight={400}>
+                  <Text
+                    fontSize={{ base: "18px", "2xl": "24px" }}
+                    fontWeight={400}
+                  >
                     Withdraw
                   </Text>
                 </CommonButton>
               </Flex>
-              <Text fontSize={"40px"} fontWeight={700}>
+              <Text fontSize={{ base: "24px", "2xl": "40px" }} fontWeight={700}>
                 {formatTokenBalance(
                   convertAndDivide(taikoClaimedAmount, chainDecimal)
                 )}
@@ -333,7 +345,7 @@ const Earning = () => {
           </CommonButton>
           <Box
             border="0.5px solid #FCDDEC"
-            width={"40%"}
+            width={{ base: "100%", "2xl": "40%" }}
             backgroundColor="var(--color-background-popup)"
             sx={{
               backdropFilter: "blur(10px) !important",
@@ -364,7 +376,10 @@ const Earning = () => {
             <Flex
               flexDirection={"column"}
               alignItems={"center"}
-              padding={"43px 41px 48px 41px"}
+              padding={{
+                base: "18px 21px 28px 19px",
+                "2xl": "43px 41px 48px 41px",
+              }}
             >
               <CommonButton
                 display={"flex"}
@@ -405,7 +420,10 @@ const Earning = () => {
                   padding={"10px 20px 10px 20px"}
                   onClick={() => setTab(0)}
                 >
-                  <Text fontSize={"24px"} fontWeight={400}>
+                  <Text
+                    fontSize={{ base: "16px", "2xl": "24px" }}
+                    fontWeight={400}
+                  >
                     TAIKO Mining
                   </Text>
                 </Box>
@@ -441,17 +459,21 @@ const Earning = () => {
                   backgroundColor={tab == 1 ? "var(--color-main)" : ""}
                   onClick={() => setTab(1)}
                 >
-                  <Text color={"#000"} fontSize={"24px"} fontWeight={400}>
+                  <Text
+                    color={"#000"}
+                    fontSize={{ base: "16px", "2xl": "24px" }}
+                    fontWeight={400}
+                  >
                     BACHI Mining
                   </Text>
                 </Box>
               </CommonButton>
               <Image src={earningNode} />
-              <Text fontSize={"40px"} fontWeight={700}>
+              <Text fontSize={{ base: "32px", "2xl": "40px" }} fontWeight={700}>
                 {mining[tab].amount} {mining[tab].name}
               </Text>
               <Text
-                fontSize={"24px"}
+                fontSize={{ base: "16px", "2xl": "24px" }}
                 fontWeight={500}
                 color="var(--color-main)"
                 marginBottom={"61px"}
@@ -472,7 +494,11 @@ const Earning = () => {
                   paddingTop={"10px"}
                   paddingBottom={"10px"}
                 >
-                  <Text color={"#000"} fontSize={"24px"} fontWeight={500}>
+                  <Text
+                    color={"#000"}
+                    fontSize={{ base: "16px", "2xl": "24px" }}
+                    fontWeight={500}
+                  >
                     Upgrade miner
                   </Text>
                 </CommonButton>
@@ -486,7 +512,10 @@ const Earning = () => {
                   onClick={address ? handleClaim : onOpenConnectWalletModal}
                   isDisabled={disabled}
                 >
-                  <Text fontSize={"24px"} fontWeight={500}>
+                  <Text
+                    fontSize={{ base: "16px", "2xl": "24px" }}
+                    fontWeight={500}
+                  >
                     {address ? "Claim" : "CONNECT WALLET NOW"}
                   </Text>
                 </CommonButton>

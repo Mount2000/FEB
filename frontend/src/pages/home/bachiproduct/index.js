@@ -4,7 +4,7 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import appProduct from "../../../assets/img/homepage/app-product.png";
 import appProductHome from "../../../assets/img/homepage/app-product-home.png";
 import SectionContainer from "../../../components/container";
-import { base } from "viem/chains";
+
 const ProductHome = () => {
   return (
     <Box marginBottom={{ xl: "100px", "2xl": "197px" }}>
@@ -75,6 +75,7 @@ const ProductHome = () => {
           flexDirection={"column"}
           paddingLeft={{
             base: "24px",
+            md: "57px",
             lg: "10%",
             xl: "12%",
             "2xl": "10%",
@@ -84,7 +85,7 @@ const ProductHome = () => {
           paddingTop={{ lg: "100px", "3xl": "150px" }}
         >
           <Text
-            fontSize={{ base: "24px", "3xl": "40px" }}
+            fontSize={{ base: "24px", "2xl": "32px", "3xl": "40px" }}
             color={"#E42493"}
             lineHeight={"normal"}
             paddingBottom={{ base: "20px", "2xl": "32px", "3xl": "36px" }}
@@ -121,7 +122,7 @@ const ProductHome = () => {
         </SectionContainer>
         <Image
           height={{ base: "100%", lg: "130%", "3xl": "800px" }}
-          width={{ lg: "600px", xl: "700px ", "2xl": "780px", "3xl": "872px" }}
+          width={{ lg: "600px", xl: "700px ", "3xl": "872px" }}
           position={{ base: "relative", lg: "absolute" }}
           right={{ lg: "0px" }}
           top={{ lg: "30px", xl: "0px", "3xl": "200px" }}

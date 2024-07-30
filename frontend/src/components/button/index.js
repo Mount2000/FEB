@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 
 const CustomButton = ({ children, onClick, ...props }) => {
   return (
@@ -8,9 +8,8 @@ const CustomButton = ({ children, onClick, ...props }) => {
       // bg="pink.500"
       color="white"
       fontWeight="400"
-      fontFamily={`'Inter', sans-serif`}
       fontSize={"20px"}
-      position="relative"
+      // position="relative"
       borderRadius="3px"
       // height={"60px"}
       sx={{
@@ -23,8 +22,8 @@ const CustomButton = ({ children, onClick, ...props }) => {
           left: 0,
           width: "20px",
           height: "20px",
-          // backgroundColor: "pink.500",
-          clipPath: "polygon(0 0, 100% 0, 0 100%)",
+          backgroundColor: "#EB7FB3",
+          clipPath: "polygon(0 100%, 100% 100%, 0 0)",
         },
         "::after": {
           content: '""',
@@ -33,7 +32,7 @@ const CustomButton = ({ children, onClick, ...props }) => {
           right: 0,
           width: "20px",
           height: "20px",
-          // backgroundColor: "pink.500",
+          backgroundColor: "#EB7FB3",
           clipPath: "polygon(100% 0, 0 0, 100% 100%)",
         },
         "@media (max-width: 768px)": {
@@ -42,10 +41,12 @@ const CustomButton = ({ children, onClick, ...props }) => {
           "::before": {
             width: "10px",
             height: "10px",
+            backgroundColor: "#EB7FB3",
           },
           "::after": {
             width: "10px",
             height: "10px",
+            backgroundColor: "#EB7FB3",
           },
         },
       }}

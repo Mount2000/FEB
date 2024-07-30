@@ -84,160 +84,237 @@ const BannerHome = () => {
         z-index={"10"}
         position={"relative"}
       >
-        <Flex
-          paddingTop={{ base: "55px", md: "30px" }}
-          justifyContent={"space-between"}
-          paddingBottom={{
-            base: "52px",
-            md: "40px",
-            "2xl": "50px",
-            "3xl": "65px",
-          }}
-          wrap={{ base: "wrap", xl: "nowrap" }}
-          gap={{ md: "5px", xl: "10px", "3xl": "160px" }}
-        >
+        <Flex flexDirection={"column"}>
           <Flex
-            flexDirection={"column"}
-            alignItems={{ base: "center", md: "flex-start" }}
-            width={{ base: "100%", md: "49%" }}
-            paddingBottom={{ base: "63px", xl: "0px" }}
+            paddingTop={{ base: "55px", md: "30px" }}
+            justifyContent={"space-between"}
+            paddingBottom={{
+              base: "52px",
+              md: "40px",
+              xl: "48px",
+            }}
+            wrap={{ base: "wrap", xl: "nowrap" }}
+            gap={{ md: "5px", xl: "10px", "2xl": "100px", "3xl": "160px" }}
           >
-            <Text
-              fontSize={{
-                base: "40px",
-                md: "48px",
-                "2xl": "68px",
-                "3xl": "96px",
-              }}
-              fontWeight={"400"}
-              lineHeight={"normal"}
-              fontFamily="var(--font-heading)"
-              marginBottom={{ base: "27px", "3xl": "41px" }}
+            <Flex
+              flexDirection={"column"}
+              alignItems={{ base: "center", md: "flex-start" }}
+              width={{ base: "100%", md: "49%" }}
+              paddingBottom={{ base: "63px", xl: "0px" }}
             >
-              100+
-            </Text>
-            <Text
-              fontSize={{
-                base: "24px",
-                md: "28px",
-                "2xl": "32px",
-                "3xl": "40px",
-              }}
-              fontWeight={"400"}
-              lineHeight={"normal"}
-              fontFamily="var(--font-text-extra)"
-              marginBottom={{ base: "21px", "3xl": "32px" }}
-              textAlign={{ base: "center", md: "start" }}
+              <Text
+                fontSize={{
+                  base: "40px",
+                  md: "48px",
+                  "2xl": "68px",
+                  "3xl": "96px",
+                }}
+                fontWeight={"400"}
+                lineHeight={"normal"}
+                fontFamily="var(--font-heading)"
+                marginBottom={{ base: "27px", "3xl": "41px" }}
+              >
+                100+
+              </Text>
+              <Text
+                fontSize={{
+                  base: "24px",
+                  md: "28px",
+                  "2xl": "32px",
+                  "3xl": "40px",
+                }}
+                fontWeight={"400"}
+                lineHeight={"normal"}
+                fontFamily="var(--font-text-extra)"
+                marginBottom={{ base: "21px", "3xl": "32px" }}
+                textAlign={{ base: "center", md: "start" }}
+              >
+                Supported Tokens Pair
+              </Text>
+              <Text
+                display={{ base: "block", xl: "none" }}
+                fontSize={{
+                  base: "16px",
+                  md: "18px",
+                  "2xl": "20px",
+                  "3xl": "24px",
+                }}
+                fontWeight={"400"}
+                lineHeight={"normal"}
+                fontFamily="var(--font-text-main)"
+                textAlign={{ base: "center", md: "start" }}
+              >
+                Exchange everything with BachiSwap
+              </Text>
+            </Flex>
+            <Flex
+              flexDirection={"column"}
+              alignItems={{ base: "center", md: "flex-start" }}
+              width={{ base: "100%", md: "49%" }}
+              paddingBottom={{ base: "63px", xl: "0px" }}
             >
-              Supported Tokens Pair
-            </Text>
-            <Text
-              fontSize={{
-                base: "16px",
-                md: "18px",
-                "2xl": "20px",
-                "3xl": "24px",
-              }}
-              fontWeight={"400"}
-              lineHeight={"normal"}
-              fontFamily="var(--font-text-main)"
-              textAlign={{ base: "center", md: "start" }}
+              <Text
+                fontSize={{
+                  base: "40px",
+                  md: "48px",
+                  "2xl": "68px",
+                  "3xl": "96px",
+                }}
+                lineHeight={"normal"}
+                fontFamily="var(--font-heading)"
+                marginBottom={{ base: "27px", "3xl": "41px" }}
+              >
+                Easy
+              </Text>
+              <Text
+                fontSize={{
+                  base: "24px",
+                  md: "28px",
+                  "2xl": "32px",
+                  "3xl": "40px",
+                }}
+                lineHeight={"normal"}
+                fontFamily="var(--font-text-extra)"
+                marginBottom={{ base: "21px", "xl": "0px" }}
+                textAlign={{ base: "center", md: "start" }}
+              >
+                To use BachiSwap on both EVM and non-EVM evviroments
+              </Text>
+              <Text
+                display={{ base: "block", xl: "none" }}
+                fontSize={{
+                  base: "16px",
+                  md: "18px",
+                  "2xl": "20px",
+                  "3xl": "24px",
+                }}
+                fontWeight={"400"}
+                lineHeight={"normal"}
+                fontFamily="var(--font-text-main)"
+                textAlign={{ base: "center", md: "start" }}
+              >
+                Bringing you closer to the edge.
+              </Text>
+            </Flex>
+            <Flex
+              flexDirection={"column"}
+              alignItems={{ base: "center", md: "flex-start" }}
+              width={{ base: "100%", md: "49%" }}
             >
-              Exchange everything with BachiSwap
-            </Text>
+              <Text
+                fontSize={{
+                  base: "40px",
+                  md: "48px",
+                  "2xl": "68px",
+                  "3xl": "96px",
+                }}
+                lineHeight={"normal"}
+                fontFamily="var(--font-heading)"
+                marginBottom={{ base: "27px", "3xl": "41px" }}
+              >
+                Grow
+              </Text>
+              <Text
+                fontSize={{
+                  base: "24px",
+                  md: "28px",
+                  "2xl": "32px",
+                  "3xl": "40px",
+                }}
+                lineHeight={"normal"}
+                marginBottom={{ base: "21px", "3xl": "58px" }}
+                fontFamily="var(--font-text-extra)"
+              >
+                With Bachi Ecosystem
+              </Text>
+              <Text
+                display={{ base: "block", xl: "none" }}
+                fontSize={{
+                  base: "16px",
+                  md: "18px",
+                  "2xl": "20px",
+                  "3xl": "24px",
+                }}
+                lineHeight={"normal"}
+                fontFamily="var(--font-text-main)"
+                textAlign={{ base: "center", md: "start" }}
+              >
+                Grow with us!
+              </Text>
+            </Flex>
           </Flex>
           <Flex
-            flexDirection={"column"}
-            alignItems={{ base: "center", md: "flex-start" }}
-            width={{ base: "100%", md: "49%" }}
-            paddingBottom={{ base: "63px", xl: "0px" }}
+            display={{ base: "none", xl: "flex" }}
+            justifyContent={"space-between"}
+            paddingBottom={{
+              base: "52px",
+              md: "40px",
+              "2xl": "50px",
+              "3xl": "65px",
+            }}
+            gap={{ md: "5px", xl: "10px", "2xl": "100px", "3xl": "160px" }}
           >
-            <Text
-              fontSize={{
-                base: "40px",
-                md: "48px",
-                "2xl": "68px",
-                "3xl": "96px",
-              }}
-              lineHeight={"normal"}
-              fontFamily="var(--font-heading)"
-              marginBottom={{ base: "27px", "3xl": "41px" }}
+            <Flex
+              flexDirection={"column"}
+              alignItems={{ base: "center", md: "flex-start" }}
+              width={{ base: "100%", md: "49%" }}
+              paddingBottom={{ base: "63px", xl: "0px" }}
             >
-              Easy
-            </Text>
-            <Text
-              fontSize={{
-                base: "24px",
-                md: "28px",
-                "2xl": "32px",
-                "3xl": "40px",
-              }}
-              lineHeight={"normal"}
-              fontFamily="var(--font-text-extra)"
-              marginBottom={{ base: "21px", "3xl": "32px" }}
-              textAlign={{ base: "center", md: "start" }}
+              <Text
+                fontSize={{
+                  base: "16px",
+                  md: "18px",
+                  "2xl": "20px",
+                  "3xl": "24px",
+                }}
+                fontWeight={"400"}
+                lineHeight={"normal"}
+                fontFamily="var(--font-text-main)"
+                textAlign={{ base: "center", md: "start" }}
+              >
+                Exchange everything with BachiSwap
+              </Text>
+            </Flex>
+            <Flex
+              flexDirection={"column"}
+              alignItems={{ base: "center", md: "flex-start" }}
+              width={{ base: "100%", md: "49%" }}
+              paddingBottom={{ base: "63px", xl: "0px" }}
             >
-              To use BachiSwap on both EVM and non-EVM evviroments
-            </Text>
-            <Text
-              fontSize={{
-                base: "16px",
-                md: "18px",
-                "2xl": "20px",
-                "3xl": "24px",
-              }}
-              fontWeight={"400"}
-              lineHeight={"normal"}
-              fontFamily="var(--font-text-main)"
-              textAlign={{ base: "center", md: "start" }}
+              <Text
+                fontSize={{
+                  base: "16px",
+                  md: "18px",
+                  "2xl": "20px",
+                  "3xl": "24px",
+                }}
+                fontWeight={"400"}
+                lineHeight={"normal"}
+                fontFamily="var(--font-text-main)"
+                textAlign={{ base: "center", md: "start" }}
+              >
+                Bringing you closer to the edge.
+              </Text>
+            </Flex>
+            <Flex
+              flexDirection={"column"}
+              alignItems={{ base: "center", md: "flex-start" }}
+              width={{ base: "100%", md: "49%" }}
             >
-              Bringing you closer to the edge.
-            </Text>
-          </Flex>
-          <Flex
-            flexDirection={"column"}
-            alignItems={{ base: "center", md: "flex-start" }}
-            width={{ base: "100%", md: "49%" }}
-          >
-            <Text
-              fontSize={{
-                base: "40px",
-                md: "48px",
-                "2xl": "68px",
-                "3xl": "96px",
-              }}
-              lineHeight={"normal"}
-              fontFamily="var(--font-heading)"
-              marginBottom={{ base: "27px", "3xl": "41px" }}
-            >
-              Grow
-            </Text>
-            <Text
-              fontSize={{
-                base: "24px",
-                md: "28px",
-                "2xl": "32px",
-                "3xl": "40px",
-              }}
-              lineHeight={"normal"}
-              marginBottom={{ base: "21px", "3xl": "58px" }}
-              fontFamily="var(--font-text-extra)"
-            >
-              With Bachi Ecosystem
-            </Text>
-            <Text
-              fontSize={{
-                base: "16px",
-                md: "18px",
-                "2xl": "20px",
-                "3xl": "24px",
-              }}
-              lineHeight={"normal"}
-              fontFamily="var(--font-text-main)"
-              textAlign={{ base: "center", md: "start" }}
-            >
-              Grow with us!
-            </Text>
+              <Text
+                fontSize={{
+                  base: "16px",
+                  md: "18px",
+                  "2xl": "20px",
+                  "3xl": "24px",
+                }}
+                lineHeight={"normal"}
+                fontFamily="var(--font-text-main)"
+                textAlign={{ base: "center", md: "start" }}
+              >
+                Grow with us!
+              </Text>
+            </Flex>
           </Flex>
         </Flex>
       </SectionContainer>

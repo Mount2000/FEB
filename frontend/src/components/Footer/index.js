@@ -1,11 +1,18 @@
-import { Flex, Image, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Image,
+  ListItem,
+  Text,
+  UnorderedList,
+} from "@chakra-ui/react";
 import React from "react";
 //import component
 import CustomButton from "../button";
 import SectionContainer from "../container";
 //import image
 import appLogo from "../../assets/img/app-logo.png";
-import { base } from "viem/chains";
+import CommonButton from "../button/commonbutton";
 
 const BachiSwapFooter = () => {
   return (
@@ -14,13 +21,13 @@ const BachiSwapFooter = () => {
         <Flex
           flexDirection={"column"}
           gap={{ base: "42px", "2xl": "102px" }}
-          paddingBottom={"132px"}
+          paddingBottom={{ base: "65px", "2xl": "132px" }}
         >
           <Flex
             justifyContent={"space-between"}
             paddingTop={{ base: "61px", "2xl": "187" }}
-            flexDirection={{ base: "column", md: "row" }}
-            gap={{ base: "49px" }}
+            flexDirection={{ base: "column", xl: "row" }}
+            gap={{ base: "49px", xl: "200px" }}
           >
             <Flex
               flexDirection={"column"}
@@ -35,29 +42,47 @@ const BachiSwapFooter = () => {
                   BachiSwap
                 </Text>
               </Flex>
-              <Flex alignItems={"center"}>
+              <Flex alignItems={"center"} gap={{ base: "13px", "2xl": "19px" }}>
                 <CustomButton
                   backgroundColor="var(--color-main)"
-                  width={{ base: "179px", "2xl": "240px" }}
+                  width={{ base: "142px", "2xl": "183px" }}
+                  height={{ base: "46px", "2xl": "70px" }}
+                >
+                  Get Started
+                </CustomButton>
+                <CustomButton
+                  border={"0.5px solid #EB7FB3"}
+                  backgroundColor={"transparent"}
+                  width={{ base: "174px", "2xl": "235px" }}
                   height={{ base: "46px", "2xl": "70px" }}
                 >
                   Become a partner
                 </CustomButton>
-                {/* <CustomButton>Become a partner</CustomButton> */}
               </Flex>
             </Flex>
-            <Flex flexDirection={"column"}>
-              <Flex>
-                {/* <Flex flexDirection={"column"} marginRight={"164px"}>
-                <Text fontSize={{ base: "24px", md: "32px" }} color={"#E42493"}>
+            <Flex wrap={"wrap"} gap={{ base: "35px" }}>
+              <Flex flexDirection={"column"} width={{ base: "40%" }}>
+                <Text
+                  fontSize={{ base: "24px", md: "32px" }}
+                  fontFamily="var(--font-text-extra)"
+                  color={"#E42493"}
+                >
                   QUICKLINKS
                 </Text>
-                <Text fontSize={{ base: "16px", md: "24px" }} fontWeight={400}>
+                <Text
+                  fontSize={{ base: "16px", md: "24px" }}
+                  fontWeight={400}
+                  fontFamily={"var(--font-text-main)"}
+                >
                   Airdrop
                 </Text>
               </Flex>
-              <Flex flexDirection={"column"} marginRight={"140px"}>
-                <Text fontSize={{ base: "24px", md: "32px" }} color={"#E42493"}>
+              <Flex flexDirection={"column"} width={{ base: "40%" }}>
+                <Text
+                  fontSize={{ base: "24px", md: "32px" }}
+                  color={"#E42493"}
+                  fontFamily="var(--font-text-extra)"
+                >
                   RESOURCES
                 </Text>
                 <UnorderedList
@@ -65,44 +90,39 @@ const BachiSwapFooter = () => {
                   marginLeft={"0px"}
                   fontSize={{ base: "16px", md: "24px" }}
                   fontWeight={400}
+                  fontFamily={"var(--font-text-main)"}
                 >
                   <ListItem>Ecosystem</ListItem>
                   <ListItem>Docs</ListItem>
                   <ListItem>Blog</ListItem>
                 </UnorderedList>
-              </Flex> */}
-                <Flex
-                  flexDirection={"column"}
-                  gap={"22px"}
-                  marginRight={"43px"}
-                >
-                  <Text
-                    fontSize={{ base: "24px", md: "32px" }}
-                    color="var(--color-main)"
-                    fontFamily="var(--font-text-extra)"
-                  >
-                    COMMUNITY
-                  </Text>
-                  <UnorderedList
-                    listStyleType="none"
-                    marginLeft={"0px"}
-                    fontSize={{ base: "16px", md: "24px" }}
-                    fontWeight={400}
-                    fontFamily="var( --font-text-main)"
-                  >
-                    <ListItem>Linkedln</ListItem>
-                    <ListItem>X</ListItem>
-                    <ListItem>Discord</ListItem>
-                    <ListItem>Ecosystem X</ListItem>
-                    <ListItem>Telegram</ListItem>
-                    <ListItem>Reddit</ListItem>
-                    <ListItem>Youtube</ListItem>
-                  </UnorderedList>
-                </Flex>
               </Flex>
-              {/* <Flex>
-              <Flex flexDirection={"column"} marginRight={"180px"}>
-                <Text fontSize={{ base: "24px", md: "32px" }} color={"#E42493"}>
+              <Flex flexDirection={"column"} width={{ base: "40%" }}>
+                <Text
+                  fontSize={{ base: "24px", md: "32px" }}
+                  color="var(--color-main)"
+                  fontFamily="var(--font-text-extra)"
+                >
+                  COMMUNITY
+                </Text>
+                <UnorderedList
+                  listStyleType="none"
+                  marginLeft={"0px"}
+                  fontSize={{ base: "16px", md: "24px" }}
+                  fontWeight={400}
+                  fontFamily="var( --font-text-main)"
+                >
+                  <ListItem>X</ListItem>
+                  <ListItem>Discord</ListItem>
+                  <ListItem>Youtube</ListItem>
+                </UnorderedList>
+              </Flex>
+              <Flex flexDirection={"column"} width={{ base: "40%" }}>
+                <Text
+                  fontSize={{ base: "24px", md: "32px" }}
+                  color={"#E42493"}
+                  fontFamily="var(--font-text-extra)"
+                >
                   SOLUTIONS
                 </Text>
                 <UnorderedList
@@ -110,13 +130,18 @@ const BachiSwapFooter = () => {
                   marginLeft={"0px"}
                   fontSize={{ base: "16px", md: "24px" }}
                   fontWeight={400}
+                  fontFamily={"var(--font-text-main)"}
                 >
                   <ListItem>Ai</ListItem>
                   <ListItem>Gaming</ListItem>
                 </UnorderedList>
               </Flex>
-              <Flex flexDirection={"column"}>
-                <Text fontSize={{ base: "24px", md: "32px" }} color={"#E42493"}>
+              <Flex flexDirection={"column"} width={{ base: "40%" }}>
+                <Text
+                  fontSize={{ base: "24px", md: "32px" }}
+                  color={"#E42493"}
+                  fontFamily="var(--font-text-extra)"
+                >
                   WEB3
                 </Text>
                 <UnorderedList
@@ -124,12 +149,12 @@ const BachiSwapFooter = () => {
                   marginLeft={"0px"}
                   fontSize={{ base: "16px", md: "24px" }}
                   fontWeight={400}
+                  fontFamily={"var(--font-text-main)"}
                 >
                   <ListItem>Checker Nodes</ListItem>
                   <ListItem>Staking</ListItem>
                 </UnorderedList>
               </Flex>
-            </Flex> */}
             </Flex>
           </Flex>
           <Flex

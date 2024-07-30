@@ -38,11 +38,11 @@ const ResourcesHome = () => {
             base: "48px",
             md: "86px",
             lg: "186px",
-            xl: "200px",
+            xl: "300px",
             "2xl": "311.31px",
           }}
           position={"relative"}
-          marginBottom={{ base: "110px", "2xl": "180px" }}
+          marginBottom={{ base: "110px", xl: "180px" }}
         >
           <Text
             fontSize={{ base: "40px", "2xl": "86px" }}
@@ -105,11 +105,15 @@ const ResourcesHome = () => {
               >
                 <Flex
                   flexDirection={"column"}
-                  margin={"33px 47px 37px 32px"}
+                  margin={{
+                    base: "22px 20px 22px 29px",
+                    "2xl": "33px 47px 37px 32px",
+                  }}
                   gap={"22px"}
                 >
                   <Flex alignItems={"center"} justifyContent={"space-between"}>
                     <Text
+                      width={{ base: "80%" }}
                       fontSize={{
                         base: "24px",
                         lg: "32px",
@@ -192,7 +196,10 @@ const ResourcesHome = () => {
               >
                 <Flex
                   flexDirection={"column"}
-                  margin={"33px 47px 37px 32px"}
+                  margin={{
+                    base: "22px 20px 22px 29px",
+                    "2xl": "33px 47px 37px 32px",
+                  }}
                   gap={"22px"}
                 >
                   <Flex alignItems={"center"} justifyContent={"space-between"}>

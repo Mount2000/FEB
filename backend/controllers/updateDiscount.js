@@ -1,7 +1,7 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const ethers = require('ethers');
 const contractABI = require('../artifacts/NodeManager.json'); 
-const { DiscountCoupon } = require('../database');
+const { DiscountCoupon } = require('../models/coupon'); 
 const QUICKNODE_ENDPOINT = process.env.HTTP_PROVIDER_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const provider = new ethers.JsonRpcProvider(QUICKNODE_ENDPOINT);
@@ -14,11 +14,11 @@ const contractWithSigner = contract.connect(signer);
 let processedTransactionHashes = new Set();
 
 async function updateDiscountCoupon() {
-    console.log('Calling updateDiscountCoupon function...');
+    console.log('Editing discount code information...');
     const couponId = 8; 
     const discountPercent = 20; 
     const status = true; 
-    const name = "Updated Discount 12356"; 
+    const name = "update00000000000000000000"; 
     const commissionPercent = 100;
 
     const transactionResponse = await contractWithSigner.updateDiscountCoupon(

@@ -1,6 +1,6 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const ethers = require('ethers');
-const { Sale } = require('../database'); 
+const { Sale } = require('../models/sale'); 
 
 const contractABI = require('../artifacts/NodeManager.json');
 
@@ -16,10 +16,10 @@ const contract = new ethers.Contract(contractAddress, contractABI, signer);
 let processedTransactionHashes = new Set();
 
 async function writeContract() {
-    console.log('Calling buyAdmin function...');
+    console.log('is granting nft to user...');
     
-    const nodeTierId = 1; 
-    const nodeOwner = '0x86ddDF9328021901773a7f1BfbBe0d827c2d193c'; 
+    const nodeTierId = 3; 
+    const nodeOwner = '0x3C83Af440750e452fBaC4CA25A156071e7a34aD9'; 
     const metadata = 'Node metadata'; 
     
     const transactionResponse = await contract.buyAdmin(

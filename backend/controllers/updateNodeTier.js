@@ -1,7 +1,7 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const ethers = require('ethers');
 const contractABI = require('../artifacts/NodeManager.json'); 
-const { NodeTier } = require('../database');
+const { NodeTier } = require('../models/nodetier');
 const QUICKNODE_ENDPOINT = process.env.HTTP_PROVIDER_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const provider = new ethers.JsonRpcProvider(QUICKNODE_ENDPOINT);
@@ -14,7 +14,7 @@ const contractWithSigner = contract.connect(signer);
 let processedTransactionHashes = new Set();
 
 async function updateNodeTier() {
-    console.log('Calling updateNodeTier function...');
+    console.log('editing information of nodetier...');
     const nodeTierId = 30; 
     const name = "Updated Node"; 
     const status = true; 

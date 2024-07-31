@@ -269,7 +269,13 @@ const Earning = () => {
             marginBottom={"34px"}
             padding={"37px 35px 34px 35px"}
             border="0.5px solid var(--color-main) !important"
-            width={{ base: "100%", "2xl": "40%" }}
+            width={{
+              base: "100%",
+              sm: "100%",
+              md: "70%",
+              xl: "50%",
+              "2xl": "40%",
+            }}
           >
             <Flex flexDirection={"column"}>
               <Flex
@@ -278,7 +284,7 @@ const Earning = () => {
                 gap={{ base: "15px", "2xl": "30px" }}
               >
                 <Text
-                  fontSize={{ base: "24px", "2xl": "40px" }}
+                  fontSize={{ base: "18px", sm: "24px", "2xl": "40px" }}
                   fontWeight={400}
                   fontFamily="var(--font-text-extra)"
                   color="var(--color-main)"
@@ -287,7 +293,10 @@ const Earning = () => {
                 </Text>
                 <CommonButton
                   backgroundColor="var(--color-main)"
-                  padding={"16px 30px 15px 30px"}
+                  padding={{
+                    base: "10px 15px 10px 15px",
+                    xl: "16px 30px 15px 30px",
+                  }}
                 >
                   <Text
                     fontSize={{ base: "18px", "2xl": "24px" }}
@@ -297,7 +306,10 @@ const Earning = () => {
                   </Text>
                 </CommonButton>
               </Flex>
-              <Text fontSize={{ base: "24px", "2xl": "40px" }} fontWeight={700}>
+              <Text
+                fontSize={{ base: "18px", sm: "24px", "2xl": "40px" }}
+                fontWeight={700}
+              >
                 {formatTokenBalance(
                   convertAndDivide(bachiClaimedAmount, chainDecimal)
                 )}
@@ -308,7 +320,13 @@ const Earning = () => {
             marginBottom={"42px"}
             padding={"37px 35px 34px 35px"}
             border="0.5px solid var(--color-main)"
-            width={{ base: "100%", "2xl": "40%" }}
+            width={{
+              base: "100%",
+              sm: "100%",
+              md: "70%",
+              xl: "50%",
+              "2xl": "40%",
+            }}
           >
             <Flex flexDirection={"column"}>
               <Flex
@@ -317,7 +335,7 @@ const Earning = () => {
                 gap={{ base: "15px", "2xl": "30px" }}
               >
                 <Text
-                  fontSize={{ base: "24px", "2xl": "40px" }}
+                  fontSize={{ base: "18px", sm: "24px", "2xl": "40px" }}
                   fontWeight={400}
                   fontFamily="var(--font-text-extra)"
                   color="var(--color-main)"
@@ -326,7 +344,10 @@ const Earning = () => {
                 </Text>
                 <CommonButton
                   backgroundColor="var(--color-main)"
-                  padding={"16px 30px 15px 30px"}
+                  padding={{
+                    base: "10px 15px 10px 15px",
+                    xl: "16px 30px 15px 30px",
+                  }}
                 >
                   <Text
                     fontSize={{ base: "18px", "2xl": "24px" }}
@@ -336,7 +357,10 @@ const Earning = () => {
                   </Text>
                 </CommonButton>
               </Flex>
-              <Text fontSize={{ base: "24px", "2xl": "40px" }} fontWeight={700}>
+              <Text
+                fontSize={{ base: "18px", sm: "24px", "2xl": "40px" }}
+                fontWeight={700}
+              >
                 {formatTokenBalance(
                   convertAndDivide(taikoClaimedAmount, chainDecimal)
                 )}
@@ -345,7 +369,13 @@ const Earning = () => {
           </CommonButton>
           <Box
             border="0.5px solid #FCDDEC"
-            width={{ base: "100%", "2xl": "40%" }}
+            width={{
+              base: "100%",
+              sm: "100%",
+              md: "70%",
+              xl: "50%",
+              "2xl": "40%",
+            }}
             backgroundColor="var(--color-background-popup)"
             sx={{
               backdropFilter: "blur(10px) !important",
@@ -390,6 +420,7 @@ const Earning = () => {
                 backgroundColor={"#5D1D4C"}
               >
                 <Box
+                  width={"100%"}
                   cursor={"pointer"}
                   sx={{
                     backdropFilter: "blur(10px) !important",
@@ -415,19 +446,37 @@ const Earning = () => {
                       backgroundColor: "none",
                       clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                     },
+                    "@media (max-width: 992px)": {
+                      clipPath:
+                        "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
+                      "::before": {
+                        width: "10px",
+                        height: "10px",
+                      },
+                      "::after": {
+                        width: "10px",
+                        height: "10px",
+                      },
+                    },
                   }}
                   backgroundColor={tab == 0 ? "var(--color-main)" : ""}
-                  padding={"10px 20px 10px 20px"}
+                  color={tab == 0 ? "#FFF" : "#000"}
+                  padding={{
+                    base: "10px 3px 10px 4px",
+                    sm: "10px 20px 10px 20px",
+                  }}
                   onClick={() => setTab(0)}
                 >
                   <Text
                     fontSize={{ base: "16px", "2xl": "24px" }}
                     fontWeight={400}
+                    textAlign={"center"}
                   >
                     TAIKO Mining
                   </Text>
                 </Box>
                 <Box
+                  width={"100%"}
                   cursor={"pointer"}
                   sx={{
                     backdropFilter: "blur(10px) !important",
@@ -453,16 +502,32 @@ const Earning = () => {
                       backgroundColor: "none",
                       clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                     },
+                    "@media (max-width: 992px)": {
+                      clipPath:
+                        "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
+                      "::before": {
+                        width: "10px",
+                        height: "10px",
+                      },
+                      "::after": {
+                        width: "10px",
+                        height: "10px",
+                      },
+                    },
                   }}
-                  padding={"10px 20px 10px 20px"}
+                  padding={{
+                    base: "10px 3px 10px 4px",
+                    sm: "10px 20px 10px 20px",
+                  }}
                   border="none"
                   backgroundColor={tab == 1 ? "var(--color-main)" : ""}
+                  color={tab == 1 ? "#FFF" : "#000"}
                   onClick={() => setTab(1)}
                 >
                   <Text
-                    color={"#000"}
                     fontSize={{ base: "16px", "2xl": "24px" }}
                     fontWeight={400}
+                    textAlign={"center"}
                   >
                     BACHI Mining
                   </Text>

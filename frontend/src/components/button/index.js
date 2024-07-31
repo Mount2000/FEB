@@ -8,7 +8,7 @@ const CustomButton = ({ children, onClick, ...props }) => {
       // bg="pink.500"
       color="white"
       fontWeight="400"
-      fontSize={"20px"}
+      fontSize={{ base: "16px", xl: "20px" }}
       // position="relative"
       borderRadius="3px"
       // height={"60px"}

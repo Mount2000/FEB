@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Flex, Input, Button, Text } from "@chakra-ui/react";
 import CustomButton from "../button";
+import { base } from "viem/chains";
 
 const ReferralCodeForm = ({ title, value, onChange, onClick, error }) => {
   return (
@@ -13,16 +14,19 @@ const ReferralCodeForm = ({ title, value, onChange, onClick, error }) => {
       <Text
         position="absolute"
         top="-20px"
-        left="50px"
+        left={{ base: "20px", xl: "50px" }}
         backgroundColor="#231A2E"
         padding="0 5px"
         color="#FFFFFF"
-        fontSize={"24px"}
+        fontSize={{ base: "16px", md: "18px", xl: "24px" }}
         fontWeight={500}
       >
         {title}
       </Text>
-      <Flex padding={"25px 28px 25px 34px"} flexDirection={"column"}>
+      <Flex
+        padding={{ base: "0px", xl: "25px 28px 25px 34px" }}
+        flexDirection={"column"}
+      >
         <Flex
           height={"70px"}
           width={"100%"}
@@ -42,8 +46,8 @@ const ReferralCodeForm = ({ title, value, onChange, onClick, error }) => {
             onChange={onChange}
           />
           <CustomButton
-            height={"70px"}
-            width={"30%"}
+            height={{ base: "40px", md: "50px", xl: "70px" }}
+            width={{ base: "30%", md: "40%", lg: "30%" }}
             bg="#EC4899"
             color="#FFFFFF"
             borderRadius="0"

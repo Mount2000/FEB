@@ -49,7 +49,7 @@ const ProductNode = () => {
         src={backgroundReferral}
         position={"absolute"}
         right={"0"}
-        top={"380px"}
+        top={{ base: "280px", md: "380px" }}
       />
       <SectionContainer
         paddingLeft={{ base: "25px", "2xl": "44px" }}
@@ -68,39 +68,56 @@ const ProductNode = () => {
           </Text>
           <Flex
             justifyContent={"space-around"}
-            // gap={"80px"}
+            // gap={"20px"}
             wrap={"wrap"}
-            borderBottom="1px solid #FCDDEC"
             width={"100%"}
             marginTop={{ base: "47px", "2xl": "99px" }}
           >
             {productTab.map((e, index) => {
               return (
-                <Box
+                <Flex
+                  alignItems={"center"}
+                  justifyContent={"center"}
                   key={index}
                   onClick={() => setcurrentTab(index)}
                   cursor={"pointer"}
-                  padding={"12px 0"}
-                  borderBottom={
-                    currentTab === index
-                      ? {
-                          base: "3px solid var(--color-main)",
-                          "2xl": "5px solid var(--color-main)",
-                        }
-                      : "none"
-                  }
+                  padding={"12px 5px 0px 5px"}
                   zIndex={"10"}
+                  borderBottom="1px solid #FCDDEC"
+                  flex={"1 1 0"}
                 >
                   <Text
-                    fontSize={{ base: "16px", "2xl": "32px", "3xl": "36px" }}
+                    position={"relative"}
+                    paddingBottom={"12px"}
+                    _before={{
+                      content: '""',
+                      position: "absolute",
+                      bottom: "-1px",
+                      left: 0,
+                      width: "100%",
+                      height: {
+                        base: currentTab === index ? "3px" : "0",
+                        "2xl": currentTab === index ? "5px" : "0",
+                      },
+                      backgroundColor: "var(--color-main)",
+                      // transition: "height 0.3s ease",
+                    }}
+                    fontSize={{
+                      base: "16px",
+                      md: "24px",
+                      "2xl": "32px",
+                      "3xl": "36px",
+                    }}
                     fontWeight={400}
                     lineHeight={"normal"}
                     fontFamily="var(--font-heading-main)"
                     color={currentTab == index ? "var(--color-main)" : "#FFF"}
+                    textAlign={"center"}
+                    whiteSpace="nowrap"
                   >
                     {e?.title}
                   </Text>
-                </Box>
+                </Flex>
               );
             })}
           </Flex>

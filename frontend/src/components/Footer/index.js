@@ -12,7 +12,6 @@ import CustomButton from "../button";
 import SectionContainer from "../container";
 //import image
 import appLogo from "../../assets/img/app-logo.png";
-import CommonButton from "../button/commonbutton";
 
 const BachiSwapFooter = () => {
   return (
@@ -21,13 +20,13 @@ const BachiSwapFooter = () => {
         <Flex
           flexDirection={"column"}
           gap={{ base: "42px", "2xl": "102px" }}
-          paddingBottom={{ base: "65px", "2xl": "132px" }}
+          paddingBottom={{ base: "65px", xl: "132px" }}
         >
           <Flex
             justifyContent={"space-between"}
-            paddingTop={{ base: "61px", "2xl": "187" }}
+            marginTop={{ base: "61px", xl: "260px", "2xl": "187px" }}
             flexDirection={{ base: "column", xl: "row" }}
-            gap={{ base: "49px", xl: "200px" }}
+            gap={{ base: "49px", xl: "200px", "2xl": "350px" }}
           >
             <Flex
               flexDirection={"column"}
@@ -42,25 +41,25 @@ const BachiSwapFooter = () => {
                   BachiSwap
                 </Text>
               </Flex>
-              <Flex alignItems={"center"} gap={{ base: "13px", "2xl": "19px" }}>
+              <Flex alignItems={"center"} gap={{ base: "13px", md: "19px" }}>
                 <CustomButton
                   backgroundColor="var(--color-main)"
-                  width={{ base: "142px", "2xl": "183px" }}
-                  height={{ base: "46px", "2xl": "70px" }}
+                  width={{ base: "142px", md: "183px" }}
+                  height={{ base: "46px", md: "70px" }}
                 >
                   Get Started
                 </CustomButton>
                 <CustomButton
                   border={"0.5px solid #EB7FB3"}
                   backgroundColor={"transparent"}
-                  width={{ base: "174px", "2xl": "235px" }}
-                  height={{ base: "46px", "2xl": "70px" }}
+                  width={{ base: "174px", md: "235px" }}
+                  height={{ base: "46px", md: "70px" }}
                 >
                   Become a partner
                 </CustomButton>
               </Flex>
             </Flex>
-            <Flex wrap={"wrap"} gap={{ base: "35px" }}>
+            <Flex wrap={"wrap"} gap={{ base: "70px" }}>
               <Flex flexDirection={"column"} width={{ base: "40%" }}>
                 <Text
                   fontSize={{ base: "24px", md: "32px" }}
@@ -159,14 +158,13 @@ const BachiSwapFooter = () => {
           </Flex>
           <Flex
             gap={{ base: "0px", md: "145px" }}
+            justifyContent={{ base: "space-between", md: "flex-start" }}
             fontSize={{ base: "16px", "2xl": "20px" }}
             fontWeight={500}
             color={"#757575"}
           >
-            <Text marginRight={{ base: "58px", md: "0px" }}>© 2024 BACHI</Text>
-            <Text marginRight={{ base: "50px", md: "0px" }}>
-              Privacy policy
-            </Text>
+            <Text>© 2024 BACHI</Text>
+            <Text>Privacy policy</Text>
             <Text>Terms</Text>
           </Flex>
         </Flex>

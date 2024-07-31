@@ -53,6 +53,7 @@ import { useModal } from "../../../../contexts/useModal";
 import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
 import { parseGwei, parseEther, parseUnits } from "viem";
 import toast from "react-hot-toast";
+import { base } from "viem/chains";
 
 const chain_env = process.env.REACT_APP_ENV;
 
@@ -330,8 +331,11 @@ const MintRune = () => {
   return (
     <>
       <SectionContainer width={"100%"} paddingLeft={"0px"} paddingRight={"0px"}>
-        <Flex flexDirection={"column"} marginTop={"87px"}>
-          <Flex gap={"48px"}>
+        <Flex
+          flexDirection={"column"}
+          paddingTop={{ base: "48px", xl: "87px" }}
+        >
+          <Flex gap={"48px"} flexDirection={{ base: "column", md: "row" }}>
             {products.map((products) => (
               <Box
                 key={products.tierId}
@@ -366,6 +370,20 @@ const MintRune = () => {
                     backgroundColor: "pink.500",
                     clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                   },
+                  "@media (max-width: 992px)": {
+                    clipPath:
+                      "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
+                    "::before": {
+                      width: "10px",
+                      height: "10px",
+                      backgroundColor: "pink.500",
+                    },
+                    "::after": {
+                      width: "10px",
+                      height: "10px",
+                      backgroundColor: "pink.500",
+                    },
+                  },
                 }}
               >
                 <CommonButton
@@ -376,26 +394,48 @@ const MintRune = () => {
                   zIndex="10"
                 >
                   <Flex
-                    flexDirection={"column"}
                     alignItems={"center"}
-                    gap={"41px"}
-                    marginTop={"51px"}
-                    marginBottom={"60px"}
+                    padding={{ base: "27px 42px 24px 32px" }}
+                    justifyContent={"space-between"}
                   >
-                    <Text
-                      fontSize={"48px"}
-                      fontWeight={700}
-                      fontFamily="var(--font-text-main)"
+                    <Flex
+                      width={"100%"}
+                      flexDirection={"column"}
+                      alignItems={{ base: "normal", md: "center" }}
+                      gap={{ base: "10px", md: "41px" }}
+                      // marginTop={"51px"}
+                      // marginBottom={"60px"}
                     >
-                      {products.nameproduct}
-                    </Text>
-                    <Image src={products.image} />
-                    <Flex alignItems={"center"} gap={"16px"}>
-                      <Text fontSize={"32px"} fontWeight={400}>
-                        {products.power}
+                      <Text
+                        fontSize={{ base: "24px", xl: "48px" }}
+                        fontWeight={700}
+                        fontFamily="var(--font-text-main)"
+                      >
+                        {products.nameproduct}
                       </Text>
-                      <Image src={iconPower} paddingTop={"5px"} />
+                      <Image
+                        src={products.image}
+                        display={{ base: "none", md: "block" }}
+                      />
+                      <Flex alignItems={"center"} gap={"16px"}>
+                        <Text
+                          fontSize={{ base: "20px", xl: "32px" }}
+                          fontWeight={400}
+                        >
+                          {products.power}
+                        </Text>
+                        <Image
+                          src={iconPower}
+                          paddingTop={"5px"}
+                          height={{ base: "25px" }}
+                        />
+                      </Flex>
                     </Flex>
+                    <Image
+                      src={products.image}
+                      display={{ base: "block", md: "none" }}
+                      width={"80px"}
+                    />
                   </Flex>
                 </CommonButton>
               </Box>
@@ -409,10 +449,15 @@ const MintRune = () => {
             marginTop={"65px"}
             backgroundColor="var(--color-background-popup)"
           >
-            <Box margin={"58px 58px 44px 59px"}>
+            <Box
+              margin={{
+                base: "31px 32px 27px 31px",
+                xl: "58px 58px 44px 59px",
+              }}
+            >
               <Flex
                 flexDirection={"column"}
-                gap={"32px"}
+                gap={{ base: "16px", md: "24px", xl: "32px" }}
                 fontFamily="var(--font-text-main)"
               >
                 <Flex
@@ -420,10 +465,18 @@ const MintRune = () => {
                   justifyContent={"space-between"}
                   width={"100%"}
                 >
-                  <Text fontSize={"36px"} fontWeight={400} color={"#B2B2B2"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#B2B2B2"}
+                  >
                     Minting Power
                   </Text>
-                  <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#FFF"}
+                  >
                     {nodeData ? Number(nodeData[3]) : 0} GH/s
                   </Text>
                 </Flex>
@@ -432,10 +485,18 @@ const MintRune = () => {
                   justifyContent={"space-between"}
                   width={"100%"}
                 >
-                  <Text fontSize={"36px"} fontWeight={400} color={"#B2B2B2"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#B2B2B2"}
+                  >
                     Rent Period
                   </Text>
-                  <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#FFF"}
+                  >
                     30 days
                   </Text>
                 </Flex>
@@ -444,10 +505,18 @@ const MintRune = () => {
                   justifyContent={"space-between"}
                   width={"100%"}
                 >
-                  <Text fontSize={"36px"} fontWeight={400} color={"#B2B2B2"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#B2B2B2"}
+                  >
                     Rent Price
                   </Text>
-                  <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#FFF"}
+                  >
                     {nodeData
                       ? formatTokenBalance(
                           convertAndDivide(nodeData[2], chainDecimal),
@@ -462,17 +531,24 @@ const MintRune = () => {
                   justifyContent={"space-between"}
                   width={"100%"}
                 >
-                  <Flex alignItems={"center"} gap={"32px"}>
+                  <Flex
+                    alignItems={"center"}
+                    gap={{ base: "5px", md: "10px", xl: "32px" }}
+                  >
                     <Text
-                      fontSize={"36px"}
+                      fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                       fontWeight={400}
                       color="var(--color-main)"
                     >
                       30 Days Profit
                     </Text>
-                    <Image src={iconNode} />
+                    <Image src={iconNode} height={{ base: "24px" }} />
                   </Flex>
-                  <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#FFF"}
+                  >
                     {nodeData
                       ? formatTokenBalance(
                           convertAndDivide(nodeData[5], chainDecimal) *
@@ -488,18 +564,24 @@ const MintRune = () => {
                   justifyContent={"space-between"}
                   width={"100%"}
                 >
-                  <Flex alignItems={"center"} gap={"32px"}>
+                  <Flex
+                    alignItems={"center"}
+                    gap={{ base: "5px", md: "10px", xl: "32px" }}
+                  >
                     <Text
-                      fontSize={"36px"}
+                      fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                       fontWeight={400}
                       color="var(--color-main)"
                     >
                       Daily
                     </Text>
-                    <Image src={iconNode} />
-                    <Image />
+                    <Image src={iconNode} height={{ base: "24px" }} />
                   </Flex>
-                  <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#FFF"}
+                  >
                     {nodeData
                       ? formatTokenBalance(
                           convertAndDivide(nodeData[5], chainDecimal) * 86400
@@ -513,10 +595,18 @@ const MintRune = () => {
                   justifyContent={"space-between"}
                   width={"100%"}
                 >
-                  <Text fontSize={"36px"} fontWeight={400} color={"#B2B2B2"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#B2B2B2"}
+                  >
                     BACHI Reward
                   </Text>
-                  <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#FFF"}
+                  >
                     {nodeData
                       ? formatTokenBalance(
                           convertAndDivide(nodeData[4], chainDecimal) * 86400
@@ -530,7 +620,11 @@ const MintRune = () => {
                   justifyContent={"space-between"}
                   width={"100%"}
                 >
-                  <Text fontSize={"36px"} fontWeight={400} color={"#B2B2B2"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#B2B2B2"}
+                  >
                     Quantity
                   </Text>
                   <Quantity count={count} setCount={setCount} />
@@ -540,10 +634,18 @@ const MintRune = () => {
                   justifyContent={"space-between"}
                   width={"100%"}
                 >
-                  <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#FFF"}
+                  >
                     Total Renting Price
                   </Text>
-                  <Text fontSize={"36px"} fontWeight={400} color={"#FFF"}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontWeight={400}
+                    color={"#FFF"}
+                  >
                     {nodeData
                       ? formatTokenBalance(
                           convertAndDivide(nodeData[2], chainDecimal) * count,
@@ -556,9 +658,13 @@ const MintRune = () => {
               </Flex>
             </Box>
             <Flex
+              flexDirection={{ base: "column", md: "row" }}
               alignItems={"center"}
               gap={"20px"}
-              padding={"47px 58px 55px 58px"}
+              padding={{
+                base: "25px 18px 25px 18px",
+                xl: "47px 58px 55px 58px",
+              }}
               border={"0.5px solid var(--color-main)"}
             >
               <ReferralCodeForm
@@ -582,10 +688,14 @@ const MintRune = () => {
               borderTop={"1px solid var(--color-main)"}
             >
               <CommonButton
-                width={"750px"}
-                height={"100px"}
+                width={{ base: "320px", md: "750px" }}
+                height={{ base: "40px", md: "70px" }}
                 backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
-                margin={"58px 0 52px 0"}
+                margin={{
+                  base: "30px 10px 30px 10px",
+                  md: "38px 20px 32px 20px",
+                  lg: "58px 0 52px 0",
+                }}
                 display={"flex"}
                 alignItems={"center"}
                 justifyContent={"center"}
@@ -593,7 +703,11 @@ const MintRune = () => {
                 cursor={"pointer"}
                 isDisabled={disabled}
               >
-                <Text textAlign={"center"} fontSize={"32px"} fontWeight={500}>
+                <Text
+                  textAlign={"center"}
+                  fontSize={{ base: "16px", md: "24px", xl: "32px" }}
+                  fontWeight={500}
+                >
                   {address ? "PAY NOW" : "CONNECT WALLET NOW"}
                 </Text>
               </CommonButton>
@@ -605,6 +719,7 @@ const MintRune = () => {
         <Message
           isVisible={isLoading && paymentStatus === null}
           onClose={handleCloseMessage}
+          width={{ base: "80%" }}
         >
           <Flex flexDirection={"column"} alignItems={"center"}>
             <Image src={iconFrame} width={"250px"} className="spin-animation" />

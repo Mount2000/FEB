@@ -18,6 +18,7 @@ import { RxExit } from "react-icons/rx";
 // for example call contract
 import bachi_node_contract from "../../utils/contracts/bachi_node_contract";
 import { useReadContract, useWriteContract } from "wagmi";
+import { base } from "viem/chains";
 
 export function Account() {
   const { address } = useAccount();
@@ -42,42 +43,57 @@ export function Account() {
   };
   return (
     <Flex
-      w={"100%"}
+      width={"100%"}
       textAlign={"center"}
       flexDirection={"column"}
-      gap={"20px"}
+      gap={{ base: "10px", md: "20px" }}
       alignItems={"center"}
     >
-      {ensAvatar && <img alt="ENS Avatar" src={ensAvatar} />}
+      {ensAvatar && (
+        <img
+          w={{ base: "40px" }}
+          height={{ base: "40px" }}
+          alt="ENS Avatar"
+          src={ensAvatar}
+        />
+      )}
       {address && (
         <Box>
           <AddressCopier
             address={ensName ? `${ensName} (${address})` : address}
-            fontSize={"28px"}
+            fontSize={{ base: "24px", xl: "28px" }}
             fontWeight={"600"}
           />
         </Box>
       )}
       {address && !isLoading && (
         <Text
-          fontSize={"20px"}
+          fontSize={{ base: "16px", xl: "20px" }}
           color={"var(--color-main)"}
         >{`${formatBalacne(balance?.formatted)} ${balance?.symbol}`}</Text>
       )}
       <ActionButton
         my="12px"
-        w="250px"
+        w={{ base: "200px", md: "250px" }}
         bgColor={"#FCDDEC"}
         onClick={() => {
           window.open(currentChain?.blockExplorers?.default?.url, "_blank");
         }}
       >
-        <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
-          <Text color={"black"} fontSize={"24px"} fontWeight={"500"}>
+        <Flex
+          w={{ base: "80%", md: "100%" }}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <Text
+            color={"black"}
+            fontSize={{ base: "16px", md: "24px" }}
+            fontWeight={"500"}
+          >
             Block Explorer
           </Text>
-          <Box w={"36px"} sx={{ transform: "rotate(-45deg)" }}>
-            <IoArrowForwardSharp fontSize={"36px"} color="black" />
+          <Box sx={{ transform: "rotate(-45deg)" }}>
+            <IoArrowForwardSharp color="black" />
           </Box>
         </Flex>
       </ActionButton>
@@ -95,7 +111,11 @@ export function Account() {
         ))}
       </Select>
       {/* <CustomSelect network={chains} handleSwitchChange={handleSwitchChange} currentChain={currentChain}/> */}
-      <ActionButton w={"100%"} _hover={{ bg: "var(--color-main)" }}>
+      <ActionButton
+        w={"100%"}
+        _hover={{ bg: "var(--color-main)" }}
+        display={{ base: "none", md: "block" }}
+      >
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
           <Text fontSize={"24px"} fontWeight={"500"}>
             Buy Crypto
@@ -105,7 +125,11 @@ export function Account() {
           </Box>
         </Flex>
       </ActionButton>
-      <ActionButton w={"100%"} _hover={{ bg: "var(--color-main)" }}>
+      <ActionButton
+        w={"100%"}
+        _hover={{ bg: "var(--color-main)" }}
+        display={{ base: "none", md: "block" }}
+      >
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
           <Text fontSize={"24px"} fontWeight={"500"}>
             Activity
@@ -121,11 +145,11 @@ export function Account() {
         _hover={{ bg: "var(--color-main)" }}
       >
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
-          <Text fontSize={"24px"} fontWeight={"500"}>
+          <Text fontSize={{ base: "16px", md: "24px" }} fontWeight={"500"}>
             Disconnect
           </Text>
           <Box w={"36px"}>
-            <RxExit fontSize={"28px"} color="black" />
+            <RxExit color="black" />
           </Box>
         </Flex>
       </ActionButton>

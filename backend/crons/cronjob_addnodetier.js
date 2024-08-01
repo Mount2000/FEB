@@ -1,7 +1,7 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const ethers = require('ethers');
 const contractABI = require('../artifacts/NodeManager.json');
-const { NodeTier } = require('../database');
+const { NodeTier } = require('../models/nodetier');
 const QUICKNODE_ENDPOINT = process.env.HTTP_PROVIDER_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const provider = new ethers.JsonRpcProvider(QUICKNODE_ENDPOINT);
@@ -12,7 +12,7 @@ const contract = new ethers.Contract(contractAddress, contractABI, provider);
 const contractWithSigner = contract.connect(signer);
 
 async function writeContract() {
-  console.log('Calling addNodeTier function...');
+  console.log('adding nodetier daily...');
   const name = "BachiNFT";
   const price = 100;
   const hashrate = 10;

@@ -302,6 +302,7 @@ const MintRune = () => {
         const result = await waitForTransactionReceipt(config, {
           hash: hash,
         });
+        console.log({ result });
         if (result?.status == "success") {
           const code = await getUserReferral(address);
           setReferralCode(code);
@@ -722,9 +723,13 @@ const MintRune = () => {
           width={{ base: "80%" }}
         >
           <Flex flexDirection={"column"} alignItems={"center"}>
-            <Image src={iconFrame} width={"250px"} className="spin-animation" />
+            <Image
+              src={iconFrame}
+              width={{ base: "200px", md: "250px" }}
+              className="spin-animation"
+            />
             <Text
-              fontSize={"24px"}
+              fontSize={{ base: "20px", md: "24px" }}
               fontWeight={400}
               fontFamily="var(--font-text-main)"
               marginTop={"50px"}
@@ -807,10 +812,14 @@ const MintRune = () => {
             gap={"60px"}
             w={"100%"}
           >
-            <Image src={iconError} />
+            <Image
+              src={iconError}
+              width={{ base: "88px", md: "100px", xl: "120px", "3xl": "200px" }}
+            />
             <Text
-              mt={"120px"}
-              fontSize={"24px"}
+              mt={{ base: "46px", "3xl": "120px" }}
+              marginBottom={{ base: "46px", "3xl": "63px" }}
+              fontSize={{ base: "20px", md: "24px" }}
               fontFamily="var(--font-text-main)"
               fontWeight={400}
             >

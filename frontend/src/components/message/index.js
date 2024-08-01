@@ -1,10 +1,6 @@
 import React from "react";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
-
-//import component
-
-//import image
-
+import { IoCloseSharp } from "react-icons/io5";
 import CloseButton from "../button/CloseButton";
 
 const Message = ({ isVisible, onClose, children }) => {
@@ -16,7 +12,7 @@ const Message = ({ isVisible, onClose, children }) => {
       left="50%"
       transform="translate(-50%, -50%)"
       border="1px solid #FCDDEC"
-      minW={{ base: "600px" }}
+      minW={{ base: "90%", md: "600px" }}
       zIndex={"1000"}
       sx={{
         backdropFilter: "blur(10px) !important",
@@ -54,7 +50,7 @@ const Message = ({ isVisible, onClose, children }) => {
           <Flex justifyContent={"flex-end"}>
             <CloseButton onClick={onClose}>
               <Text fontSize="30px" color={"#000"} fontWeight={500}>
-                X
+                <IoCloseSharp />
               </Text>
             </CloseButton>
           </Flex>

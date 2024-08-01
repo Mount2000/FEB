@@ -111,7 +111,7 @@ export function Account() {
         ))}
       </Select>
       {/* <CustomSelect network={chains} handleSwitchChange={handleSwitchChange} currentChain={currentChain}/> */}
-      <ActionButton
+      {/* <ActionButton
         w={"100%"}
         _hover={{ bg: "var(--color-main)" }}
         display={{ base: "none", md: "block" }}
@@ -124,8 +124,8 @@ export function Account() {
             <IoArrowForwardSharp fontSize={"36px"} color="black" />
           </Box>
         </Flex>
-      </ActionButton>
-      <ActionButton
+      </ActionButton> */}
+      {/* <ActionButton
         w={"100%"}
         _hover={{ bg: "var(--color-main)" }}
         display={{ base: "none", md: "block" }}
@@ -138,7 +138,7 @@ export function Account() {
             <IoArrowForwardSharp fontSize={"36px"} color="black" />
           </Box>
         </Flex>
-      </ActionButton>
+      </ActionButton> */}
       <ActionButton
         w={"100%"}
         onClick={() => disconnect()}

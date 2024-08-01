@@ -297,12 +297,15 @@ const MintRune = () => {
       const hash = await writeContract(config, {
         ...txObj,
       });
+
       if (hash) {
         setTxHash(hash);
+        console.log({ hash });
+
         const result = await waitForTransactionReceipt(config, {
           hash: hash,
         });
-        console.log({ result });
+
         if (result?.status == "success") {
           const code = await getUserReferral(address);
           setReferralCode(code);
@@ -743,10 +746,17 @@ const MintRune = () => {
           isVisible={isLoading && paymentStatus === "success"}
           onClose={handleCloseMessage}
         >
-          <Flex flexDirection={"column"} alignItems={"center"} gap={"30px"}>
-            <Image src={iconSuccess} />
+          <Flex
+            flexDirection={"column"}
+            alignItems={"center"}
+            gap={{ base: "10px", md: "30px" }}
+          >
+            <Image
+              src={iconSuccess}
+              width={{ base: "88px", md: "100px", xl: "120px", "3xl": "200px" }}
+            />
             <Text
-              fontSize={"28px"}
+              fontSize={{ base: "20px", md: "28px" }}
               fontWeight={400}
               fontFamily="var(--font-text-main)"
             >
@@ -756,12 +766,13 @@ const MintRune = () => {
             <Flex
               alignItems={"center"}
               width={"100%"}
-              gap={"30px"}
+              gap={{ base: "10px", md: "30px" }}
               justifyContent={"space-between"}
+              flexDirection={{ base: "column", md: "row" }}
             >
               <CommonButton
                 backgroundColor="var(--color-main)"
-                width="50%"
+                width={{ base: "100%", md: "50%" }}
                 padding="10px"
                 display="flex"
                 justifyContent="center"
@@ -772,7 +783,7 @@ const MintRune = () => {
               </CommonButton>
               <CommonButton
                 backgroundColor="#FFF"
-                width="50%"
+                width={{ base: "100%", md: "50%" }}
                 padding="10px"
                 display="flex"
                 justifyContent="center"
@@ -863,9 +874,14 @@ const ReferralCopier = ({ referralCode }) => {
 
   return (
     <>
-      <Flex alignItems={"center"} justifyContent={"space-between"} gap={"14px"}>
+      <Flex
+        justifyContent={"space-between"}
+        gap={"14px"}
+        flexDirection={{ base: "column", md: "row" }}
+        alignItems={"flex-start"}
+      >
         <Text
-          fontSize={"28px"}
+          fontSize={{ base: "16px", md: "28px" }}
           fontWeight={400}
           fontFamily="var(--font-text-main)"
         >
@@ -879,10 +895,10 @@ const ReferralCopier = ({ referralCode }) => {
           onClick={() => handleCopy("referral", referralCode)}
           cursor={"pointer"}
         >
-          <Text fontSize={"24px"} fontWeight={300}>
+          <Text fontSize={{ base: "14px", md: "24px" }} fontWeight={300}>
             {`http://bachi.swap.io/Bachi-Taiko-Swap?referral-code=${referralCode}`}
           </Text>
-          <Image src={iconNodedetail} />
+          <Image src={iconNodedetail} height={{ base: "20px", md: "25px" }} />
         </Flex>
       </Flex>
     </>

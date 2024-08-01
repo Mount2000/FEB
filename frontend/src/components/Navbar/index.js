@@ -8,12 +8,13 @@ import CustomButton from "../button";
 //import image
 import appLogo from "../../assets/img/app-logo.png";
 import iconMenu from "../../assets/img/icon-menu.png";
-// import navIcon from "../../assets/img/nav-icon.png";
+import navIcon from "../../assets/img/nav-icon.png";
 import { useModal } from "../../contexts/useModal";
 import { useAccount } from "wagmi";
 import { truncateStr } from "../../utils";
 import { Link } from "react-router-dom";
 import NavbarMobile from "./navbarmobile";
+import MainButton from "../button/MainButton";
 
 const Navbar = () => {
   const [shownav, setShowNav] = useState(false);
@@ -55,14 +56,14 @@ const Navbar = () => {
           </Link>
           <Flex
             style={{ gridColumn: "span 5" }}
-            gap={"40px"}
+            gap={{ base: "20px", "2xl": "40px" }}
             alignItems={"center"}
             fontFamily="var(--font-text-main)"
             display={{ base: "none", xl: "flex" }}
-            justifyContent={"center"}
+            justifyContent={{ base: "center", "2xl": "space-between" }}
           >
-            <Flex alignItems={"center"} gap={"10px"}>
-              <Link to="/node">
+            <Link to="/node">
+              <Flex alignItems={"center"} gap={"10px"}>
                 <Text
                   fontSize={{ base: "20px", md: "24px" }}
                   fontWeight={400}
@@ -70,19 +71,21 @@ const Navbar = () => {
                 >
                   Mine TAIKO
                 </Text>
-              </Link>
-            </Flex>
-            <Flex alignItems={"center"} gap={"10px"}>
-              <Link to="">
+                <Image src={navIcon} />
+              </Flex>
+            </Link>
+            <Link to="/airdrop">
+              <Flex alignItems={"center"} gap={"10px"}>
                 <Text
                   fontSize={{ base: "20px", md: "24px" }}
                   fontFamily="var(--font-text-main)"
                 >
                   Airdrop
                 </Text>
-              </Link>
-            </Flex>
-            <Link to="/airdrop">
+                <Image src={navIcon} />
+              </Flex>
+            </Link>
+            <Link to="/swap">
               <Flex>
                 <Text
                   fontSize={{ base: "20px", md: "24px" }}
@@ -106,7 +109,7 @@ const Navbar = () => {
             justifyContent={"flex-end"}
             display={{ base: "none", xl: "flex" }}
           >
-            <CustomButton
+            <MainButton
               width="200px"
               height="60px"
               _hover={{
@@ -115,8 +118,14 @@ const Navbar = () => {
               onClick={onOpenConnectWalletModal}
               backgroundColor="var(--color-main)"
             >
-              {address ? truncateStr(address) : "Connect Wallet"}
-            </CustomButton>
+              <Text
+                fontSize={{ base: "16px", md: "20px" }}
+                color={"#FFF"}
+                fontWeight="var(--font-text-main)"
+              >
+                {address ? truncateStr(address) : "Connect Wallet"}
+              </Text>
+            </MainButton>
           </Flex>
           <Flex
             cursor={"pointer"}

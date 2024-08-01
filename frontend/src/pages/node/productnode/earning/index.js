@@ -546,7 +546,7 @@ const Earning = () => {
                 Level {mining[tab].level}: {mining[tab].speed} GH/s
               </Text>
               <Flex
-                alignItems={"center"}
+                alignItems={"stretch"}
                 justifyContent={"space-between"}
                 gap={"10px"}
                 width={"100%"}
@@ -559,13 +559,15 @@ const Earning = () => {
                   paddingTop={"10px"}
                   paddingBottom={"10px"}
                 >
-                  <Text
-                    color={"#000"}
-                    fontSize={{ base: "16px", "2xl": "24px" }}
-                    fontWeight={500}
-                  >
-                    Upgrade miner
-                  </Text>
+                  <Flex alignItems={"center"}>
+                    <Text
+                      color={"#000"}
+                      fontSize={{ base: "16px", "2xl": "24px" }}
+                      fontWeight={500}
+                    >
+                      Upgrade miner
+                    </Text>
+                  </Flex>
                 </CommonButton>
                 <CommonButton
                   backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
@@ -578,6 +580,7 @@ const Earning = () => {
                   isDisabled={disabled}
                 >
                   <Text
+                    textAlign={"center"}
                     fontSize={{ base: "16px", "2xl": "24px" }}
                     fontWeight={500}
                   >

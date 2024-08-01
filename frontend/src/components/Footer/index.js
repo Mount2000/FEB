@@ -12,21 +12,23 @@ import CustomButton from "../button";
 import SectionContainer from "../container";
 //import image
 import appLogo from "../../assets/img/app-logo.png";
+import MainButton from "../button/MainButton";
+import { Link } from "react-router-dom";
 
 const BachiSwapFooter = () => {
   return (
     <>
-      <SectionContainer>
+      <SectionContainer backgroundColor="var(--color-background-footer)">
         <Flex
           flexDirection={"column"}
           gap={{ base: "42px", "2xl": "102px" }}
-          paddingBottom={{ base: "65px", xl: "132px" }}
+          paddingBottom={{ base: "48px" }}
         >
           <Flex
             justifyContent={"space-between"}
-            marginTop={{ base: "61px", xl: "260px", "2xl": "187px" }}
+            marginTop={{ base: "48px", xl: "260px", "2xl": "80px" }}
             flexDirection={{ base: "column", xl: "row" }}
-            gap={{ base: "49px", xl: "200px", "2xl": "350px" }}
+            gap={{ base: "49px", xl: "150px" }}
           >
             <Flex
               flexDirection={"column"}
@@ -36,31 +38,43 @@ const BachiSwapFooter = () => {
                 <Image src={appLogo} />
                 <Text
                   fontSize={{ base: "32px", md: "64px" }}
-                  fontFamily={`'Bruno Ace', sans-serif`}
+                  fontFamily="var(--font-heading)"
                 >
                   BachiSwap
                 </Text>
               </Flex>
               <Flex alignItems={"center"} gap={{ base: "13px", md: "19px" }}>
-                <CustomButton
+                <MainButton
                   backgroundColor="var(--color-main)"
-                  width={{ base: "142px", md: "183px" }}
-                  height={{ base: "46px", md: "70px" }}
+                  width={{ base: "131px", md: "172px" }}
+                  height={{ base: "44px", md: "60px" }}
                 >
-                  Get Started
-                </CustomButton>
-                <CustomButton
+                  <Text
+                    fontSize={{ base: "16px", md: "20px" }}
+                    color={"#FFF"}
+                    fontFamily="var(--font-text-main)"
+                  >
+                    Get Started
+                  </Text>
+                </MainButton>
+                <MainButton
                   border={"0.5px solid #EB7FB3"}
                   backgroundColor={"transparent"}
-                  width={{ base: "174px", md: "235px" }}
-                  height={{ base: "46px", md: "70px" }}
+                  width={{ base: "186px", md: "229px" }}
+                  height={{ base: "44px", md: "60px" }}
                 >
-                  Become a partner
-                </CustomButton>
+                  <Text
+                    fontSize={{ base: "16px", md: "20px" }}
+                    color={"#FFF"}
+                    fontFamily="var(--font-text-main)"
+                  >
+                    Become a partner
+                  </Text>
+                </MainButton>
               </Flex>
             </Flex>
-            <Flex wrap={"wrap"} gap={{ base: "70px" }}>
-              <Flex flexDirection={"column"} width={{ base: "40%" }}>
+            <Flex wrap={"wrap"} gap={{ base: "80px" }}>
+              <Flex flexDirection={"column"}>
                 <Text
                   fontSize={{ base: "24px", md: "32px" }}
                   fontFamily="var(--font-text-extra)"
@@ -68,15 +82,17 @@ const BachiSwapFooter = () => {
                 >
                   QUICKLINKS
                 </Text>
-                <Text
-                  fontSize={{ base: "16px", md: "24px" }}
-                  fontWeight={400}
-                  fontFamily={"var(--font-text-main)"}
-                >
-                  Airdrop
-                </Text>
+                <Link to={""}>
+                  <Text
+                    fontSize={{ base: "16px", md: "24px" }}
+                    fontWeight={400}
+                    fontFamily={"var(--font-text-main)"}
+                  >
+                    Airdrop
+                  </Text>
+                </Link>
               </Flex>
-              <Flex flexDirection={"column"} width={{ base: "40%" }}>
+              <Flex flexDirection={"column"}>
                 <Text
                   fontSize={{ base: "24px", md: "32px" }}
                   color={"#E42493"}
@@ -91,12 +107,18 @@ const BachiSwapFooter = () => {
                   fontWeight={400}
                   fontFamily={"var(--font-text-main)"}
                 >
-                  <ListItem>Ecosystem</ListItem>
-                  <ListItem>Docs</ListItem>
-                  <ListItem>Blog</ListItem>
+                  <Link to={""}>
+                    <ListItem>Ecosystem</ListItem>
+                  </Link>
+                  <Link to={""}>
+                    <ListItem>Docs</ListItem>
+                  </Link>
+                  <Link to={""}>
+                    <ListItem>Blog</ListItem>
+                  </Link>
                 </UnorderedList>
               </Flex>
-              <Flex flexDirection={"column"} width={{ base: "40%" }}>
+              <Flex flexDirection={"column"}>
                 <Text
                   fontSize={{ base: "24px", md: "32px" }}
                   color="var(--color-main)"
@@ -111,12 +133,18 @@ const BachiSwapFooter = () => {
                   fontWeight={400}
                   fontFamily="var( --font-text-main)"
                 >
-                  <ListItem>X</ListItem>
-                  <ListItem>Discord</ListItem>
-                  <ListItem>Youtube</ListItem>
+                  <Link to="">
+                    <ListItem>X</ListItem>
+                  </Link>
+                  <Link to="">
+                    <ListItem>Discord</ListItem>
+                  </Link>
+                  <Link to="">
+                    <ListItem>Youtube</ListItem>
+                  </Link>
                 </UnorderedList>
               </Flex>
-              <Flex flexDirection={"column"} width={{ base: "40%" }}>
+              <Flex flexDirection={"column"}>
                 <Text
                   fontSize={{ base: "24px", md: "32px" }}
                   color={"#E42493"}
@@ -131,11 +159,15 @@ const BachiSwapFooter = () => {
                   fontWeight={400}
                   fontFamily={"var(--font-text-main)"}
                 >
-                  <ListItem>Ai</ListItem>
-                  <ListItem>Gaming</ListItem>
+                  <Link to="">
+                    <ListItem>Ai</ListItem>
+                  </Link>
+                  <Link to="">
+                    <ListItem>Gaming</ListItem>
+                  </Link>
                 </UnorderedList>
               </Flex>
-              <Flex flexDirection={"column"} width={{ base: "40%" }}>
+              <Flex flexDirection={"column"}>
                 <Text
                   fontSize={{ base: "24px", md: "32px" }}
                   color={"#E42493"}
@@ -150,8 +182,12 @@ const BachiSwapFooter = () => {
                   fontWeight={400}
                   fontFamily={"var(--font-text-main)"}
                 >
-                  <ListItem>Checker Nodes</ListItem>
-                  <ListItem>Staking</ListItem>
+                  <Link to="">
+                    <ListItem>Checker Nodes</ListItem>
+                  </Link>
+                  <Link to="">
+                    <ListItem>Staking</ListItem>
+                  </Link>
                 </UnorderedList>
               </Flex>
             </Flex>

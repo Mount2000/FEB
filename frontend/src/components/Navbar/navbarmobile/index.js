@@ -7,9 +7,11 @@ import { IoClose } from "react-icons/io5";
 import CustomButton from "../../button";
 import appLogo from "../../../assets/img/app-logo.png";
 import iconClose from "../../../assets/img/icon-close-menu.png";
+import navIcon from "../../../assets/img/nav-icon.png";
 import { useModal } from "../../../contexts/useModal";
 import { truncateStr } from "../../../utils";
 import { useAccount } from "wagmi";
+import MainButton from "../../button/MainButton";
 const NavbarMobile = ({ zIndex, handleShowNav }) => {
   const { setConnectWalletModalVisible } = useModal();
   const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
@@ -79,7 +81,10 @@ const NavbarMobile = ({ zIndex, handleShowNav }) => {
             borderBottom={"0.25px solid #5B5B5B"}
           >
             <Link to="/node">
-              <Text>Mine TAIKO</Text>
+              <Flex alignItems={"center"} gap={"5px"}>
+                <Text>Mine TAIKO</Text>
+                <Image src={navIcon} />
+              </Flex>
             </Link>
           </Box>
           <Box
@@ -89,7 +94,10 @@ const NavbarMobile = ({ zIndex, handleShowNav }) => {
             borderBottom={"0.25px solid #5B5B5B"}
           >
             <Link to="">
-              <Text>Airdrop</Text>
+              <Flex alignItems={"center"} gap={"5px"}>
+                <Text>Airdrop</Text>
+                <Image src={navIcon} />
+              </Flex>
             </Link>
           </Box>
         </Flex>
@@ -98,7 +106,7 @@ const NavbarMobile = ({ zIndex, handleShowNav }) => {
           alignItems={"center"}
           paddingTop={"170px"}
         >
-          <CustomButton
+          <MainButton
             width="200px"
             height="60px"
             _hover={{
@@ -107,8 +115,14 @@ const NavbarMobile = ({ zIndex, handleShowNav }) => {
             onClick={onOpenConnectWalletModal}
             backgroundColor="var(--color-main)"
           >
-            {address ? truncateStr(address) : "Connect Wallet"}
-          </CustomButton>
+            <Text
+              fontSize={{ base: "20px" }}
+              color={"#FFF"}
+              fontWeight="var(--font-text-main)"
+            >
+              {address ? truncateStr(address) : "Connect Wallet"}
+            </Text>
+          </MainButton>
         </Flex>
       </Flex>
     </Box>

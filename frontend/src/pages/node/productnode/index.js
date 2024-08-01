@@ -68,7 +68,6 @@ const ProductNode = () => {
           </Text>
           <Flex
             justifyContent={"space-around"}
-            // gap={"20px"}
             wrap={"wrap"}
             width={"100%"}
             marginTop={{ base: "47px", "2xl": "99px" }}
@@ -76,6 +75,7 @@ const ProductNode = () => {
             {productTab.map((e, index) => {
               return (
                 <Flex
+                  
                   alignItems={"center"}
                   justifyContent={"center"}
                   key={index}

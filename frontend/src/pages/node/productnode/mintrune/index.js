@@ -23,6 +23,7 @@ import {
   waitForTransactionReceipt,
   readContract,
   getGasPrice,
+  getTransaction,
 } from "@wagmi/core";
 import {
   convertAndDivide,
@@ -209,6 +210,18 @@ const MintRune = () => {
     return referrals[0];
   };
 
+  /**********Get IP **************/
+  const getUserIpAddress = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP address:", error);
+      return "unknown";
+    }
+  };
+  /***********PayNode*************/
   const handlePayNow = async () => {
     setDisabled(true);
     let price = billNode?.price;
@@ -258,6 +271,10 @@ const MintRune = () => {
 
     const priceValue = parseUnits(String(price), chainDecimal);
     console.log({ priceValue });
+
+    /***Lấy địa chỉ IP của người dùng ***/
+    const ipAddress = await getUserIpAddress();
+
     const txObj = {
       ...nodeManagerContract,
       functionName: "multiBuyNode",
@@ -301,6 +318,26 @@ const MintRune = () => {
       if (hash) {
         setTxHash(hash);
         console.log({ hash });
+
+        await fetch(
+          "http://localhost:3001/api/transaction/create-transaction",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              hash: hash,
+              type: txObj.functionName,
+              ipAddress: ipAddress,
+            }),
+          }
+        );
+
+        const transaction = getTransaction(config, {
+          hash: hash,
+        });
+        console.log({ transaction });
 
         const result = await waitForTransactionReceipt(config, {
           hash: hash,

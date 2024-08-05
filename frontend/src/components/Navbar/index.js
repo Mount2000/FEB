@@ -63,7 +63,11 @@ const Navbar = () => {
             justifyContent={{ base: "center", "2xl": "space-between" }}
           >
             <Link to="/node">
-              <Flex alignItems={"center"} gap={"10px"}>
+              <Flex
+                alignItems={"center"}
+                gap={"16px"}
+                justifyContent={"space-between"}
+              >
                 <Text
                   fontSize={{ base: "20px", md: "24px" }}
                   fontWeight={400}
@@ -75,7 +79,11 @@ const Navbar = () => {
               </Flex>
             </Link>
             <Link to="/airdrop">
-              <Flex alignItems={"center"} gap={"10px"}>
+              <Flex
+                alignItems={"center"}
+                gap={"16px"}
+                justifyContent={"space-between"}
+              >
                 <Text
                   fontSize={{ base: "20px", md: "24px" }}
                   fontFamily="var(--font-text-main)"
@@ -110,8 +118,8 @@ const Navbar = () => {
             display={{ base: "none", xl: "flex" }}
           >
             <MainButton
-              width="200px"
-              height="60px"
+              width={{ "2xl": "200px", "3xl": "240px" }}
+              height="64px"
               _hover={{
                 backgroundColor: "var(--color-main)",
               }}
@@ -119,7 +127,7 @@ const Navbar = () => {
               backgroundColor="var(--color-main)"
             >
               <Text
-                fontSize={{ base: "16px", md: "20px" }}
+                fontSize={{ base: "20px", md: "24px" }}
                 color={"#FFF"}
                 fontWeight="var(--font-text-main)"
               >

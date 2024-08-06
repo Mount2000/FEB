@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import SectionContainer from "../../../../components/container";
 import CommonButton from "../../../../components/button/commonbutton";
 import Quantity from "../../../../components/quantity";
-
+import { clientAPI } from "../../../../api/client";
 //import image
 import productCoreI5 from "../../../../assets/img/node/product-corei5.png";
 import productCoreI7 from "../../../../assets/img/node/product-corei7.png";
@@ -221,6 +221,20 @@ const MintRune = () => {
       return "unknown";
     }
   };
+  /************Check Ipspam***************/
+  const checkIfIPBlocked = async (ip) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/transaction/check-ip/${ip}`
+      );
+      const data = await response.json();
+      return data.blocked;
+    } catch (error) {
+      console.error("Error checking IP address:", error);
+      return false;
+    }
+  };
+
   /***********PayNode*************/
   const handlePayNow = async () => {
     setDisabled(true);
@@ -275,6 +289,8 @@ const MintRune = () => {
     /***Lấy địa chỉ IP của người dùng ***/
     const ipAddress = await getUserIpAddress();
 
+    const isBlocked = await checkIfIPBlocked(ipAddress);
+
     const txObj = {
       ...nodeManagerContract,
       functionName: "multiBuyNode",
@@ -310,6 +326,14 @@ const MintRune = () => {
     dispatch(setMessage(PENDING.txAwait));
     setIsLoading(true);
     setPaymentStatus(null);
+
+    if (isBlocked) {
+      dispatch(setMessage(FAIURE.txFalure));
+      setPaymentStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
     try {
       const hash = await writeContract(config, {
         ...txObj,
@@ -319,21 +343,25 @@ const MintRune = () => {
         setTxHash(hash);
         console.log({ hash });
 
-        await fetch(
-          "http://localhost:3001/api/transaction/create-transaction",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              hash: hash,
-              type: txObj.functionName,
-              ipAddress: ipAddress,
-            }),
-          }
-        );
-
+        // await fetch(
+        //   "http://localhost:3001/api/transaction/create-transaction",
+        //   {
+        //     method: "POST",
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify({
+        //       hash: hash,
+        //       type: txObj.functionName,
+        //       ipAddress: ipAddress,
+        //     }),
+        //   }
+        // );
+        await clientAPI("post", "/api/transaction/create-transaction", {
+          hash: hash,
+          type: txObj.functionName,
+          ipAddress: ipAddress,
+        });
         const transaction = getTransaction(config, {
           hash: hash,
         });

@@ -34,7 +34,7 @@ function WalletOption({ connector, onClick }) {
 
   return (
     <ActionButton disabled={!ready} onClick={onClick}>
-      <Text>{connector.name}</Text>
+      <Text fontSize={{base:"24px"}}>{connector.name}</Text>
     </ActionButton>
   );
 }

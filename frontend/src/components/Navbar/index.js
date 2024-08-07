@@ -12,9 +12,11 @@ import navIcon from "../../assets/img/nav-icon.png";
 import { useModal } from "../../contexts/useModal";
 import { useAccount } from "wagmi";
 import { truncateStr } from "../../utils";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import NavbarMobile from "./navbarmobile";
 import MainButton from "../button/MainButton";
+import { enumMenu } from "../../utils/contants";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 const Navbar = () => {
   const [shownav, setShowNav] = useState(false);
@@ -60,57 +62,33 @@ const Navbar = () => {
             alignItems={"center"}
             fontFamily="var(--font-text-main)"
             display={{ base: "none", xl: "flex" }}
-            justifyContent={{ base: "center", "2xl": "space-between" }}
+            justifyContent={{ base: "space-around", "2xl": "space-between" }}
           >
-            <Link to="/node">
-              <Flex
-                alignItems={"center"}
-                gap={"16px"}
-                justifyContent={"space-between"}
+            {enumMenu.map((item) => (
+              <NavLink
+                to={item.path}
+                key={item.name}
+                style={({ isActive }) => ({
+                  color: isActive ? "var(--color-main)" : "white",
+                  position: "relative",
+                })}
               >
-                <Text
-                  fontSize={{ base: "20px", md: "24px" }}
-                  fontWeight={400}
-                  fontFamily="var(--font-text-main)"
+                <Flex
+                  alignItems={"center"}
+                  gap={"16px"}
+                  justifyContent={"space-between"}
                 >
-                  Mine TAIKO
-                </Text>
-                <Image src={navIcon} />
-              </Flex>
-            </Link>
-            <Link to="/airdrop">
-              <Flex
-                alignItems={"center"}
-                gap={"16px"}
-                justifyContent={"space-between"}
-              >
-                <Text
-                  fontSize={{ base: "20px", md: "24px" }}
-                  fontFamily="var(--font-text-main)"
-                >
-                  Airdrop
-                </Text>
-                <Image src={navIcon} />
-              </Flex>
-            </Link>
-            <Link to="/swap">
-              <Flex>
-                <Text
-                  fontSize={{ base: "20px", md: "24px" }}
-                  fontFamily="var(--font-text-main)"
-                >
-                  Swap
-                </Text>
-              </Flex>
-            </Link>
-            <Flex alignItems={"center"} gap={"10px"}>
-              <Text
-                fontSize={{ base: "20px", md: "24px" }}
-                fontFamily="var(--font-text-main)"
-              >
-                Staking
-              </Text>
-            </Flex>
+                  <Text
+                    fontSize={{ base: "20px", md: "24px" }}
+                    fontWeight={400}
+                    fontFamily="var(--font-text-main)"
+                  >
+                    {item.name}
+                  </Text>
+                  {item.children && <IoIosArrowDown size={"24px"} />}
+                </Flex>
+              </NavLink>
+            ))}
           </Flex>
           <Flex
             style={{ gridColumn: "span 2" }}
@@ -151,7 +129,13 @@ const Navbar = () => {
         </Grid>
       </SectionContainer>
 
-      {shownav && <NavbarMobile zIndex="1000" handleShowNav={handleShowNav} />}
+      {shownav && (
+        <NavbarMobile
+          zIndex="1000"
+          handleShowNav={handleShowNav}
+          shownav={shownav}
+        />
+      )}
       {shownav && (
         <Box
           position="fixed"

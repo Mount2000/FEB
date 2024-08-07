@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 //import component
 import SectionContainer from "../../container";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
@@ -12,102 +12,154 @@ import { useModal } from "../../../contexts/useModal";
 import { truncateStr } from "../../../utils";
 import { useAccount } from "wagmi";
 import MainButton from "../../button/MainButton";
-const NavbarMobile = ({ zIndex, handleShowNav }) => {
+import { enumMenu } from "../../../utils/contants";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+
+const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
   const { setConnectWalletModalVisible } = useModal();
   const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
   const { address } = useAccount();
+  const [navActive, setNavActive] = useState("");
+  useEffect(() => {
+    if (shownav) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [shownav]);
   return (
     <Box
       padding={"0px"}
-      position={"absolute"}
+      position={"fixed"}
       right={"0px"}
       top={"0px"}
       zIndex={zIndex}
       width={{ base: "100%", md: "60%" }}
       backgroundColor="var(--color-background-popup)"
+      height={"100vh"}
+      className="slideIn-animation"
+      overflowY={"auto"}
     >
-      <Flex flexDirection={"column"} paddingBottom={"40.49px"}>
-        <Flex
-          alignItems={"center"}
-          justifyContent={"space-between"}
-          gap={"20px"}
-          paddingTop={"20px"}
-          paddingBottom={"20px"}
-          borderBottom={"0.5px solid  var(--color-border-bottom)"}
-          paddingLeft={"25px"}
-          paddingRight={"24.64px"}
-        >
-          <Link to="/">
-            <Flex gap={{ base: "4.64px", md: "14.45px" }} alignItems={"center"}>
-              <Image src={appLogo} height={{ base: "24px", md: "52px" }} />
-              <Text
-                fontSize={{ base: "16px", md: "40px" }}
-                lineHeight={{ base: "19.3px", md: "48.24px" }}
-                fontFamily="var(--font-heading-main)"
-                fontWeight={400}
+      <Flex
+        flexDirection={"column"}
+        height={"100%"}
+        justifyContent={"space-between"}
+      >
+        <Box>
+          <Flex
+            alignItems={"center"}
+            justifyContent={"space-between"}
+            gap={"20px"}
+            paddingTop={"20px"}
+            paddingBottom={"20px"}
+            borderBottom={"0.5px solid  var(--color-border-bottom)"}
+            px={"24px"}
+          >
+            <Link to="/">
+              <Flex
+                gap={{ base: "4.64px", md: "14.45px" }}
+                alignItems={"center"}
               >
-                BachiSwap
-              </Text>
-            </Flex>
-          </Link>
-
-          <Image src={iconClose} onClick={handleShowNav} cursor={"pointer"} />
-        </Flex>
-        <Flex flexDirection={"column"}>
-          <Box
-            paddingBottom={"31px"}
-            paddingTop={"27px"}
-            paddingLeft={"25px"}
-            borderBottom={"0.25px solid #5B5B5B"}
-          >
-            <Link to="">
-              <Text>Swap</Text>
-            </Link>
-          </Box>
-          <Box
-            paddingBottom={"31px"}
-            paddingTop={"27px"}
-            paddingLeft={"25px"}
-            borderBottom={"0.25px solid #5B5B5B"}
-          >
-            <Link to="">
-              <Text>Staking</Text>
-            </Link>
-          </Box>
-          <Box
-            paddingBottom={"31px"}
-            paddingTop={"27px"}
-            paddingLeft={"25px"}
-            borderBottom={"0.25px solid #5B5B5B"}
-          >
-            <Link to="/node">
-              <Flex alignItems={"center"} gap={"5px"}>
-                <Text>Mine TAIKO</Text>
-                <Image src={navIcon} />
+                <Image src={appLogo} height={{ base: "24px", md: "52px" }} />
+                <Text
+                  fontSize={{ base: "16px", md: "40px" }}
+                  lineHeight={{ base: "19.3px", md: "48.24px" }}
+                  fontFamily="var(--font-heading-main)"
+                  fontWeight={400}
+                >
+                  BachiSwap
+                </Text>
               </Flex>
             </Link>
-          </Box>
-          <Box
-            paddingBottom={"31px"}
-            paddingTop={"27px"}
-            paddingLeft={"25px"}
-            borderBottom={"0.25px solid #5B5B5B"}
-          >
-            <Link to="">
-              <Flex alignItems={"center"} gap={"5px"}>
-                <Text>Airdrop</Text>
-                <Image src={navIcon} />
-              </Flex>
-            </Link>
-          </Box>
-        </Flex>
-        <Flex
-          justifyContent={"center"}
-          alignItems={"center"}
-          paddingTop={"170px"}
-        >
+            <Image src={iconClose} onClick={handleShowNav} cursor={"pointer"} />
+          </Flex>
+          <Flex flexDirection={"column"}>
+            {enumMenu.map((item) => (
+              <>
+                <Box
+                  padding={{ base: "32px 24px" }}
+                  borderBottom={"0.25px solid #5B5B5B"}
+                  onClick={() => {
+                    setNavActive(navActive != item.name ? item.name : "");
+                  }}
+                  cursor={"pointer"}
+                >
+                  <Link to={item.path}>
+                    <Flex
+                      alignItems={"center"}
+                      gap={"5px"}
+                      justifyContent={"space-between"}
+                    >
+                      <Text
+                        color={
+                          navActive == item.name ? "var(--color-main)" : ""
+                        }
+                        fontSize={{ base: "24px" }}
+                      >
+                        {item.name}
+                      </Text>
+                      {item?.children &&
+                        (item.name != navActive ? (
+                          <IoIosArrowDown
+                            size={"24px"}
+                            color={
+                              navActive == item.name ? "var(--color-main)" : ""
+                            }
+                          />
+                        ) : (
+                          <IoIosArrowUp
+                            size={"24px"}
+                            color={
+                              navActive == item.name ? "var(--color-main)" : ""
+                            }
+                          />
+                        ))}
+                    </Flex>
+                  </Link>
+                </Box>
+                {item?.children && navActive == item.name && (
+                  <Flex
+                    padding={{ base: "32px 48px" }}
+                    borderBottom={"0.25px solid #5B5B5B"}
+                    direction={"column"}
+                    className={"slideDown-animation"}
+                  >
+                    {item?.children.map((subItem) => (
+                      <Link to={subItem.path}>
+                        <Flex
+                          alignItems={"center"}
+                          justifyContent={"space-between"}
+                        >
+                          <Box
+                            color={"#788AA3"}
+                            padding={"8px 48px"}
+                            _hover={{
+                              backgroundColor: "#788AA3",
+                              borderRadius: "12px",
+                              color: "white !important",
+                            }}
+                            w={"100%"}
+                          >
+                            <Text  fontSize={{ base: "24px" }}>
+                              {subItem.name}
+                            </Text>
+                          </Box>
+                        </Flex>
+                      </Link>
+                    ))}
+                  </Flex>
+                )}
+              </>
+            ))}
+          </Flex>
+        </Box>
+        <Flex alignItems={"center"} padding={"36px 24px"} direction={"column"}>
           <MainButton
-            width="200px"
+            width="100%"
             height="60px"
             _hover={{
               backgroundColor: "var(--color-main)",

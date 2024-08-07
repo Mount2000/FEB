@@ -29,15 +29,15 @@ export const enumMenu = [
     path: "#",
     name: "Airdrop",
     children: [
-        {
-          path: "/airdrop",
-          name: "Social Quest",
-        },
-        {
-          path: "/airdrop",
-          name: "Node Quest",
-        },
-      ],
+      {
+        path: "/airdrop",
+        name: "Social Quest",
+      },
+      {
+        path: "/airdrop",
+        name: "Node Quest",
+      },
+    ],
   },
   {
     path: "/swap",

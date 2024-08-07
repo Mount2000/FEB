@@ -17,16 +17,19 @@ import NavbarMobile from "./navbarmobile";
 import MainButton from "../button/MainButton";
 import { enumMenu } from "../../utils/contants";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-
+import { useTab } from "../../contexts/useTab";
 const Navbar = () => {
   const [shownav, setShowNav] = useState(false);
+  const [navActive, setNavActive] = useState("");
+  const [navColor, setNavColor] = useState("");
   const { setConnectWalletModalVisible } = useModal();
   const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
   const { address } = useAccount();
-
+  const { setFarmTab } = useTab();
   const handleShowNav = () => {
     setShowNav(!shownav);
   };
+
   return (
     <>
       <SectionContainer
@@ -34,7 +37,7 @@ const Navbar = () => {
         borderBottom="0.5px solid var(--color-border-bottom)"
         position="relative"
         sx={{ backdropFilter: "blur(10px)" }}
-        zIndex="10"
+        zIndex="1000"
       >
         <Grid
           templateColumns="repeat(10, 1fr)"
@@ -43,7 +46,14 @@ const Navbar = () => {
           paddingTop={"20px"}
           paddingBottom={"20px"}
         >
-          <Link to="/" style={{ gridColumn: "span 3" }}>
+          <Link
+            to="/"
+            style={{ gridColumn: "span 3" }}
+            onClick={() => {
+              setNavActive("");
+              setNavColor("");
+            }}
+          >
             <Flex gap={{ base: "4.64px", md: "14.45px" }} alignItems={"center"}>
               <Image src={appLogo} height={{ base: "24px", md: "52px" }} />
               <Text
@@ -68,10 +78,14 @@ const Navbar = () => {
               <NavLink
                 to={item.path}
                 key={item.name}
-                style={({ isActive }) => ({
-                  color: isActive ? "var(--color-main)" : "white",
+                onClick={() => {
+                  setNavActive(navActive != item.name ? item.name : "");
+                  setNavColor(item.name);
+                }}
+                style={{
+                  color: navColor == item.name ? "var(--color-main)" : "white",
                   position: "relative",
-                })}
+                }}
               >
                 <Flex
                   alignItems={"center"}
@@ -85,8 +99,78 @@ const Navbar = () => {
                   >
                     {item.name}
                   </Text>
-                  {item.children && <IoIosArrowDown size={"24px"} />}
+                  {item?.children &&
+                    (!navActive.includes(item.name) ? (
+                      <IoIosArrowDown
+                        size={"24px"}
+                        color={
+                          navActive.includes(item.name)
+                            ? "var(--color-main)"
+                            : ""
+                        }
+                      />
+                    ) : (
+                      <IoIosArrowUp
+                        size={"24px"}
+                        color={
+                          navActive.includes(item.name)
+                            ? "var(--color-main)"
+                            : ""
+                        }
+                      />
+                    ))}
                 </Flex>
+                <Box
+                  borderBottomRadius={"15px"}
+                  backgroundColor="var(--color-background)"
+                  position="absolute"
+                  top={"70px"}
+                  left="50%"
+                  transform="translateX(-50%)"
+                  zIndex={"10000"}
+                  width={"210px"}
+                  boxShadow={"inset 0 0 10px #FFF"}
+                >
+                  {item?.children && navActive.includes(item.name) && (
+                    <Flex
+                      padding={{ base: "24px 11px" }}
+                      border={"none"}
+                      direction={"column"}
+                      className={"slideDown-animation"}
+                    >
+                      {item?.children.map((subItem, index) => (
+                        <Link
+                          to={subItem.path}
+                          key={subItem.name}
+                          onClick={() => {
+                            if (item.name == enumMenu[0].name)
+                              setFarmTab(index);
+                          }}
+                        >
+                          <Flex
+                            alignItems={"center"}
+                            justifyContent={"space-between"}
+                          >
+                            <Box
+                              color={"#788AA3"}
+                              padding={"8px 29px"}
+                              _hover={{
+                                backgroundColor: "#788AA3",
+                                borderRadius: "12px",
+                                color: "white !important",
+                              }}
+                              w={"100%"}
+                            >
+                              <Text fontSize={{ base: "16px" }}>
+                                {subItem.name}
+                              </Text>
+                            </Box>
+                          </Flex>
+                        </Link>
+                      ))}
+                    </Flex>
+                  )}
+                </Box>
               </NavLink>
             ))}
           </Flex>

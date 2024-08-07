@@ -8,10 +8,13 @@ const MainButton = ({
   height,
   border,
   onClick,
+  borderRadius,
+  ...props
 }) => {
   return (
     <Button
-      borderRadius={"12px"}
+      {...props}
+      borderRadius={borderRadius || "12px"}
       padding={"16px 36px"}
       fontWeight={400}
       backgroundColor={backgroundColor}

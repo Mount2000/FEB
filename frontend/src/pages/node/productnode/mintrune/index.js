@@ -545,11 +545,12 @@ const MintRune = () => {
                     fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
+                    fontFamily={"var(--font-heading)"}
                   >
                     {nodeData ? Number(nodeData[3]) : 0} GH/s
                   </Text>
                 </Flex>
-                <Flex
+                {/* <Flex
                   alignItems={"center"}
                   justifyContent={"space-between"}
                   width={"100%"}
@@ -568,7 +569,7 @@ const MintRune = () => {
                   >
                     30 days
                   </Text>
-                </Flex>
+                </Flex> */}
                 <Flex
                   alignItems={"center"}
                   justifyContent={"space-between"}
@@ -585,6 +586,7 @@ const MintRune = () => {
                     fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
+                    fontFamily={"var(--font-heading)"}
                   >
                     {nodeData
                       ? formatTokenBalance(
@@ -595,7 +597,7 @@ const MintRune = () => {
                     {chainSymbol}
                   </Text>
                 </Flex>
-                <Flex
+                {/* <Flex
                   alignItems={"center"}
                   justifyContent={"space-between"}
                   width={"100%"}
@@ -627,7 +629,7 @@ const MintRune = () => {
                       : 0}{" "}
                     {chainSymbol}
                   </Text>
-                </Flex>
+                </Flex> */}
                 <Flex
                   alignItems={"center"}
                   justifyContent={"space-between"}
@@ -650,6 +652,7 @@ const MintRune = () => {
                     fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
+                    fontFamily={"var(--font-heading)"}
                   >
                     {nodeData
                       ? formatTokenBalance(
@@ -659,7 +662,7 @@ const MintRune = () => {
                     {chainSymbol}
                   </Text>
                 </Flex>
-                <Flex
+                {/* <Flex
                   alignItems={"center"}
                   justifyContent={"space-between"}
                   width={"100%"}
@@ -683,7 +686,7 @@ const MintRune = () => {
                       : 0}{" "}
                     Bachi
                   </Text>
-                </Flex>
+                </Flex> */}
                 <Flex
                   alignItems={"center"}
                   justifyContent={"space-between"}
@@ -714,6 +717,7 @@ const MintRune = () => {
                     fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
+                    fontFamily={"var(--font-heading)"}
                   >
                     {nodeData
                       ? formatTokenBalance(

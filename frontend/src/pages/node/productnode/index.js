@@ -11,8 +11,9 @@ import ReferralProgram from "./referralprogram";
 import backgroundNode from "../../../assets/img/node/background-node.png";
 import backgroundReferral from "../../../assets/img/node/background-referral.png";
 import { base } from "viem/chains";
+import { useTab } from "../../../contexts/useTab";
 const ProductNode = () => {
-  const [currentTab, setcurrentTab] = useState(0);
+  const { farmTab, setFarmTab } = useTab();
 
   const productTab = [
     {
@@ -75,11 +76,10 @@ const ProductNode = () => {
             {productTab.map((e, index) => {
               return (
                 <Flex
-                  
                   alignItems={"center"}
                   justifyContent={"center"}
                   key={index}
-                  onClick={() => setcurrentTab(index)}
+                  onClick={() => setFarmTab(index)}
                   cursor={"pointer"}
                   padding={"12px 5px 0px 5px"}
                   zIndex={"10"}
@@ -96,8 +96,8 @@ const ProductNode = () => {
                       left: 0,
                       width: "100%",
                       height: {
-                        base: currentTab === index ? "3px" : "0",
-                        "2xl": currentTab === index ? "5px" : "0",
+                        base: farmTab === index ? "3px" : "0",
+                        "2xl": farmTab === index ? "5px" : "0",
                       },
                       backgroundColor: "var(--color-main)",
                       // transition: "height 0.3s ease",
@@ -111,7 +111,7 @@ const ProductNode = () => {
                     fontWeight={400}
                     lineHeight={"normal"}
                     fontFamily="var(--font-heading-main)"
-                    color={currentTab == index ? "var(--color-main)" : "#FFF"}
+                    color={farmTab == index ? "var(--color-main)" : "#FFF"}
                     textAlign={"center"}
                     whiteSpace="nowrap"
                   >
@@ -122,7 +122,7 @@ const ProductNode = () => {
             })}
           </Flex>
         </Flex>
-        <Box>{productTab[currentTab].content}</Box>
+        <Box>{productTab[farmTab].content}</Box>
       </SectionContainer>
     </>
   );

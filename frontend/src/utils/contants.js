@@ -1,6 +1,6 @@
 export const enumMenu = [
   {
-    path: "/node",
+    path: "#",
     name: "Mine TAIKO",
     children: [
       {
@@ -26,7 +26,7 @@ export const enumMenu = [
     ],
   },
   {
-    path: "/airdrop",
+    path: "#",
     name: "Airdrop",
     children: [
         {

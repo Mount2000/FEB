@@ -110,7 +110,7 @@ const Earning = () => {
 
   useInterval(() => {
     address && getFarmAmounts();
-  }, 3000);
+  }, 2000);
 
   const mining = [
     {

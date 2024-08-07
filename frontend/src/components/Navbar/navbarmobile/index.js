@@ -14,12 +14,14 @@ import { useAccount } from "wagmi";
 import MainButton from "../../button/MainButton";
 import { enumMenu } from "../../../utils/contants";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { useTab } from "../../../contexts/useTab";
 
 const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
   const { setConnectWalletModalVisible } = useModal();
   const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
   const { address } = useAccount();
-  const [navActive, setNavActive] = useState("");
+  const [navActive, setNavActive] = useState([]);
+  const { setFarmTab } = useTab();
   useEffect(() => {
     if (shownav) {
       document.body.style.overflow = "hidden";
@@ -31,6 +33,7 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
       document.body.style.overflow = "";
     };
   }, [shownav]);
+
   return (
     <Box
       padding={"0px"}
@@ -84,7 +87,16 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
                   padding={{ base: "32px 24px" }}
                   borderBottom={"0.25px solid #5B5B5B"}
                   onClick={() => {
-                    setNavActive(navActive != item.name ? item.name : "");
+                    if (!navActive.includes(item.name)) {
+                      const newNav = [...navActive];
+                      newNav.push(item.name);
+                      setNavActive(newNav);
+                    } else {
+                      const newNav = navActive.filter(
+                        (navItem) => navItem !== item.name
+                      );
+                      setNavActive(newNav);
+                    }
                   }}
                   cursor={"pointer"}
                 >
@@ -96,40 +108,52 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
                     >
                       <Text
                         color={
-                          navActive == item.name ? "var(--color-main)" : ""
+                          navActive.includes(item.name)
+                            ? "var(--color-main)"
+                            : ""
                         }
                         fontSize={{ base: "24px" }}
                       >
                         {item.name}
                       </Text>
                       {item?.children &&
-                        (item.name != navActive ? (
+                        (!navActive.includes(item.name) ? (
                           <IoIosArrowDown
                             size={"24px"}
                             color={
-                              navActive == item.name ? "var(--color-main)" : ""
+                              navActive.includes(item.name)
+                                ? "var(--color-main)"
+                                : ""
                             }
                           />
                         ) : (
                           <IoIosArrowUp
                             size={"24px"}
                             color={
-                              navActive == item.name ? "var(--color-main)" : ""
+                              navActive.includes(item.name)
+                                ? "var(--color-main)"
+                                : ""
                             }
                           />
                         ))}
                     </Flex>
                   </Link>
                 </Box>
-                {item?.children && navActive == item.name && (
+                {item?.children && navActive.includes(item.name) && (
                   <Flex
                     padding={{ base: "32px 48px" }}
                     borderBottom={"0.25px solid #5B5B5B"}
                     direction={"column"}
                     className={"slideDown-animation"}
                   >
-                    {item?.children.map((subItem) => (
-                      <Link to={subItem.path}>
+                    {item?.children.map((subItem, index) => (
+                      <Link
+                        to={subItem.path}
+                        onClick={() => {
+                          if (item.name == enumMenu[0].name) setFarmTab(index);
+                          handleShowNav();
+                        }}
+                      >
                         <Flex
                           alignItems={"center"}
                           justifyContent={"space-between"}
@@ -144,7 +168,7 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
                             }}
                             w={"100%"}
                           >
-                            <Text  fontSize={{ base: "24px" }}>
+                            <Text fontSize={{ base: "24px" }}>
                               {subItem.name}
                             </Text>
                           </Box>

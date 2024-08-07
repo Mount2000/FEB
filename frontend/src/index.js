@@ -12,6 +12,7 @@ import ConnectWalletModal from "./components/wallets/ConnectWallet";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "./store/store";
 import { Toaster } from "react-hot-toast";
+import { TabProvider } from "./contexts/useTab";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient();
@@ -22,9 +23,11 @@ root.render(
         <QueryClientProvider client={queryClient}>
           <ReduxProvider store={store}>
             <ModalProvider>
-              <App />
-              <ConnectWalletModal />
-              <Toaster position="bottom-right" reverseOrder={true} />
+              <TabProvider>
+                <App />
+                <ConnectWalletModal />
+                <Toaster position="bottom-right" reverseOrder={true} />
+              </TabProvider>
             </ModalProvider>
           </ReduxProvider>
         </QueryClientProvider>

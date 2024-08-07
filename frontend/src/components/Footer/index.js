@@ -12,8 +12,9 @@ import CustomButton from "../button";
 import SectionContainer from "../container";
 //import image
 import appLogo from "../../assets/img/app-logo.png";
-import MainButton from "../button/MainButton";
+
 import { Link } from "react-router-dom";
+import MainButton from "../button/MainButton";
 
 const BachiSwapFooter = () => {
   return (

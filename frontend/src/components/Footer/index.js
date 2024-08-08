@@ -74,7 +74,11 @@ const BachiSwapFooter = () => {
                 </MainButton>
               </Flex>
             </Flex>
-            <Flex wrap={"wrap"} gap={{ base: "80px" }}>
+            <Flex
+              wrap={"wrap"}
+              gap={{ base: "80px" }}
+              justifyContent={"space-between"}
+            >
               <Flex flexDirection={"column"}>
                 <Text
                   fontSize={{ base: "24px", md: "32px" }}
@@ -145,7 +149,7 @@ const BachiSwapFooter = () => {
                   </Link>
                 </UnorderedList>
               </Flex>
-              <Flex flexDirection={"column"}>
+              {/* <Flex flexDirection={"column"}>
                 <Text
                   fontSize={{ base: "24px", md: "32px" }}
                   color={"#E42493"}
@@ -167,7 +171,7 @@ const BachiSwapFooter = () => {
                     <ListItem>Gaming</ListItem>
                   </Link>
                 </UnorderedList>
-              </Flex>
+              </Flex> */}
               <Flex flexDirection={"column"}>
                 <Text
                   fontSize={{ base: "24px", md: "32px" }}

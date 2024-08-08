@@ -19,10 +19,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     // Node tier
     struct NodeTier {
-        bool status;
+        uint8 status; // 1 is Running, 2 is Stopped, 3 is Idle
         string name;
         uint256 price;
-        uint256 hashrate;
+        uint64 hashrate;
         uint256 farmSpeedBachi;
         uint256 farmSpeedTaiko;
     }
@@ -62,10 +62,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     event AddedNode(
         address indexed user,
         uint256 nodeTierId,
-        bool status,
+        uint8 status,
         string name,
         uint256 price,
-        uint256 hashrate,
+        uint64 hashrate,
         uint256 farmSpeedBachi,
         uint256 farmSpeedTaiko
     );
@@ -73,10 +73,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     event UpdatedNode(
         address indexed user,
         uint256 nodeTierId,
-        bool status,
+        uint8 status,
         string name,
         uint256 price,
-        uint256 hashrate,
+        uint64 hashrate,
         uint256 farmSpeedBachi,
         uint256 farmSpeedTaiko
     );
@@ -169,9 +169,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
     // NODE TIER MANAGEMENT
     function addNodeTier(
+        uint8 status,
         string memory name,
         uint256 price,
-        uint256 hashrate,
+        uint64 hashrate,
         uint256 farmSpeedBachi,
         uint256 farmSpeedTaiko
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
@@ -185,7 +186,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
         nodeTierId++;
         NodeTier memory newNode = NodeTier(
-            true,
+            status,
             name,
             price,
             hashrate,
@@ -209,9 +210,9 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     function updateNodeTier(
         uint256 _nodeTierId,
         string memory name,
-        bool status,
+        uint8 status,
         uint256 price,
-        uint256 hashrate,
+        uint64 hashrate,
         uint256 farmSpeedBachi,
         uint256 farmSpeedTaiko
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
@@ -358,13 +359,11 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             discountCouponsIdUserLinks[discountCouponId] != caller
         ) {
             DiscountCoupon memory coupon = discountCoupons[discountCouponId];
-            NodeTier memory nodetier = nodeTiers[_nodeTierId];
             require(
                 coupon.discountPercent > 0,
                 "Discount coupon does not exist"
             );
             require(coupon.status, "Discount coupon is not active");
-            require(nodetier.status, "Node is not active");
             discountValue = (price * coupon.discountPercent) / 100;
 
             address discountOwner = discountCouponsIdUserLinks[

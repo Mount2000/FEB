@@ -17,6 +17,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     BachiToken private tokenContract;
     Staking private stakingContract;
 
+    // Node tier
     struct NodeTier {
         bool status;
         string name;
@@ -24,7 +25,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 hashrate;
         uint256 farmSpeedBachi;
         uint256 farmSpeedTaiko;
-        uint8 referralRate;
     }
 
     uint256 public nodeTierId;
@@ -33,6 +33,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     mapping(address => EnumerableSet.UintSet) private userNodeIdLinks;
     mapping(uint256 => address) public nodeIdUserLinks;
 
+    // Coupon
     uint256 public couponId;
     struct DiscountCoupon {
         bool status;
@@ -47,6 +48,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     mapping(uint256 => address) public discountCouponsIdUserLinks;
 
     // Referral
+    uint8 public referralRate = 10;
     uint256 public referenceId;
     struct ReferralInformation {
         string code;
@@ -65,8 +67,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price,
         uint256 hashrate,
         uint256 farmSpeedBachi,
-        uint256 farmSpeedTaiko,
-        uint8 ReferralRate
+        uint256 farmSpeedTaiko
     );
 
     event UpdatedNode(
@@ -77,8 +78,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price,
         uint256 hashrate,
         uint256 farmSpeedBachi,
-        uint256 farmSpeedTaiko,
-        uint8 ReferralRate
+        uint256 farmSpeedTaiko
     );
 
     event AddCoupon(
@@ -133,18 +133,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         _unpause();
     }
 
-    function getNodeContractAddress() public view returns (address) {
-        return address(bachiNodeContract);
-    }
-
     function setNodeContractAddress(
         address _bachiNodeContract
     ) public onlyRole(ADMIN_ROLE) {
         bachiNodeContract = BachiNode(_bachiNodeContract);
     }
 
-    function getTokenContractAddress() public view returns (address) {
-        return address(tokenContract);
+    function getNodeContractAddress() public view returns (address) {
+        return address(bachiNodeContract);
     }
 
     function setTokenContractAddress(
@@ -153,8 +149,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         tokenContract = BachiToken(_tokenContract);
     }
 
-    function getStakingContractAddress() public view returns (address) {
-        return address(stakingContract);
+    function getTokenContractAddress() public view returns (address) {
+        return address(tokenContract);
     }
 
     function setStakingContractAddress(
@@ -163,15 +159,21 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         stakingContract = Staking(_stakingContract);
     }
 
-    // NODE Tier MANAGEMENT
+    function getStakingContractAddress() public view returns (address) {
+        return address(stakingContract);
+    }
 
+    function setReferralRate(uint8 _referralRate) public onlyRole(ADMIN_ROLE) {
+        referralRate = _referralRate;
+    }
+
+    // NODE TIER MANAGEMENT
     function addNodeTier(
         string memory name,
         uint256 price,
         uint256 hashrate,
         uint256 farmSpeedBachi,
-        uint256 farmSpeedTaiko,
-        uint8 ReferralRate
+        uint256 farmSpeedTaiko
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(
             price > 0 &&
@@ -180,6 +182,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
                 farmSpeedTaiko > 0,
             "Price, Hashrate and FarmSpeed must be greater than 0"
         );
+
         nodeTierId++;
         NodeTier memory newNode = NodeTier(
             true,
@@ -187,10 +190,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             price,
             hashrate,
             farmSpeedBachi,
-            farmSpeedTaiko,
-            ReferralRate
+            farmSpeedTaiko
         );
         nodeTiers[nodeTierId] = newNode;
+
         emit AddedNode(
             msg.sender,
             nodeTierId,
@@ -199,8 +202,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             price,
             hashrate,
             farmSpeedBachi,
-            farmSpeedTaiko,
-            ReferralRate
+            farmSpeedTaiko
         );
     }
 
@@ -211,8 +213,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 price,
         uint256 hashrate,
         uint256 farmSpeedBachi,
-        uint256 farmSpeedTaiko,
-        uint8 referralRate
+        uint256 farmSpeedTaiko
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         NodeTier memory newNode = nodeTiers[_nodeTierId];
         require(newNode.price > 0, "Node does not exist");
@@ -230,8 +231,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         newNode.hashrate = hashrate;
         newNode.farmSpeedBachi = farmSpeedBachi;
         newNode.farmSpeedTaiko = farmSpeedTaiko;
-        newNode.referralRate = referralRate;
-
         nodeTiers[_nodeTierId] = newNode;
 
         emit UpdatedNode(
@@ -242,12 +241,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             newNode.price,
             newNode.hashrate,
             newNode.farmSpeedBachi,
-            newNode.farmSpeedTaiko,
-            newNode.referralRate
+            newNode.farmSpeedTaiko
         );
     }
 
-    //cronjob addnodetier, môngdb, pull datanodetier
     function getNodeIdByIndex(
         address user,
         uint256 index
@@ -270,7 +267,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     }
 
     // COUPON MANAGEMENT
-
     function addDiscountCoupon(
         uint8 discountPercent,
         string memory name,
@@ -281,14 +277,12 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         require(bytes(name).length > 0, "Coupon name must not be empty");
 
         couponId++;
-        string memory _code;
-        uint256 currentTimestamp = block.timestamp;
-        _code = string(
+        string memory _code = string(
             abi.encodePacked(
                 "BachiSwapCP_",
                 uint256str(couponId),
                 "_",
-                uint256str(currentTimestamp)
+                uint256str(block.timestamp)
             )
         );
         DiscountCoupon memory newCoupon = DiscountCoupon(
@@ -401,9 +395,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             referralIdUserLinks[referralId] != caller
         ) {
             address referralsOwner = referralIdUserLinks[referralId];
-            totalSales =
-                (expectedValue * nodeTiers[_nodeTierId].referralRate) /
-                100;
+            totalSales = (expectedValue * referralRate) / 100;
             require(address(this).balance >= totalSales, "Not enough balance");
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");

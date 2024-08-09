@@ -18,6 +18,7 @@ import MainButton from "../button/MainButton";
 import { enumMenu } from "../../utils/contants";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useTab } from "../../contexts/useTab";
+import { base } from "viem/chains";
 const Navbar = () => {
   const [shownav, setShowNav] = useState(false);
   const [navActive, setNavActive] = useState("");
@@ -37,15 +38,14 @@ const Navbar = () => {
         borderBottom="0.5px solid var(--color-border-bottom)"
         position="relative"
         sx={{ backdropFilter: "blur(10px)" }}
-        zIndex="1000"
+        zIndex={{ base: "100", xl: "1000" }}
+        padding={{
+          base: "16px 24px",
+          lg: "16px 48px",
+          "3xl": "18px 32px 18px 64px",
+        }}
       >
-        <Grid
-          templateColumns="repeat(10, 1fr)"
-          gap={0}
-          alignItems="center"
-          paddingTop={"20px"}
-          paddingBottom={"20px"}
-        >
+        <Grid templateColumns="repeat(10, 1fr)" gap={0} alignItems="center">
           <Link
             to="/"
             style={{ gridColumn: "span 3" }}
@@ -54,13 +54,24 @@ const Navbar = () => {
               setNavColor("");
             }}
           >
-            <Flex gap={{ base: "4.64px", md: "14.45px" }} alignItems={"center"}>
+            <Flex gap={{ base: "4.64px", md: "8px" }} alignItems={"center"}>
               <Image src={appLogo} height={{ base: "24px", md: "52px" }} />
               <Text
-                fontSize={{ base: "16px", md: "40px" }}
-                lineHeight={{ base: "19.3px", md: "48.24px" }}
+                fontSize={{
+                  base: "16px",
+                  md: "32px",
+                  "2xl": "36px",
+                  "3xl": "40px",
+                }}
+                lineHeight={{
+                  base: "24px",
+                  md: "40px",
+
+                  "3xl": "48px",
+                }}
                 fontFamily="var(--font-heading-main)"
                 fontWeight={400}
+                letterSpacing={{ "3xl": "-1px" }}
               >
                 BachiSwap
               </Text>
@@ -93,7 +104,8 @@ const Navbar = () => {
                   justifyContent={"space-between"}
                 >
                   <Text
-                    fontSize={{ base: "20px", md: "24px" }}
+                    lineHeight={{ base: "", xl: "32px" }}
+                    fontSize={{ base: "20px", xl: "24px" }}
                     fontWeight={400}
                     fontFamily="var(--font-text-main)"
                   >
@@ -189,7 +201,8 @@ const Navbar = () => {
               backgroundColor="var(--color-main)"
             >
               <Text
-                fontSize={{ base: "20px", md: "24px" }}
+                lineHeight={{ base: "", "3xl": "32px" }}
+                fontSize={{ base: "20px", "3xl": "24px" }}
                 color={"#FFF"}
                 fontWeight="var(--font-text-main)"
               >

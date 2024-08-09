@@ -41,7 +41,7 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
       right={"0px"}
       top={"0px"}
       zIndex={zIndex}
-      width={{ base: "100%", md: "60%" }}
+      width={{ base: "100%", md: "75%", lg: "65%" }}
       backgroundColor="var(--color-background-popup)"
       height={"100vh"}
       className="slideIn-animation"
@@ -57,20 +57,17 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
             alignItems={"center"}
             justifyContent={"space-between"}
             gap={"20px"}
-            paddingTop={"20px"}
-            paddingBottom={"20px"}
+            paddingTop={"16px"}
+            paddingBottom={"16px"}
             borderBottom={"0.5px solid  var(--color-border-bottom)"}
             px={"24px"}
           >
             <Link to="/">
-              <Flex
-                gap={{ base: "4.64px", md: "14.45px" }}
-                alignItems={"center"}
-              >
+              <Flex gap={{ base: "8px" }} alignItems={"center"}>
                 <Image src={appLogo} height={{ base: "24px", md: "52px" }} />
                 <Text
-                  fontSize={{ base: "16px", md: "40px" }}
-                  lineHeight={{ base: "19.3px", md: "48.24px" }}
+                  fontSize={{ base: "16px", md: "32px" }}
+                  lineHeight={{ base: "19.3px", md: "40px" }}
                   fontFamily="var(--font-heading-main)"
                   fontWeight={400}
                 >
@@ -112,7 +109,7 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
                             ? "var(--color-main)"
                             : ""
                         }
-                        fontSize={{ base: "24px" }}
+                        fontSize={{ base: "20px", md: "40px" }}
                       >
                         {item.name}
                       </Text>
@@ -141,7 +138,7 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
                 </Box>
                 {item?.children && navActive.includes(item.name) && (
                   <Flex
-                    padding={{ base: "32px 48px" }}
+                    padding={{ base: "24px 24px", md: "32px 48px" }}
                     borderBottom={"0.25px solid #5B5B5B"}
                     direction={"column"}
                     className={"slideDown-animation"}
@@ -160,7 +157,7 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
                         >
                           <Box
                             color={"#788AA3"}
-                            padding={"8px 48px"}
+                            padding={{ base: "8px 24px", md: "8px 48px" }}
                             _hover={{
                               backgroundColor: "#788AA3",
                               borderRadius: "12px",
@@ -168,7 +165,7 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
                             }}
                             w={"100%"}
                           >
-                            <Text fontSize={{ base: "24px" }}>
+                            <Text fontSize={{ base: "16px", md: "32px" }}>
                               {subItem.name}
                             </Text>
                           </Box>

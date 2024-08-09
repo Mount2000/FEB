@@ -4,58 +4,74 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import appProduct from "../../../assets/img/homepage/app-product.png";
 import appProductHome from "../../../assets/img/homepage/app-product-home.png";
 import SectionContainer from "../../../components/container";
+import { base } from "viem/chains";
 
 const ProductHome = () => {
   return (
-    <Box marginBottom={{ xl: "100px", "2xl": "197px" }}>
+    <Flex
+      flexDirection={{ base: "column", lg: "column-reverse", xl: "column" }}
+      gap={{ base: "24px", lg: "166px", "3xl": "256px" }}
+      padding={{
+        base: "64px 24px 64px 24px",
+        lg: "104px 64px 104px 64px",
+        xl: "104px 86px 104px 86px",
+        "3xl": "128px 144px 144px 128px",
+      }}
+    >
       <Flex
-        paddingTop={{ base: "27px", md: "50px", lg: "70px", "3xl": "197px" }}
+        // paddingTop={{ base: "27px", md: "50px", lg: "70px", "3xl": "197px" }}
         flexDirection={{ base: "column", lg: "row" }}
-        alignItems={{ lg: "center" }}
+        alignItems={{ md: "center" }}
+        gap={{ base: "16px" }}
       >
         <Image
           src={appProduct}
           height={"100%"}
-          paddingRight={{ base: "18px" }}
-          paddingLeft={{ base: "18px" }}
-          paddingBottom={{ base: "6px" }}
-          width={{ lg: "50%" }}
+          // paddingRight={{ base: "18px" }}
+          // paddingLeft={{ base: "18px" }}
+          // paddingBottom={{ base: "6px" }}
+          width={{ base: "100%", md: "80%", lg: "50%" }}
         />
         <SectionContainer
+          gap={{ base: "24px", "3xl": "48px" }}
           display={"flex"}
           flexDirection={"column"}
           width={{ lg: "50%" }}
         >
           <Text
-            fontSize={{ base: "24px", "2xl": "32px", "3xl": "40px" }}
+            letterSpacing={"-1px"}
+            fontSize={{ base: "24px", lg: "32px", "3xl": "40px" }}
             color="var(--color-main)"
-            lineHeight={"normal"}
-            paddingBottom={"35px"}
+            lineHeight={{ base: "32px", "3xl": "48px" }}
+            // paddingBottom={"35px"}
             fontFamily="var(--font-text-extra)"
           >
             BACHI Product
           </Text>
           <Text
+            letterSpacing={"-1px"}
             fontSize={{
               base: "40px",
               xl: "48px",
               "2xl": "55px",
-              "3xl": "86px",
+              "3xl": "72px",
             }}
-            lineHeight={{ base: "50px", "2xl": "70px", "3xl": "100px" }}
-            paddingBottom={{ base: "28px", "2xl": "36px", "3xl": "45px" }}
+            lineHeight={{ base: "48px", "2xl": "70px", "3xl": "80px" }}
+            // paddingBottom={{ base: "28px", "2xl": "36px", "3xl": "45px" }}
             fontFamily="var(--font-heading)"
           >
             Unlocking the potential of artificial intelligence
           </Text>
           <Text
+            letterSpacing={"-1px"}
             fontSize={{
               base: "16px",
+              lg: "20px",
               xl: "24px",
               "2xl": "26px",
               "3xl": "32px",
             }}
-            lineHeight={"normal"}
+            lineHeight={{ base: "24px", lg: "28px", "3xl": "40px" }}
             fontFamily="var(--font-text-main)"
           >
             BACHI provides innovative products that empower users to engage in
@@ -67,53 +83,83 @@ const ProductHome = () => {
       </Flex>
       <Flex
         position={"relative"}
-        paddingTop={{ base: "30px", "3xl": "200px" }}
+        // paddingTop={{ base: "30px", "3xl": "200px" }}
         flexDirection={{ base: "column-reverse" }}
+        alignItems={{ base: "center", lg: "normal" }}
       >
         <SectionContainer
           display={"flex"}
           flexDirection={"column"}
-          paddingLeft={{
-            base: "24px",
-            md: "57px",
-            lg: "10%",
-            xl: "12%",
-            "2xl": "10%",
-            "3xl": "214px",
-          }}
-          width={{ base: "100%", lg: "50%", "3xl": "59%" }}
-          paddingTop={{ lg: "100px", "3xl": "150px" }}
+          // paddingLeft={{
+          //   base: "24px",
+          //   md: "57px",
+          //   lg: "10%",
+          //   xl: "12%",
+          //   "2xl": "10%",
+          //   "3xl": "214px",
+          // }}
+          width={{ base: "100%", lg: "50%", "3xl": "52%" }}
+          paddingTop={{ lg: "72px", "3xl": "150px" }}
+          paddingBottom={{ lg: "72px" }}
         >
           <Text
-            fontSize={{ base: "24px", "2xl": "32px", "3xl": "40px" }}
+            letterSpacing={"-1px"}
+            fontSize={{ base: "24px", lg: "32px", "3xl": "40px" }}
             color={"#E42493"}
-            lineHeight={"normal"}
-            paddingBottom={{ base: "20px", "2xl": "32px", "3xl": "36px" }}
+            lineHeight={{ "3xl": "48px" }}
+            paddingBottom={{
+              base: "20px",
+              lg: "24px",
+              "2xl": "32px",
+              "3xl": "48px",
+            }}
             fontFamily="var(--font-text-extra)"
           >
             BACHI Swap
           </Text>
           <Text
+            letterSpacing={"-1px"}
             fontSize={{
               base: "40px",
               xl: "48px",
               "2xl": "55px",
-              "3xl": "70px",
+              "3xl": "72px",
             }}
-            lineHeight={{ base: "50px", "2xl": "70px", "3xl": "100px" }}
-            paddingBottom={{ base: "28px", "2xl": "36px", "3xl": "43px" }}
+            lineHeight={{ base: "50px", "2xl": "70px", "3xl": "80px" }}
             fontFamily="var(--font-heading)"
           >
-            Swap everything in ONE click
+            Swap everything in
           </Text>
           <Text
+            letterSpacing={"-1px"}
+            fontSize={{
+              base: "40px",
+              xl: "48px",
+              "2xl": "55px",
+              "3xl": "72px",
+            }}
+            lineHeight={{ base: "50px", "2xl": "70px", "3xl": "80px" }}
+            paddingBottom={{
+              base: "28px",
+              lg: "24px",
+              "2xl": "36px",
+              "3xl": "48px",
+            }}
+            fontFamily="var(--font-heading)"
+          >
+            ONE click
+          </Text>
+          <Text
+            width={{ "3xl": "90%" }}
+            letterSpacing={"-1px"}
             fontSize={{
               base: "16px",
+              lg: "20px",
               xl: "24px",
               "2xl": "26px",
               "3xl": "32px",
             }}
-            lineHeight={"normal"}
+            lineHeight={{ "3xl": "40px" }}
             fontFamily="var(--font-text-main)"
           >
             As a Taiko’s native DEX, BACHI allows users to easily trade tokens
@@ -121,17 +167,17 @@ const ProductHome = () => {
           </Text>
         </SectionContainer>
         <Image
-          height={{ base: "100%", lg: "130%", "3xl": "800px" }}
-          width={{ lg: "600px", xl: "700px ", "3xl": "872px" }}
+          height={{ base: "100%", lg: "432px", xl: "530px", "3xl": "800px" }}
+          width={{ md: "70%", lg: "50%", "3xl": "872px" }}
           position={{ base: "relative", lg: "absolute" }}
           right={{ lg: "0px" }}
-          top={{ lg: "30px", xl: "0px", "3xl": "200px" }}
+          top={{ lg: "15px", xl: "-30px", "3xl": "-30px" }}
           // right={"0px"}
           // bottom={"-150px"}
           src={appProductHome}
         />
       </Flex>
-    </Box>
+    </Flex>
   );
 };
 

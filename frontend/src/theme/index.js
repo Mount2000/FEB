@@ -12,7 +12,7 @@ const customTheme = extendTheme({
   breakpoints: {
     sm: "26.875em",
     md: "48em",
-    lg: "62em",
+    lg: "64em",
     xl: "80em", // 1280px
     "2xl": "96em", // 1536px
     "3xl": "120em", // 1920px

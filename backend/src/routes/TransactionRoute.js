@@ -4,6 +4,7 @@ const route = express.Router();
 
 route.post("/create-transaction", TransactionController.createTransaction);
 route.post("/update-transaction", TransactionController.updateTransaction);
+route.post("/get-transaction", TransactionController.getTransaction);
 route.get("/check-ip", TransactionController.checkIP);
 
 module.exports = route;

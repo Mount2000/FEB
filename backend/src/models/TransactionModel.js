@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const transactionSchema = new mongoose.Schema(
   {
+    caller: { type: String, required: true },
     chainId: { type: Number, required: true },
     hash: { type: String, required: true },
     type: {

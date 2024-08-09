@@ -246,6 +246,7 @@ const Earning = () => {
         setTxHash(hash);
         const status = await getTransactionStatus(config, hash);
         await clientAPI("post", "/api/transaction/create-transaction", {
+          caller: address,
           chainId: chainId,
           hash: hash,
           type: txObj.functionName,

@@ -3,13 +3,14 @@ const Transaction = require("../models/TransactionModel");
 
 const createTransaction = (newTransaction) => {
   return new Promise(async (resolve, reject) => {
-    const { chainId, hash, type, ipAddress, status } = newTransaction;
+    const { caller, chainId, hash, type, ipAddress, status } = newTransaction;
     try {
       const existingTransaction = await Transaction.findOne({
         hash: hash,
       });
       if (!existingTransaction) {
         const createTransaction = await Transaction.create({
+          caller,
           chainId,
           hash,
           type,
@@ -75,7 +76,48 @@ const updateTransaction = (newTransaction) => {
     } catch (e) {
       reject({
         status: "FAILED",
-        message: "Error creating transaction",
+        message: "Error update transaction",
+        error: e.message,
+      });
+    }
+  });
+};
+
+const getTransaction = (query) => {
+  return new Promise(async (resolve, reject) => {
+    const { caller, limit, offset, sort } = query;
+
+    try {
+      const [totalData, data] = await Promise.all([
+        Transaction.find({
+          caller: caller,
+        }),
+        Transaction.find({
+          caller: caller,
+        })
+          .skip(Number(offset))
+          .limit(Number(limit))
+          .sort({ createdAt: Number(sort) }),
+      ]);
+
+      if (data && totalData) {
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          ret: {
+            data: data,
+            total: totalData.length,
+          },
+        });
+      } else
+        resolve({
+          status: "FAILED",
+          message: "Transaction is not exist",
+        });
+    } catch (e) {
+      reject({
+        status: "FAILED",
+        message: "Error get transaction",
         error: e.message,
       });
     }
@@ -116,5 +158,6 @@ const checkIP = (ipAddress) => {
 module.exports = {
   createTransaction,
   updateTransaction,
+  getTransaction,
   checkIP,
 };

@@ -4,9 +4,9 @@ const { ethers } = require("ethers");
 
 const createTransaction = async (req, res) => {
   try {
-    const { chainId, hash, type, ipAddress, status } = req.body;
+    const { caller, chainId, hash, type, ipAddress, status } = req.body;
 
-    if (!chainId || !hash || !type || !ipAddress || !status) {
+    if (!caller || !chainId || !hash || !type || !ipAddress || !status) {
       return res.status(400).json({
         status: "FAILED",
         message: "Missing required fields",
@@ -72,6 +72,46 @@ const updateTransaction = async (req, res) => {
   }
 };
 
+const getTransaction = async (req, res) => {
+  try {
+    let { caller, limit, offset, sort } = req.body;
+    if (!limit) limit = 15;
+    if (!offset) offset = 0;
+    if (!sort) sort = -1;
+    if (!caller) {
+      return res.status(400).json({
+        status: "FAILED",
+        message: "Missing required fields",
+      });
+    }
+
+    try {
+      const response = await TransactionServices.getTransaction({
+        caller,
+        limit,
+        offset,
+        sort,
+      });
+      if (response.status === "FAILED") {
+        return res.status(401).json(response);
+      }
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json({
+        status: "FAILED",
+        message: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  } catch (e) {
+    return res.status(500).json({
+      status: "FAILED",
+      message: "Internal Server Error",
+      error: e.message,
+    });
+  }
+};
+
 const checkIP = async (req, res) => {
   try {
     const { ip: ipAddress } = req.query;
@@ -107,5 +147,6 @@ const checkIP = async (req, res) => {
 module.exports = {
   createTransaction,
   updateTransaction,
+  getTransaction,
   checkIP,
 };

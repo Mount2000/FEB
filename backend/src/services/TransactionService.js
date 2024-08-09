@@ -3,25 +3,37 @@ const Transaction = require("../models/TransactionModel");
 
 const createTransaction = (newTransaction) => {
   return new Promise(async (resolve, reject) => {
-    const { hash, type, ipAddress } = newTransaction;
+    const { caller, chainId, hash, type, ipAddress, status } = newTransaction;
     try {
-      const createTransaction = await Transaction.create({
-        hash,
-        type,
-        ipAddress,
+      const existingTransaction = await Transaction.findOne({
+        hash: hash,
       });
-      if (createTransaction) {
-        resolve({
-          status: "OK",
-          message: "SUCCESS",
-          data: createTransaction,
+      if (!existingTransaction) {
+        const createTransaction = await Transaction.create({
+          caller,
+          chainId,
+          hash,
+          type,
+          ipAddress,
+          status,
         });
-      } else {
+        if (createTransaction) {
+          resolve({
+            status: "OK",
+            message: "SUCCESS",
+            data: createTransaction,
+          });
+        } else {
+          resolve({
+            status: "FAILED",
+            message: "Transaction creation failed",
+          });
+        }
+      } else
         resolve({
           status: "FAILED",
-          message: "Transaction creation failed",
+          message: "Transaction is exist",
         });
-      }
     } catch (e) {
       reject({
         status: "FAILED",
@@ -32,22 +44,106 @@ const createTransaction = (newTransaction) => {
   });
 };
 
+const updateTransaction = (newTransaction) => {
+  return new Promise(async (resolve, reject) => {
+    const { hash, status } = newTransaction;
+    try {
+      const existingTransaction = await Transaction.findOne({
+        hash: hash,
+      });
+      if (existingTransaction) {
+        const updateTransaction = await Transaction.findOneAndUpdate(
+          { hash },
+          { status }
+        );
+        if (updateTransaction) {
+          resolve({
+            status: "OK",
+            message: "SUCCESS",
+            data: updateTransaction,
+          });
+        } else {
+          resolve({
+            status: "FAILED",
+            message: "Transaction creation failed",
+          });
+        }
+      } else
+        resolve({
+          status: "FAILED",
+          message: "Transaction not exist",
+        });
+    } catch (e) {
+      reject({
+        status: "FAILED",
+        message: "Error update transaction",
+        error: e.message,
+      });
+    }
+  });
+};
+
+const getTransaction = (query) => {
+  return new Promise(async (resolve, reject) => {
+    const { caller, limit, offset, sort } = query;
+
+    try {
+      const [totalData, data] = await Promise.all([
+        Transaction.find({
+          caller: caller,
+        }),
+        Transaction.find({
+          caller: caller,
+        })
+          .skip(Number(offset))
+          .limit(Number(limit))
+          .sort({ createdAt: Number(sort) }),
+      ]);
+
+      if (data && totalData) {
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          ret: {
+            data: data,
+            total: totalData.length,
+          },
+        });
+      } else
+        resolve({
+          status: "FAILED",
+          message: "Transaction is not exist",
+        });
+    } catch (e) {
+      reject({
+        status: "FAILED",
+        message: "Error get transaction",
+        error: e.message,
+      });
+    }
+  });
+};
+
 const checkIP = (ipAddress) => {
   return new Promise(async (resolve, reject) => {
     try {
       const isBlocked = await BlockedIP.findOne({ ipAddress: ipAddress });
-      if (isBlocked === null) {
+      if (!isBlocked) {
         resolve({
           status: "OK",
           message: "The ip is not defined",
-          blocked: false,
+          ret: {
+            blocked: false,
+          },
         });
       }
 
       resolve({
         status: "OK",
         message: "success",
-        blocked: true,
+        ret: {
+          blocked: true,
+        },
       });
     } catch (e) {
       reject({
@@ -61,5 +157,7 @@ const checkIP = (ipAddress) => {
 
 module.exports = {
   createTransaction,
+  updateTransaction,
+  getTransaction,
   checkIP,
 };

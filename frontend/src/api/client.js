@@ -8,7 +8,6 @@ export const clientAPI = async (method, url, options) => {
     Object.entries(options)
   ).toString();
 
-  console.log({method, url, options});
   const { data } = await axios({
     baseURL,
     url,

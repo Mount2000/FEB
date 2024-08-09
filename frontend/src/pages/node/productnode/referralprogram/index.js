@@ -17,7 +17,6 @@ const ReferralProgram = () => {
   const { address } = useAccount();
   const client = useClient();
   const chainDecimal = client.chain.nativeCurrency.decimals;
-  console.log(client);
   const nodeManagerContract = {
     address: node_manager_contract.CONTRACT_ADDRESS,
     abi: node_manager_contract.CONTRACT_ABI,

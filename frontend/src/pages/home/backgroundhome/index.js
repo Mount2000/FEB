@@ -7,7 +7,6 @@ import appLogo from "../../../assets/img/app-logo.png";
 import backgroundHome from "../../../assets/img/homepage/background-home.png";
 //import icon
 import { HiArrowSmRight } from "react-icons/hi";
-import { base } from "viem/chains";
 
 const BackgroundHome = () => {
   return (
@@ -17,7 +16,12 @@ const BackgroundHome = () => {
       backgroundPosition={{ base: "bottom", lg: "bottom" }}
       backgroundRepeat={"no-repeat"}
       // height={"300px"}
-      padding={{ base: "40px 24px 40px 24px", lg: "38px 92px 38px 92px" }}
+      padding={{
+        base: "40px 24px 40px 24px",
+        lg: "38px 92px 38px 92px",
+        xl: "88px 104px 68px 104px",
+        "3xl": "128px 179px 128px 179px",
+      }}
       zIndex={"1"}
       position={"relative"}
     >
@@ -31,8 +35,8 @@ const BackgroundHome = () => {
         />
         <Text
           letterSpacing={"-1px"}
-          fontSize={{ base: "40px", lg: "40px", "2xl": "64px", "3xl": "86px" }}
-          lineHeight={{ base: "48px" }}
+          fontSize={{ base: "40px", lg: "40px", xl: "64px", "3xl": "72px" }}
+          lineHeight={{ base: "48px", xl: "68px", "3xl": "80px" }}
           fontFamily="var(--font-heading)"
           textAlign={"center"}
           marginBottom={{ base: "40px", lg: "48px", "2xl": "112px" }}
@@ -99,16 +103,17 @@ const BackgroundHome = () => {
                 padding={{
                   base: "24px 21px 20px 24px",
                   lg: "16px 20px 16px 20px",
+                  xl: "24px 36px 24px 36px",
+                  "3xl": "32px 32px 50px 48px",
                 }}
-                gap={{ base: "16px", lg: "32px", "2xl": "22px" }}
+                gap={{ base: "16px", lg: "32px", "2xl": "22px", "3xl": "25px" }}
               >
                 <Flex alignItems={"center"} justifyContent={"space-between"}>
                   <Text
-                    lineHeight={"32px"}
                     letterSpacing={"-1px"}
                     fontSize={{
                       base: "24px",
-
+                      xl: "32px",
                       "2xl": "36px",
                       "3xl": "40px",
                     }}
@@ -142,6 +147,20 @@ const BackgroundHome = () => {
                         backgroundColor: "pink.500",
                         clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                       },
+                      "@media (width: 1920px)": {
+                        clipPath:
+                          "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                        "::before": {
+                          width: "20px",
+                          height: "20px",
+                          backgroundColor: "pink.500",
+                        },
+                        "::after": {
+                          width: "20px",
+                          height: "20px",
+                          backgroundColor: "pink.500",
+                        },
+                      },
                     }}
                     width={{ base: "40px", lg: "40px", "3xl": "61px" }}
                     height={{ base: "40px", lg: "40px", "3xl": "61px" }}
@@ -157,9 +176,9 @@ const BackgroundHome = () => {
                 </Flex>
                 <Text
                   letterSpacing={"-1px"}
-                  lineHeight={{ base: "28px" }}
-                  width={{ base: "80%", lg: "100%" }}
-                  fontSize={{ base: "20px", "2xl": "24px", "3xl": "36px" }}
+                  lineHeight={{ base: "28px", "3xl": "40px" }}
+                  width={{ base: "80%", lg: "100%", xl: "80%" }}
+                  fontSize={{ base: "20px", xl: "24px", "3xl": "32px" }}
                   fontFamily="var(--font-heading-main)"
                 >
                   Setup your gears and earn $TAIKO and $BACHI today
@@ -222,14 +241,16 @@ const BackgroundHome = () => {
                 padding={{
                   base: "24px 21px 20px 24px",
                   lg: "16px 20px 16px 20px",
+                  xl: "24px 36px 24px 36px",
+                  "3xl": "32px 32px 50px 48px",
                 }}
-                gap={{ base: "16px", lg: "32px", "2xl": "22px" }}
+                gap={{ base: "16px", lg: "32px", "2xl": "22px", "3xl": "25px" }}
               >
                 <Flex alignItems={"center"} justifyContent={"space-between"}>
                   <Text
                     fontSize={{
                       base: "24px",
-
+                      xl: "32",
                       "2xl": "36px",
                       "3xl": "40px",
                     }}
@@ -263,6 +284,20 @@ const BackgroundHome = () => {
                         backgroundColor: "pink.500",
                         clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                       },
+                      "@media (width: 1920px)": {
+                        clipPath:
+                          "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                        "::before": {
+                          width: "20px",
+                          height: "20px",
+                          backgroundColor: "pink.500",
+                        },
+                        "::after": {
+                          width: "20px",
+                          height: "20px",
+                          backgroundColor: "pink.500",
+                        },
+                      },
                     }}
                     width={{ base: "40px", lg: "40px", "3xl": "61px" }}
                     height={{ base: "40px", lg: "40px", "3xl": "61px" }}
@@ -278,9 +313,9 @@ const BackgroundHome = () => {
                 </Flex>
                 <Text
                   letterSpacing={"-1px"}
-                  lineHeight={{ base: "28px" }}
-                  width={{ base: "80%", lg: "100%" }}
-                  fontSize={{ base: "20px", "2xl": "24px", "3xl": "36px" }}
+                  lineHeight={{ base: "28px", "3xl": "40px" }}
+                  width={{ base: "80%", lg: "100%", xl: "80%" }}
+                  fontSize={{ base: "20px", xl: "24px", "3xl": "32px" }}
                   fontFamily="var(--font-heading-main)"
                 >
                   Join the Bachi communities and win our Airdrop!

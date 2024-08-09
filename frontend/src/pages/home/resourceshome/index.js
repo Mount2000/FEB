@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
 
 //import component
@@ -10,7 +10,9 @@ import { HiArrowSmRight } from "react-icons/hi";
 //import image
 import resourcesHome from "../../../assets/img/homepage/resources-home.png";
 import backgroundResources from "../../../assets/img/homepage/background-resources-home.png";
-import { base } from "viem/chains";
+import resourcesMobile from "../../../assets/img/homepage/resources-homemobile.png";
+import MainButton from "../../../components/button/MainButton";
+
 const ResourcesHome = () => {
   return (
     <>
@@ -18,8 +20,10 @@ const ResourcesHome = () => {
         position={"relative"}
         display={"flex"}
         justifyContent={"flex-end"}
+        padding={{ base: "48px 25px 48px 25px", lg: "194px 64px 194px 0px" }}
       >
         <Image
+          display={{ base: "none" }}
           src={resourcesHome}
           position={"absolute"}
           left={"0"}
@@ -31,28 +35,39 @@ const ResourcesHome = () => {
             "2xl": "-159.69px",
           }}
         />
+        <Image
+          src={resourcesMobile}
+          position={"absolute"}
+          left={"0"}
+          top={"0"}
+          height={"100%"}
+          width={{ lg: "45%" }}
+        />
         <Flex
           flexDirection={"column"}
           width={{ base: "100%", md: "50%" }}
-          paddingTop={{
-            base: "48px",
-            md: "86px",
-            lg: "186px",
-            xl: "300px",
-            "2xl": "311.31px",
-          }}
+          // paddingTop={{
+          //   base: "48px",
+          //   md: "86px",
+          //   lg: "186px",
+          //   xl: "300px",
+          //   "2xl": "311.31px",
+          // }}
           position={"relative"}
-          marginBottom={{ base: "110px", xl: "180px" }}
         >
           <Text
             fontSize={{ base: "40px", "2xl": "86px" }}
             lineHeight={"normal"}
             fontFamily="var(--font-heading)"
-            paddingBottom={{ base: "50px", "2xl": "48px" }}
+            paddingBottom={{ base: "36px", lg: "32px", "2xl": "48px" }}
           >
             resources
           </Text>
-          <Flex flexDirection={"column"} gap={"40px"}>
+          <Flex
+            flexDirection={"column"}
+            gap={{ base: "36px", lg: "32px" }}
+            alignItems="stretch"
+          >
             <Box
               width={"100%"}
               height={"100%"}
@@ -105,28 +120,69 @@ const ResourcesHome = () => {
               >
                 <Flex
                   flexDirection={"column"}
-                  margin={{
-                    base: "22px 20px 22px 29px",
-                    "2xl": "33px 47px 37px 32px",
+                  padding={{
+                    base: "24px 29px 24px 20px",
+                    lg: "21.5px 16px 21.5px 16px",
+                    "3xl": "48px 56px 48px 56px",
                   }}
                   gap={"22px"}
                 >
                   <Flex alignItems={"center"} justifyContent={"space-between"}>
                     <Text
-                      width={{ base: "80%" }}
+                      letterSpacing={"-1px"}
+                      width={{ base: "80%", "3xl": "90%" }}
                       fontSize={{
-                        base: "24px",
-                        lg: "32px",
-                        "2xl": "36px",
+                        base: "20px",
+                        "2xl": "32px",
+                        "3xl": "40px",
                       }}
                       fontFamily="var(--font-heading-main)"
-                      lineHeight={"normal"}
+                      lineHeight={{ base: "28px", "2xl": "48px" }}
                     >
                       BachiSwap Mining Program
                     </Text>
-                    <CommonButton
-                      width={{ base: "40px", lg: "50px", xl: "61px" }}
-                      height={{ base: "40px", lg: "50px", xl: "61px" }}
+                    <Button
+                      sx={{
+                        backdropFilter: "blur(10px) !important",
+                        clipPath:
+                          "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%) ",
+                        "::before": {
+                          content: '""',
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          width: "10px",
+                          height: "10px",
+                          backgroundColor: "pink.500",
+                          clipPath: "polygon(0 100%, 100% 0, 0 0)",
+                        },
+                        "::after": {
+                          content: '""',
+                          position: "absolute",
+                          bottom: 0,
+                          right: 0,
+                          width: "10px",
+                          height: "10px",
+                          backgroundColor: "pink.500",
+                          clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
+                        },
+                        "@media (width: 1920px)": {
+                          clipPath:
+                            "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                          "::before": {
+                            width: "20px",
+                            height: "20px",
+                            backgroundColor: "pink.500",
+                          },
+                          "::after": {
+                            width: "20px",
+                            height: "20px",
+                            backgroundColor: "pink.500",
+                          },
+                        },
+                      }}
+                      width={{ base: "40px", lg: "40px", "3xl": "61px" }}
+                      height={{ base: "40px", lg: "40px", "3xl": "61px" }}
                       backgroundColor="var(--color-main)"
                       display={"flex"}
                       alignItems={"center"}
@@ -135,7 +191,7 @@ const ResourcesHome = () => {
                       <Box sx={{ transform: "rotate(-45deg)" }}>
                         <HiArrowSmRight fontSize={"30px"} color="#000" />
                       </Box>
-                    </CommonButton>
+                    </Button>
                   </Flex>
                   <Text
                     fontSize={{ base: "16px", "2xl": "24px" }}
@@ -196,27 +252,70 @@ const ResourcesHome = () => {
               >
                 <Flex
                   flexDirection={"column"}
-                  margin={{
-                    base: "22px 20px 22px 29px",
-                    "2xl": "33px 47px 37px 32px",
+                  padding={{
+                    base: "24px 29px 24px 20px",
+                    lg: "21.5px 16px 21.5px 16px",
+                    "3xl": "48px 56px 48px 56px",
                   }}
-                  gap={"22px"}
+                  gap={{ base: "16px", lg: "5px" }}
                 >
                   <Flex alignItems={"center"} justifyContent={"space-between"}>
                     <Text
+                      etterSpacing={"-1px"}
+                      width={{ base: "80%" }}
                       fontSize={{
-                        base: "24px",
-                        lg: "32px",
-                        "2xl": "36px",
+                        base: "20px",
+
+                        "2xl": "32px",
+                        "3xl": "40px",
                       }}
                       fontFamily="var(--font-heading-main)"
-                      lineHeight={"normal"}
+                      lineHeight={{ base: "28px", "2xl": "48px" }}
                     >
                       Docs
                     </Text>
-                    <CommonButton
-                      width={{ base: "40px", lg: "50px", xl: "61px" }}
-                      height={{ base: "40px", lg: "50px", xl: "61px" }}
+                    <Button
+                      sx={{
+                        backdropFilter: "blur(10px) !important",
+                        clipPath:
+                          "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%) ",
+                        "::before": {
+                          content: '""',
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          width: "10px",
+                          height: "10px",
+                          backgroundColor: "pink.500",
+                          clipPath: "polygon(0 100%, 100% 0, 0 0)",
+                        },
+                        "::after": {
+                          content: '""',
+                          position: "absolute",
+                          bottom: 0,
+                          right: 0,
+                          width: "10px",
+                          height: "10px",
+                          backgroundColor: "pink.500",
+                          clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
+                        },
+                        "@media (width: 1920px)": {
+                          clipPath:
+                            "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                          "::before": {
+                            width: "20px",
+                            height: "20px",
+                            backgroundColor: "pink.500",
+                          },
+                          "::after": {
+                            width: "20px",
+                            height: "20px",
+                            backgroundColor: "pink.500",
+                          },
+                        },
+                      }}
+                      width={{ base: "40px", lg: "40px", "3xl": "61px" }}
+                      height={{ base: "40px", lg: "40px", "3xl": "61px" }}
                       backgroundColor="var(--color-main)"
                       display={"flex"}
                       alignItems={"center"}
@@ -225,7 +324,7 @@ const ResourcesHome = () => {
                       <Box sx={{ transform: "rotate(-45deg)" }}>
                         <HiArrowSmRight fontSize={"30px"} color="#000" />
                       </Box>
-                    </CommonButton>
+                    </Button>
                   </Flex>
                   <Text
                     fontSize={{ base: "16px", "2xl": "24px" }}
@@ -244,27 +343,33 @@ const ResourcesHome = () => {
         position={"relative"}
         backgroundColor="var(--color-main)"
         backgroundImage={`url(${backgroundResources})`}
-        backgroundSize={"cover"}
+        backgroundSize={{ base: "100% 100%", md: "cover" }}
         backgroundPosition={"center"}
         backgroundRepeat={"no-repeat"}
       >
         <Flex
           flexDirection={"column"}
           alignItems={"center"}
-          paddingTop={"210px"}
-          paddingBottom={"210px"}
-          gap={{ base: "40px", "2xl": "100px" }}
+          padding={{
+            base: "48px 20px 48px 20px",
+            lg: "32px 64px 32px 64px",
+            xl: "48px 100px 48px 100px ",
+            "3xl": "68px 179px 44px 179px",
+          }}
+          gap={{ base: "36px", "2xl": "55px" }}
         >
           <Text
-            fontSize={{ base: "40px", "2xl": "86px" }}
+            fontSize={{ base: "40px", "2xl": "72px" }}
             textAlign={"center"}
             fontFamily="var(--font-heading)"
+            lineHeight={{ base: "48px", "2xl": "80px" }}
+            letterSpacing={"-1px"}
           >
             The next evolution of Decentralized Exchange
           </Text>
-          <CommonButton
-            width={{ base: "142px", "2xl": "230px" }}
-            height={{ base: "46", "2xl": "70px" }}
+          <MainButton
+            width={{ base: "172px", lg: "136px", "2xl": "230px" }}
+            height={{ base: "44px", lg: "56px", "2xl": "64px" }}
             backgroundColor="var(--color-background)"
             display={"flex"}
             justifyContent={"center"}
@@ -272,13 +377,15 @@ const ResourcesHome = () => {
           >
             <Text
               textAlign={"center"}
-              fontSize={"20px"}
+              fontSize={{ base: "20px", "3xl": "24px" }}
               color={"#FCDDEC"}
               fontWeight={500}
+              lineHeight={"28px"}
+              letterSpacing={"-1px"}
             >
               Join Now
             </Text>
-          </CommonButton>
+          </MainButton>
         </Flex>
       </SectionContainer>
     </>

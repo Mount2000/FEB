@@ -15,6 +15,7 @@ const ProductHome = () => {
         base: "64px 24px 64px 24px",
         lg: "104px 64px 104px 64px",
         xl: "104px 86px 104px 86px",
+        "2xl": "104px 120px 104px 120px",
         "3xl": "128px 144px 144px 128px",
       }}
     >
@@ -171,7 +172,7 @@ const ProductHome = () => {
           width={{ md: "70%", lg: "50%", "3xl": "872px" }}
           position={{ base: "relative", lg: "absolute" }}
           right={{ lg: "0px" }}
-          top={{ lg: "15px", xl: "-30px", "3xl": "-30px" }}
+          top={{ lg: "15px", xl: "-30px", "2xl": "-10px", "3xl": "-30px" }}
           // right={"0px"}
           // bottom={"-150px"}
           src={appProductHome}

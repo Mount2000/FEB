@@ -1,14 +1,15 @@
 const mongoose = require("mongoose");
-const { type } = require("os");
 
 const transactionSchema = new mongoose.Schema(
   {
+    chainId: { type: Number, required: true },
     hash: { type: String, required: true },
     type: {
       type: String,
       required: true,
     },
     ipAddress: { type: String, required: true },
+    status: { type: String, required: true },
   },
   {
     timestamps: true,

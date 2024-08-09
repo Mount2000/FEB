@@ -24,6 +24,7 @@ import {
   readContract,
   getGasPrice,
   getTransaction,
+  getTransactionReceipt,
 } from "@wagmi/core";
 import {
   convertAndDivide,
@@ -33,6 +34,7 @@ import {
   isDiscountCode,
   isDefaultAddress,
   formatTokenBalance,
+  getUserIpAddress,
 } from "../../../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -54,7 +56,6 @@ import { useModal } from "../../../../contexts/useModal";
 import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
 import { parseGwei, parseEther, parseUnits } from "viem";
 import toast from "react-hot-toast";
-import { base } from "viem/chains";
 
 const chain_env = process.env.REACT_APP_ENV;
 
@@ -63,7 +64,6 @@ const MintRune = () => {
   const dispatch = useDispatch();
   const billNode = useSelector(selectBillNode);
 
-  console.log({ billNode });
   const chains = getChains(config);
   const chainId = getChainId(config);
   const currentChain = chains.find((chain) => chain.id === chainId);
@@ -142,7 +142,7 @@ const MintRune = () => {
     setReferralCodeError("");
     setDiscountCouponIdId(discountId);
   };
-  console.log(discountCouponIdId);
+
   const products = [
     {
       tierId: 1,
@@ -183,7 +183,6 @@ const MintRune = () => {
       dispatch(setPrice(convertAndDivide(nodeData[2], chainDecimal) * count));
   }, [billNode?.nodeId, nodeData]);
 
-  console.log({ nodeData });
   const [isLoading, setIsLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [disabled, setDisabled] = useState(false);
@@ -208,31 +207,6 @@ const MintRune = () => {
       args: [refId],
     });
     return referrals[0];
-  };
-
-  /**********Get IP **************/
-  const getUserIpAddress = async () => {
-    try {
-      const response = await fetch("https://api.ipify.org?format=json");
-      const data = await response.json();
-      return data.ip;
-    } catch (error) {
-      console.error("Error fetching IP address:", error);
-      return "unknown";
-    }
-  };
-  /************Check Ipspam***************/
-  const checkIfIPBlocked = async (ip) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3001/api/transaction/check-ip/${ip}`
-      );
-      const data = await response.json();
-      return data.blocked;
-    } catch (error) {
-      console.error("Error checking IP address:", error);
-      return false;
-    }
   };
 
   /***********PayNode*************/
@@ -275,7 +249,6 @@ const MintRune = () => {
     ]);
 
     const discountPercent = discountinfo[1];
-    console.log({ ownerDiscount });
     if (discountPercent > 0 && ownerDiscount !== address) {
       price = price - (price * discountPercent) / 100;
     }
@@ -284,12 +257,14 @@ const MintRune = () => {
     });
 
     const priceValue = parseUnits(String(price), chainDecimal);
-    console.log({ priceValue });
 
-    /***Lấy địa chỉ IP của người dùng ***/
+    /***Get IP user ***/
     const ipAddress = await getUserIpAddress();
-
-    const isBlocked = await checkIfIPBlocked(ipAddress);
+    const IPBlocked = await clientAPI(
+      "get",
+      `/api/transaction/check-ip?ip=${ipAddress}`
+    );
+    const isBlocked = IPBlocked?.blocked;
 
     const txObj = {
       ...nodeManagerContract,
@@ -313,8 +288,6 @@ const MintRune = () => {
     ]);
 
     const gasFeeToEther = Number(gasLimit * gasPrice) / 10 ** chainDecimal;
-
-    console.log({ gasFeeToEther });
 
     if (Number(balance.formatted) < price + gasFeeToEther) {
       dispatch(setMessage(ERROR.notBalance));
@@ -342,36 +315,25 @@ const MintRune = () => {
       if (hash) {
         setTxHash(hash);
         console.log({ hash });
-
-        // await fetch(
-        //   "http://localhost:3001/api/transaction/create-transaction",
-        //   {
-        //     method: "POST",
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify({
-        //       hash: hash,
-        //       type: txObj.functionName,
-        //       ipAddress: ipAddress,
-        //     }),
-        //   }
-        // );
+        const status = await getTransactionStatus(config, hash);
         await clientAPI("post", "/api/transaction/create-transaction", {
+          chainId: chainId,
           hash: hash,
           type: txObj.functionName,
           ipAddress: ipAddress,
+          status: status,
         });
-        const transaction = getTransaction(config, {
-          hash: hash,
-        });
-        console.log({ transaction });
 
         const result = await waitForTransactionReceipt(config, {
           hash: hash,
         });
 
         if (result?.status == "success") {
+          const status = await getTransactionStatus(config, hash);
+          await clientAPI("post", "/api/transaction/update-transaction", {
+            hash: hash,
+            status: status,
+          });
           const code = await getUserReferral(address);
           setReferralCode(code);
           dispatch(setMessage(SUCCESS.txBuySuccess));
@@ -380,6 +342,11 @@ const MintRune = () => {
           setDisabled(false);
           return;
         } else {
+          const status = await getTransactionStatus(config, hash);
+          await clientAPI("post", "/api/transaction/update-transaction", {
+            hash: hash,
+            status: status,
+          });
           dispatch(setMessage(FAIURE.txFalure));
           setPaymentStatus("failure");
           setIsLoading(true);
@@ -397,6 +364,21 @@ const MintRune = () => {
     }
   };
 
+  const getTransactionStatus = async (config, hash) => {
+    let status;
+    const transaction = await getTransaction(config, {
+      hash: hash,
+    });
+    if (transaction.blockNumber === null) {
+      status = "pending";
+    } else {
+      const receipt = await getTransactionReceipt(config, {
+        hash: hash,
+      });
+      status = receipt.status;
+    }
+    return status;
+  };
   return (
     <>
       <SectionContainer width={"100%"} paddingLeft={"0px"} paddingRight={"0px"}>

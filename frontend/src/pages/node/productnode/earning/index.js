@@ -16,6 +16,8 @@ import {
   getChains,
   readContract,
   getGasPrice,
+  getTransaction,
+  getTransactionReceipt,
 } from "@wagmi/core";
 import { config } from "../../../../components/wallets/config";
 import useInterval from "../../../../hooks/useInterval";
@@ -26,11 +28,13 @@ import {
 } from "../../../../utils";
 import MessageBox from "../../../../components/message/messageBox";
 import { FAIURE, PENDING } from "../../../../utils/mesages";
+import { getUserIpAddress } from "../../../../utils";
 import { useModal } from "../../../../contexts/useModal";
 import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
 import { parseGwei, parseEther, parseUnits } from "viem";
 import MainButton from "../../../../components/button/MainButton";
 import { base } from "viem/chains";
+import { clientAPI } from "../../../../api/client";
 
 const stakingContract = {
   address: staking_contract.CONTRACT_ADDRESS,
@@ -95,7 +99,6 @@ const Earning = () => {
       args: [address],
     });
 
-    console.log({ claimedAmounts });
     setTaikoClaimedAmount(Number(claimedAmounts[1]));
     setBachiClaimedAmount(Number(claimedAmounts[0]));
   };
@@ -114,7 +117,6 @@ const Earning = () => {
     address && getFarmAmounts();
   }, 2000);
 
-  console.log({ nodeData });
   const mining = [
     {
       name: "Taiko",
@@ -208,6 +210,7 @@ const Earning = () => {
         return;
       }
     }
+    const ipAddress = await getUserIpAddress();
     const txObj = {
       ...stakingContract,
       functionName: "claimAllRewards",
@@ -241,17 +244,35 @@ const Earning = () => {
       if (hash) {
         console.log({ hash });
         setTxHash(hash);
+        const status = await getTransactionStatus(config, hash);
+        await clientAPI("post", "/api/transaction/create-transaction", {
+          chainId: chainId,
+          hash: hash,
+          type: txObj.functionName,
+          ipAddress: ipAddress,
+          status: status,
+        });
         const result = await waitForTransactionReceipt(config, {
           hash: hash,
         });
         if (result?.status == "success") {
           getClaimedAmount();
+          const status = await getTransactionStatus(config, hash);
+          await clientAPI("post", "/api/transaction/update-transaction", {
+            hash: hash,
+            status: status,
+          });
           setMessage("Claim successful");
           setStatus("success");
           setIsLoading(true);
           setDisabled(false);
           return;
         } else {
+          const status = await getTransactionStatus(config, hash);
+          await clientAPI("post", "/api/transaction/update-transaction", {
+            hash: hash,
+            status: status,
+          });
           setMessage(FAIURE.txFalure);
           setStatus("failure");
           setIsLoading(true);
@@ -268,6 +289,21 @@ const Earning = () => {
     }
   };
 
+  const getTransactionStatus = async (config, hash) => {
+    let status;
+    const transaction = await getTransaction(config, {
+      hash: hash,
+    });
+    if (transaction.blockNumber === null) {
+      status = "pending";
+    } else {
+      const receipt = await getTransactionReceipt(config, {
+        hash: hash,
+      });
+      status = receipt.status;
+    }
+    return status;
+  };
   return (
     <>
       <SectionContainer padding={"0px"}>

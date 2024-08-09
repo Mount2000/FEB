@@ -105,6 +105,12 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 referralId,
         uint256 totalSales
     );
+    event Referral(
+        address indexed user,
+        address indexed owner,
+        uint256 referralId,
+        uint256 amount
+    );
     event FundsWithdrawn(address indexed to, uint256 value);
     event GeneratedReferralCode(address indexed user, string code);
     event NodeTransferred(
@@ -399,6 +405,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");
             referrals[referralId].totalSales += totalSales;
+            emit Referral(caller, referralsOwner, referralId, totalSales);
         }
 
         string memory _code;

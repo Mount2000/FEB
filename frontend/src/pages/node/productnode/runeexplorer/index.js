@@ -17,11 +17,21 @@ import {
   Tfoot,
   Text,
   HStack,
+  Flex,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { formatTableValue } from "./formatTable";
 import { useInView } from "react-intersection-observer";
 import { BeatLoader } from "react-spinners";
 import useInterval from "../../../../hooks/useInterval";
+import useScreenWidth from "../../../../hooks/useScreenWidth";
+import { base } from "viem/chains";
+import { AddressCopier } from "../../../../components/addressCopier";
+import {
+  MdOutlineArrowBackIosNew,
+  MdOutlineArrowForwardIos,
+} from "react-icons/md";
+import ReactPaginate from "react-paginate";
 
 const RuneExplorer = () => {
   const {
@@ -35,6 +45,11 @@ const RuneExplorer = () => {
     setCurrentPage,
     currentPage,
   } = useTransactionHistory();
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage.selected + 1);
+    refetchTransactionHistoryData();
+  };
 
   const {
     transactionHistoryDataInfinity,
@@ -57,6 +72,8 @@ const RuneExplorer = () => {
       fetchNextPage();
     }
   }, [inView]);
+  const isMobile = useScreenWidth(480);
+  const isTablet = useScreenWidth(1024);
   const historyTableData = {
     headers: [
       {
@@ -73,11 +90,113 @@ const RuneExplorer = () => {
       },
       {
         label: "Process",
-        key: "Status",
+        key: "status",
       },
     ],
-    data: transactionHistoryDataInfinity,
+    headersMobile: [
+      {
+        label: "Type",
+        key: "type",
+      },
+      {
+        label: "User Wallet",
+        key: "caller",
+      },
+      {
+        label: "Process",
+        key: "status",
+      },
+    ],
+    data: isMobile ? transactionHistoryData : transactionHistoryDataInfinity,
   };
+
+  if (isMobile)
+    return (
+      <>
+        <CommonButton
+          border="0.5px solid var(--color-main)"
+          width={"100%"}
+          height={"100%"}
+          marginTop={"65px"}
+          backgroundColor="var(--color-background-footer)"
+          fontFamily={"var(--font-text-main)"}
+          fontSize={{ base: "16px" }}
+        >
+          {historyTableData.data?.length > 0 ? (
+            historyTableData.data?.map((record) => {
+              let color;
+              if (record.status === "pending") color = "#F8A401";
+              else if (record.status === "success") color = "#23F600";
+              else color = "#E42493";
+              return (
+                <Box
+                  padding={"32px"}
+                  borderBottom={"0.5px solid var(--color-main)"}
+                >
+                  <Flex w={"100%"} gap={"12px"}>
+                    <Box w={"24px"}>
+                      {record.num}
+                      {"."}
+                    </Box>
+                    <Flex direction={"column"} w={"100%"}>
+                      {historyTableData.headersMobile.map((item) => {
+                        return (
+                          <SimpleGrid columns={2} w={"100%"}>
+                            <Box>
+                              <Text>{item.label}</Text>
+                            </Box>
+                            <Box>
+                              {item.key === "caller" ? (
+                                <AddressCopier
+                                  address={record.caller}
+                                  digits={5}
+                                />
+                              ) : (
+                                <Text color={item.key === "status" && color}>
+                                  {record[item.key]}
+                                </Text>
+                              )}
+                            </Box>
+                          </SimpleGrid>
+                        );
+                      })}
+                    </Flex>
+                  </Flex>
+                </Box>
+              );
+            })
+          ) : (
+            <Box
+              padding={"32px"}
+              borderBottom={"0.5px solid var(--color-main)"}
+            >
+              <Text textAlign={"center"}>No record</Text>
+            </Box>
+          )}
+          <Box
+            display="flex"
+            justifyContent={"center"}
+            alignItems={"center"}
+            py={"24px"}
+          >
+            <ReactPaginate
+              pageCount={totalPages}
+              pageRangeDisplayed={3}
+              marginPagesDisplayed={1}
+              onPageChange={handlePageChange}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              breakClassName={"ellipsis"}
+              breakLabel={"..."}
+              previousLabel={<MdOutlineArrowBackIosNew />}
+              nextLabel={<MdOutlineArrowForwardIos />}
+              renderOnZeroPageCount={null}
+              initialPage={currentPage - 1}
+            />
+          </Box>
+        </CommonButton>
+      </>
+    );
 
   return (
     <>
@@ -86,7 +205,11 @@ const RuneExplorer = () => {
         width={"100%"}
         height={"100%"}
         marginTop={"65px"}
-        backgroundColor="var(--color-background-popup)"
+        backgroundColor={
+          !isTablet
+            ? "var(--color-background-popup)"
+            : "var(--color-background-footer)"
+        }
         padding={"32px 24px"}
       >
         <TableContainer w={"100%"}>
@@ -152,7 +275,7 @@ const RuneExplorer = () => {
                       border={"none"}
                       color={"white"}
                       fontFamily={"var(--font-text-main)"}
-                      fontSize={{base: "16px", xl: "24px"}}
+                      fontSize={{ base: "16px", xl: "24px" }}
                       w={width}
                     >
                       <Box ml={"24px"}>{e.label}</Box>
@@ -180,7 +303,7 @@ const RuneExplorer = () => {
                               mt={"24px"}
                               ml={"24px"}
                               fontFamily={"var(--font-text-main)"}
-                              fontSize={{base: "16px", xl: "24px"}}
+                              fontSize={{ base: "16px", xl: "24px" }}
                             >
                               {formatTableValue(e[keyvalue], keyvalue)}
                             </Box>

@@ -22,7 +22,7 @@ async function fetchTransactionHistory(currentPage) {
     const totalpages = Math.ceil(data?.total / NUMBER_NFT_PER_PAGE);
     const newData = data?.data?.map((item, index) => {
       return {
-        num: index + 1,
+        num: index + 1 + NUMBER_NFT_PER_PAGE * (currentPage - 1),
         type: item.type,
         caller: item.caller,
         status: item.status,
@@ -98,7 +98,7 @@ export function useTransactionHistoryInfinity() {
     isFetching,
     isFetchingNextPage,
     isLoading,
-    refetch
+    refetch,
   } = useInfiniteQuery({
     queryKey: [queryKeyInfinity],
     queryFn: fetchTransactionHistoryInfinity,
@@ -121,6 +121,6 @@ export function useTransactionHistoryInfinity() {
     isFetching,
     isFetchingNextPage,
     isLoading,
-    refetch
+    refetch,
   };
 }

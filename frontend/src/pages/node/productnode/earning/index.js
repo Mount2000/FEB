@@ -117,6 +117,7 @@ const Earning = () => {
     address && getFarmAmounts();
   }, 2000);
 
+  console.log({ nodeData });
   const mining = [
     {
       name: "Taiko",
@@ -140,7 +141,7 @@ const Earning = () => {
         7
       ),
       farmSpeed: formatTokenBalance(
-        convertAndDivide(nodeData ? Number(nodeData[5]) : 0, chainDecimal),
+        convertAndDivide(nodeData ? Number(nodeData[4]) : 0, chainDecimal),
         12
       ),
     },

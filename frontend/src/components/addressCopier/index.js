@@ -37,7 +37,7 @@ export const AddressCopier = ({
         style={style}
       >
         <Text mr="4px" fontSize={fontSize}>
-          {truncated ? addressShortener(address) : address}
+          {truncated ? addressShortener(address, digits) : address}
         </Text>
         <MdOutlineContentCopy size={isMobile ? "16px" : "24px"} />
       </Flex>

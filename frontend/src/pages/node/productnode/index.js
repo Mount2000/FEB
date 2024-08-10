@@ -53,8 +53,8 @@ const ProductNode = () => {
         top={{ base: "280px", md: "380px" }}
       />
       <SectionContainer
-        paddingLeft={{ base: "25px", xl: "48px", "3xl": "68px" }}
-        paddingRight={{ base: "25px", xl: "48px", "3xl": "68px" }}
+        px={{ base: "25px", xl: "48px", "3xl": "68px" }}
+        marginBottom={"24px"}
         position={"relative"}
       >
         <Flex flexDirection={"column"} alignItems={"center"}>

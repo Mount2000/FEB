@@ -501,7 +501,10 @@ const MintRune = () => {
                       <Text
                         fontSize={{ base: "20px", xl: "48px" }}
                         fontWeight={700}
-                        fontFamily="var(--font-text-main)"
+                        fontFamily={{
+                          base: "var(--font-text-main)",
+                          md: "var(--font-heading)",
+                        }}
                       >
                         {products.nameproduct}
                       </Text>
@@ -513,7 +516,10 @@ const MintRune = () => {
                         <Text
                           fontSize={{ base: "20px", xl: "32px" }}
                           fontWeight={400}
-                          fontFamily="var(--font-text-main)"
+                          fontFamily={{
+                            base: "var(--font-text-main)",
+                            md: "var(--font-heading)",
+                          }}
                         >
                           {products.power}
                         </Text>
@@ -608,7 +614,10 @@ const MintRune = () => {
                     fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
-                    fontFamily="var(--font-text-main)"
+                    fontFamily={{
+                      base: "var(--font-text-main)",
+                      md: "var(--font-heading)",
+                    }}
                   >
                     {nodeData ? Number(nodeData[3]) : 0} GH/s
                   </Text>
@@ -649,7 +658,10 @@ const MintRune = () => {
                     fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
-                    fontFamily="var(--font-text-main)"
+                    fontFamily={{
+                      base: "var(--font-text-main)",
+                      md: "var(--font-heading)",
+                    }}
                   >
                     {nodeData
                       ? formatTokenBalance(
@@ -715,7 +727,10 @@ const MintRune = () => {
                     fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
-                    fontFamily="var(--font-text-main)"
+                    fontFamily={{
+                      base: "var(--font-text-main)",
+                      md: "var(--font-heading)",
+                    }}
                   >
                     {nodeData
                       ? formatTokenBalance(
@@ -780,7 +795,10 @@ const MintRune = () => {
                     fontSize={{ base: "20♫px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
-                    fontFamily="var(--font-text-main)"
+                    fontFamily={{
+                      base: "var(--font-text-main)",
+                      md: "var(--font-heading)",
+                    }}
                   >
                     {nodeData
                       ? formatTokenBalance(

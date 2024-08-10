@@ -1,6 +1,6 @@
 const contract = {
   testnet: {
-    CONTRACT_ADDRESS: "0x9388ab9A56ACBc735Fc4A664f42F8A3f4d66A03D",
+    CONTRACT_ADDRESS: "0x6c0EfCb27DDA0D6d9E8E123C2226dcFaFD8BfB18",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -692,7 +692,7 @@ const contract = {
     ],
   },
   mainnet: {
-    CONTRACT_ADDRESS: "0x9388ab9A56ACBc735Fc4A664f42F8A3f4d66A03D",
+    CONTRACT_ADDRESS: "0x6c0EfCb27DDA0D6d9E8E123C2226dcFaFD8BfB18",
     CONTRACT_ABI: [
       {
         inputs: [

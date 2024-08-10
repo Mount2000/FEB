@@ -9,6 +9,7 @@ import {
 import { MdOutlineContentCopy } from "react-icons/md";
 import { addressShortener } from "../../utils";
 import toast from "react-hot-toast";
+import useScreenWidth from "../../hooks/useScreenWidth";
 
 export const AddressCopier = ({
   address,
@@ -16,12 +17,14 @@ export const AddressCopier = ({
   fontWeight,
   style,
   fontSize,
+  digits = 5,
 }) => {
   const handleCopy = (label, text) => {
     toast.success(`${label} copied!`);
     navigator.clipboard.writeText(text);
   };
 
+  const isMobile = useScreenWidth(480);
   return (
     <>
       <Flex
@@ -33,10 +36,10 @@ export const AddressCopier = ({
         sx={{ fontWeight: fontWeight || "bold", color: "#F7F7F8" }}
         style={style}
       >
-        <Text mr="8px" fontSize={fontSize}>
+        <Text mr="4px" fontSize={fontSize}>
           {truncated ? addressShortener(address) : address}
         </Text>
-        <MdOutlineContentCopy size={"24px"} />
+        <MdOutlineContentCopy size={isMobile ? "16px" : "24px"} />
       </Flex>
     </>
   );

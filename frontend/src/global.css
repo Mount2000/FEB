@@ -65,3 +65,41 @@ input:focus {
   overflow: hidden;
   animation: slideDown 0.5s ease-out forwards;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+}
+
+.pagination a {
+  border-color: #EB7FB3 !important;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 8px;
+  border: 1px solid white;
+  text-decoration: none;
+  width: 30px !important;
+  height: 30px !important;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.pagination li.disabled a {
+  display: none;
+}
+
+.pagination li.active a {
+  /* background-color: #1BECA6; */
+  color: var(--color-background-popup);
+  background-color: #EB7FB3;
+}
+
+.pagination .ellipsis {
+  cursor: not-allowed;
+}

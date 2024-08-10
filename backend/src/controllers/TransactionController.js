@@ -68,20 +68,13 @@ const updateTransaction = async (req, res) => {
 
 const getTransaction = async (req, res) => {
   try {
-    let { caller, limit, offset, sort } = req.body;
+    let { limit, offset, sort } = req.body;
     if (!limit) limit = 15;
     if (!offset) offset = 0;
     if (!sort) sort = -1;
-    if (!caller) {
-      return res.status(400).json({
-        status: "FAILED",
-        message: "Missing required fields",
-      });
-    }
 
     try {
       const response = await TransactionServices.getTransaction({
-        caller,
         limit,
         offset,
         sort,

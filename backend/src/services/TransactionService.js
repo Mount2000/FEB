@@ -86,16 +86,12 @@ const updateTransaction = (newTransaction) => {
 
 const getTransaction = (query) => {
   return new Promise(async (resolve, reject) => {
-    const { caller, limit, offset, sort } = query;
+    const { limit, offset, sort } = query;
 
     try {
       const [totalData, data] = await Promise.all([
-        Transaction.find({
-          caller: caller,
-        }),
-        Transaction.find({
-          caller: caller,
-        })
+        Transaction.find({}),
+        Transaction.find({})
           .skip(Number(offset))
           .limit(Number(limit))
           .sort({ createdAt: Number(sort) }),

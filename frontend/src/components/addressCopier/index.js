@@ -16,6 +16,7 @@ export const AddressCopier = ({
   fontWeight,
   style,
   fontSize,
+  digits = 5,
 }) => {
   const handleCopy = (label, text) => {
     toast.success(`${label} copied!`);
@@ -34,7 +35,7 @@ export const AddressCopier = ({
         style={style}
       >
         <Text mr="4px" fontSize={fontSize}>
-          {truncated ? addressShortener(address) : address}
+          {truncated ? addressShortener(address, digits) : address}
         </Text>
         <MdOutlineContentCopy size={"24px"} />
       </Flex>

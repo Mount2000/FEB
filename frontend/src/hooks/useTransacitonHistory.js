@@ -4,10 +4,9 @@ import { clientAPI } from "../api/client";
 
 const queryKey = "transactionHistory";
 
-async function fetchTransactionHistory(caller, currentPage) {
+async function fetchTransactionHistory(currentPage) {
   try {
     const options = {
-      caller: caller,
       limit: 10,
       offset: 10 * (currentPage - 1),
       sort: -1,
@@ -19,7 +18,15 @@ async function fetchTransactionHistory(caller, currentPage) {
       options
     );
     const totalpages = Math.ceil(data?.total / 10);
-    return { data: data?.data, totalpages };
+    const newData = data?.data?.map((item, index) => {
+      return {
+        num: index + 1,
+        type: item.type,
+        caller: item.caller,
+        status: item.status,
+      };
+    });
+    return { data: newData, totalpages };
   } catch (error) {
     console.log("error", error);
 
@@ -27,11 +34,11 @@ async function fetchTransactionHistory(caller, currentPage) {
   }
 }
 
-export function useTransactionHistory(caller) {
+export function useTransactionHistory() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, refetch, isLoading, isRefetching } = useQuery({
     queryKey: [queryKey, currentPage],
-    queryFn: async () => fetchTransactionHistory(caller, currentPage),
+    queryFn: async () => fetchTransactionHistory(currentPage),
     refetchOnWindowFocus: false,
   });
 

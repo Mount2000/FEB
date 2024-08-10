@@ -34,15 +34,15 @@ const CommonButton = ({ children, onClick, isDisabled, ...props }) => {
         },
         "@media (max-width: 992px)": {
           clipPath:
-            "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
+            "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
           "::before": {
-            width: "10px",
-            height: "10px",
+            width: "20px",
+            height: "20px",
             backgroundColor: "pink.500",
           },
           "::after": {
-            width: "10px",
-            height: "10px",
+            width: "20px",
+            height: "20px",
             backgroundColor: "pink.500",
           },
         },

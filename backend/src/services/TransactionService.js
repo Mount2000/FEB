@@ -1,5 +1,6 @@
 const BlockedIP = require("../models/BlockedIPModel");
 const Transaction = require("../models/TransactionModel");
+const Referrals = require("../models/referrals.model");
 
 const createTransaction = (newTransaction) => {
   return new Promise(async (resolve, reject) => {
@@ -124,6 +125,47 @@ const getTransaction = (query) => {
   });
 };
 
+const getReferrals = (query) => {
+  return new Promise(async (resolve, reject) => {
+    const { caller, limit, offset, sort } = query;
+
+    try {
+      const [totalData, data] = await Promise.all([
+        Referrals.find({
+          referralsOwner: caller,
+        }),
+        Referrals.find({
+          referralsOwner: caller,
+        })
+          .skip(Number(offset))
+          .limit(Number(limit))
+          .sort({ createdAt: Number(sort) }),
+      ]);
+
+      if (data && totalData) {
+        resolve({
+          status: "OK",
+          message: "SUCCESS",
+          ret: {
+            data: data,
+            total: totalData.length,
+          },
+        });
+      } else
+        resolve({
+          status: "FAILED",
+          message: "Referrals is not exist",
+        });
+    } catch (e) {
+      reject({
+        status: "FAILED",
+        message: "Error get referrals",
+        error: e.message,
+      });
+    }
+  });
+};
+
 const checkIP = (ipAddress) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -159,5 +201,6 @@ module.exports = {
   createTransaction,
   updateTransaction,
   getTransaction,
+  getReferrals,
   checkIP,
 };

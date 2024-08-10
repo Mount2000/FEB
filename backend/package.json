@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "nodemon src/index.js",
+    "scan-node-manager": "nodemon src/crons/node_manager_events_collector.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

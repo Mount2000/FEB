@@ -90,7 +90,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint8 commissionPercent,
         string code
     );
-
     event UpdateCoupon(
         address indexed user,
         uint256 couponId,
@@ -103,13 +102,15 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         address indexed user,
         uint256 nodeTierId,
         uint256 referralId,
-        uint256 totalSales
+        uint256 totalSales,
+        uint256 timestamp
     );
     event Referral(
         address indexed user,
         address indexed owner,
         uint256 referralId,
-        uint256 amount
+        uint256 amount,
+        uint256 timestamp
     );
     event FundsWithdrawn(address indexed to, uint256 value);
     event GeneratedReferralCode(address indexed user, string code);
@@ -405,7 +406,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");
             referrals[referralId].totalSales += totalSales;
-            emit Referral(caller, referralsOwner, referralId, totalSales);
+            emit Referral(caller, referralsOwner, referralId, totalSales, block.timestamp);
         }
 
         string memory _code;
@@ -440,7 +441,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
 
             emit GeneratedReferralCode(caller, _code);
         }
-        emit Sale(caller, _nodeTierId, referralId, totalSales);
+        emit Sale(caller, _nodeTierId, referralId, totalSales, block.timestamp);
 
         return _code;
     }
@@ -473,7 +474,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         nodeIdNodeTiersIdLinks[nodeId] = _nodeTierId;
         userNodeIdLinks[nodeOwner].add(nodeId);
         nodeIdUserLinks[nodeId] = nodeOwner;
-        emit Sale(nodeOwner, _nodeTierId, 0, 0);
+        emit Sale(nodeOwner, _nodeTierId, 0, 0, block.timestamp);
     }
 
     function withdraw(address payable to, uint256 value) public onlyOwner {

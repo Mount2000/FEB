@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const contract = {
   testnet: {
     CONTRACT_ADDRESS: "0xA236ae61818D4d43f4a25D900403520b8dA90bf4",
@@ -2835,5 +2837,6 @@ const contract = {
   },
 };
 
-const node_manager_contract = contract[process.env.REACT_APP_ENV || "testnet"];
-export default node_manager_contract;
+module.exports = {
+  node_manager_contract: contract[process.env.NODE_ENV],
+};

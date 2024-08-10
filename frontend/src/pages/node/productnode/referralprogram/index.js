@@ -12,6 +12,7 @@ import { config } from "../../../../components/wallets/config";
 import node_manager_contract from "../../../../utils/contracts/node_manager_contract";
 import { useClient } from "wagmi";
 import { base } from "viem/chains";
+import { useReferralsHistory } from "../../../../hooks/useReferralsHistory";
 
 const ReferralProgram = () => {
   const { address } = useAccount();
@@ -29,6 +30,18 @@ const ReferralProgram = () => {
       getTotal();
     }
   }, [address]);
+  const {
+    referralsHistoryData,
+    totalPages,
+    isLoading: isLoadingReferralsHistoryData,
+    refetch: refetchReferralsHistoryData,
+    isRefetching: isRefetchingReferralsHistoryData,
+    prevPage: handlePrev,
+    nextPage: handleNext,
+    setCurrentPage,
+    currentPage,
+  } = useReferralsHistory(address);
+  console.log({ referralsHistoryData });
 
   const getTotal = async () => {
     const ReferralCode = await readContract(config, {

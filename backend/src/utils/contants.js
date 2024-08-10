@@ -5,6 +5,11 @@ const CHAINS = [
   },
 ];
 
+let global_vars = {
+  isScanning: true,
+};
+
 module.exports = {
+  global_vars: global_vars,
   CHAINS: CHAINS,
 };

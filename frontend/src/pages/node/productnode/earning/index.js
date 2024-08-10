@@ -56,6 +56,7 @@ const Earning = () => {
   const chainSymbol = currentChain?.nativeCurrency?.symbol;
   //
   const [firstNodeId, setFirstNodeId] = useState(0);
+  const [nodeTiersId, setNodeTiersId] = useState(1);
   const [disabled, setDisabled] = useState(false);
   const { setConnectWalletModalVisible } = useModal();
   const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
@@ -71,6 +72,15 @@ const Earning = () => {
         functionName: "getNodeIdByIndex",
         args: [address, 0],
       });
+      if (nodeId) {
+        const nodeTiersId = await readContract(config, {
+          ...nodeManagerContract,
+          functionName: "nodeIdNodeTiersIdLinks",
+          args: [nodeId],
+        });
+        setNodeTiersId(Number(nodeTiersId));
+      }
+
       setFirstNodeId(Number(nodeId));
     }
   };
@@ -106,7 +116,7 @@ const Earning = () => {
   const { data: nodeData } = useReadContract({
     ...nodeManagerContract,
     functionName: "nodeTiers",
-    args: [firstNodeId],
+    args: [nodeTiersId],
   });
 
   useEffect(() => {
@@ -117,7 +127,6 @@ const Earning = () => {
     address && getFarmAmounts();
   }, 2000);
 
-  console.log({ nodeData });
   const mining = [
     {
       name: "Taiko",

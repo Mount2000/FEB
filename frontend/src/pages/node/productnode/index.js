@@ -25,7 +25,7 @@ const ProductNode = () => {
       content: <MintRune />,
     },
     {
-      title: "Rune Explorer",
+      title: "Explorer",
       content: <RuneExplorer />,
     },
     {

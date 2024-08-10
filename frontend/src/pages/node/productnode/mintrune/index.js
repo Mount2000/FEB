@@ -56,6 +56,7 @@ import { useModal } from "../../../../contexts/useModal";
 import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
 import { parseGwei, parseEther, parseUnits } from "viem";
 import toast from "react-hot-toast";
+import MainButton from "../../../../components/button/MainButton";
 
 const chain_env = process.env.REACT_APP_ENV;
 
@@ -422,23 +423,62 @@ const MintRune = () => {
                     backgroundColor: "pink.500",
                     clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                   },
-                  "@media (max-width: 992px)": {
+                  "@media (max-width: 768px)": {
                     clipPath:
-                      "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
+                      "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
                     "::before": {
-                      width: "10px",
-                      height: "10px",
+                      width: "40px",
+                      height: "40px",
                       backgroundColor: "pink.500",
                     },
                     "::after": {
-                      width: "10px",
-                      height: "10px",
+                      width: "40px",
+                      height: "40px",
                       backgroundColor: "pink.500",
                     },
                   },
                 }}
               >
-                <CommonButton
+                <Box
+                  sx={{
+                    backdropFilter: "blur(10px) !important",
+                    clipPath:
+                      "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                    "::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "20px",
+                      height: "20px",
+                      backgroundColor: "pink.500",
+                      clipPath: "polygon(0 100%, 100% 0, 0 0)",
+                    },
+                    "::after": {
+                      content: '""',
+                      position: "absolute",
+                      bottom: 0,
+                      right: 0,
+                      width: "20px",
+                      height: "20px",
+                      backgroundColor: "pink.500",
+                      clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
+                    },
+                    "@media (max-width: 768px)": {
+                      clipPath:
+                        "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                      "::before": {
+                        width: "40px",
+                        height: "40px",
+                        backgroundColor: "pink.500",
+                      },
+                      "::after": {
+                        width: "40px",
+                        height: "40px",
+                        backgroundColor: "pink.500",
+                      },
+                    },
+                  }}
                   backgroundColor={"rgba(27, 27, 27, 0.20)"}
                   boxShadow={"inset 0 0 10px var(--color-main)"}
                   border="0.5px solid var(--color-main)"
@@ -459,7 +499,7 @@ const MintRune = () => {
                       // marginBottom={"60px"}
                     >
                       <Text
-                        fontSize={{ base: "24px", xl: "48px" }}
+                        fontSize={{ base: "20px", xl: "48px" }}
                         fontWeight={700}
                         fontFamily="var(--font-text-main)"
                       >
@@ -473,6 +513,7 @@ const MintRune = () => {
                         <Text
                           fontSize={{ base: "20px", xl: "32px" }}
                           fontWeight={400}
+                          fontFamily="var(--font-text-main)"
                         >
                           {products.power}
                         </Text>
@@ -489,12 +530,51 @@ const MintRune = () => {
                       width={"80px"}
                     />
                   </Flex>
-                </CommonButton>
+                </Box>
               </Box>
             ))}
           </Flex>
           {/* <PayNow /> */}
-          <CommonButton
+          <Box
+            sx={{
+              backdropFilter: "blur(10px) !important",
+              clipPath:
+                "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+              "::before": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "20px",
+                height: "20px",
+                backgroundColor: "pink.500",
+                clipPath: "polygon(0 100%, 100% 0, 0 0)",
+              },
+              "::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                width: "20px",
+                height: "20px",
+                backgroundColor: "pink.500",
+                clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
+              },
+              "@media (max-width: 768px)": {
+                clipPath:
+                  "polygon(0 30px, 30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)",
+                "::before": {
+                  width: "30px",
+                  height: "30px",
+                  backgroundColor: "pink.500",
+                },
+                "::after": {
+                  width: "30px",
+                  height: "30px",
+                  backgroundColor: "pink.500",
+                },
+              },
+            }}
             border="0.5px solid var(--color-main)"
             width={"100%"}
             height={"100%"}
@@ -502,8 +582,8 @@ const MintRune = () => {
             backgroundColor="var(--color-background-popup)"
           >
             <Box
-              margin={{
-                base: "31px 32px 27px 31px",
+              padding={{
+                base: "31px 32px 32px 32px",
                 xl: "58px 58px 44px 59px",
               }}
             >
@@ -528,7 +608,7 @@ const MintRune = () => {
                     fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
-                    fontFamily={"var(--font-heading)"}
+                    fontFamily="var(--font-text-main)"
                   >
                     {nodeData ? Number(nodeData[3]) : 0} GH/s
                   </Text>
@@ -569,7 +649,7 @@ const MintRune = () => {
                     fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
-                    fontFamily={"var(--font-heading)"}
+                    fontFamily="var(--font-text-main)"
                   >
                     {nodeData
                       ? formatTokenBalance(
@@ -635,7 +715,7 @@ const MintRune = () => {
                     fontSize={{ base: "16px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
-                    fontFamily={"var(--font-heading)"}
+                    fontFamily="var(--font-text-main)"
                   >
                     {nodeData
                       ? formatTokenBalance(
@@ -697,10 +777,10 @@ const MintRune = () => {
                     Total Renting Price
                   </Text>
                   <Text
-                    fontSize={{ base: "16px", md: "24px", xl: "36px" }}
+                    fontSize={{ base: "20♫px", md: "24px", xl: "36px" }}
                     fontWeight={400}
                     color={"#FFF"}
-                    fontFamily={"var(--font-heading)"}
+                    fontFamily="var(--font-text-main)"
                   >
                     {nodeData
                       ? formatTokenBalance(
@@ -715,10 +795,11 @@ const MintRune = () => {
             </Box>
             <Flex
               flexDirection={{ base: "column", md: "row" }}
+              justifyContent={{ base: "space-between" }}
               alignItems={"center"}
               gap={"20px"}
               padding={{
-                base: "25px 18px 25px 18px",
+                base: "32px 32px 0px 32px",
                 xl: "47px 58px 55px 58px",
               }}
               border={"0.5px solid var(--color-main)"}
@@ -743,14 +824,15 @@ const MintRune = () => {
               justifyContent={"center"}
               borderTop={"1px solid var(--color-main)"}
             >
-              <CommonButton
-                width={{ base: "320px", md: "750px" }}
+              <MainButton
+                borderRadius={"8px"}
+                width={{ base: "100%" }}
                 height={{ base: "40px", md: "70px" }}
                 backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
                 margin={{
-                  base: "30px 10px 30px 10px",
+                  base: "40px 32px 40px 32px",
                   md: "38px 20px 32px 20px",
-                  lg: "58px 0 52px 0",
+                  lg: "58px 32px 52px 32px",
                 }}
                 display={"flex"}
                 alignItems={"center"}
@@ -763,12 +845,13 @@ const MintRune = () => {
                   textAlign={"center"}
                   fontSize={{ base: "16px", md: "24px", xl: "32px" }}
                   fontWeight={500}
+                  color={"#FFF"}
                 >
                   {address ? "PAY NOW" : "CONNECT WALLET NOW"}
                 </Text>
-              </CommonButton>
+              </MainButton>
             </Flex>
-          </CommonButton>
+          </Box>
         </Flex>
       </SectionContainer>
       <Box className="msg-box">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 //import component
 import SectionContainer from "../../../../components/container";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import CommonButton from "../../../../components/button/commonbutton";
 //import image
 import earningNode from "../../../../assets/img/node/earning-node.png";
@@ -311,7 +311,7 @@ const Earning = () => {
         <Flex
           flexDirection={"column"}
           alignItems={"center"}
-          paddingTop={{ base: "60px", "2xl": "108px" }}
+          paddingTop={{ base: "28px", "2xl": "108px" }}
         >
           <Flex
             w={"100%"}
@@ -319,8 +319,51 @@ const Earning = () => {
             gap={{ base: "36px", md: "24px" }}
             paddingBottom={{ base: "40px", md: "48px" }}
           >
-            <CommonButton
-              padding={"37px 35px 34px 35px"}
+            <Box
+              sx={{
+                backdropFilter: "blur(10px) !important",
+                clipPath:
+                  "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                "::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor: "pink.500",
+                  clipPath: "polygon(0 100%, 100% 0, 0 0)",
+                },
+                "::after": {
+                  content: '""',
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor: "pink.500",
+                  clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
+                },
+                "@media (max-width: 768px)": {
+                  clipPath:
+                    "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                  "::before": {
+                    width: "40px",
+                    height: "40px",
+                    backgroundColor: "pink.500",
+                  },
+                  "::after": {
+                    width: "40px",
+                    height: "40px",
+                    backgroundColor: "pink.500",
+                  },
+                },
+              }}
+              padding={{
+                base: "24px 24px 21.76px 24px",
+                lg: "24px 28px 32px 32px",
+                "3xl": "40px 40px 56px 68px",
+              }}
               boxShadow={"inset 0 0 10px var(--color-main)"}
               border="0.5px solid var(--color-main)"
               width={{
@@ -328,7 +371,7 @@ const Earning = () => {
                 sm: "100%",
                 md: "70%",
                 xl: "50%",
-                "2xl": "40%",
+                "2xl": "50%",
               }}
             >
               <Flex flexDirection={"column"} gap={"24px"}>
@@ -341,21 +384,22 @@ const Earning = () => {
                     fontWeight={400}
                     fontFamily="var(--font-text-extra)"
                     color="var(--color-main)"
-                    fontSize={{ base: "24px", sm: "48px" }}
+                    fontSize={{ base: "24px", "3xl": "72px" }}
                   >
                     BACHI Balance
                   </Text>
                   <MainButton
+                    height={{ base: "44px", "3xl": "80px" }}
                     backgroundColor="var(--color-main)"
                     padding={{
                       base: "16px 36px",
-                      xl: "16px 30px 15px 30px",
+                      xl: "16px 36px 16px 36px",
                     }}
                     color="white"
                     borderRadius={"8px !important"}
                   >
                     <Text
-                      fontSize={{ base: "18px", "2xl": "24px" }}
+                      fontSize={{ base: "18px", "2xl": "24px", "3xl": "32px" }}
                       fontWeight={400}
                       fontFamily={"var(--font-text-main)"}
                     >
@@ -364,18 +408,63 @@ const Earning = () => {
                   </MainButton>
                 </Flex>
                 <Text
-                  fontSize={{ base: "24px", sm: "48px" }}
+                  lineHeight={{ base: "32px" }}
+                  fontSize={{ base: "24px", lg: "32px", "3xl": "72px" }}
                   fontWeight={700}
-                  fontFamily={"var(--font-heading)"}
+                  fontFamily={"var(--font-text-main)"}
                 >
                   {formatTokenBalance(
                     convertAndDivide(bachiClaimedAmount, chainDecimal)
                   )}
                 </Text>
               </Flex>
-            </CommonButton>
-            <CommonButton
-              padding={"37px 35px 34px 35px"}
+            </Box>
+
+            <Box
+              sx={{
+                backdropFilter: "blur(10px) !important",
+                clipPath:
+                  "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                "::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor: "pink.500",
+                  clipPath: "polygon(0 100%, 100% 0, 0 0)",
+                },
+                "::after": {
+                  content: '""',
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor: "pink.500",
+                  clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
+                },
+                "@media (max-width: 768px)": {
+                  clipPath:
+                    "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                  "::before": {
+                    width: "40px",
+                    height: "40px",
+                    backgroundColor: "pink.500",
+                  },
+                  "::after": {
+                    width: "40px",
+                    height: "40px",
+                    backgroundColor: "pink.500",
+                  },
+                },
+              }}
+              padding={{
+                base: "24px 24px 21.76px 24px",
+                lg: "24px 28px 32px 32px",
+                "3xl": "40px 40px 56px 68px",
+              }}
               border="0.5px solid var(--color-main)"
               boxShadow={"inset 0 0 10px var(--color-main)"}
               width={{
@@ -383,7 +472,7 @@ const Earning = () => {
                 sm: "100%",
                 md: "70%",
                 xl: "50%",
-                "2xl": "40%",
+                "2xl": "50%",
               }}
             >
               <Flex flexDirection={"column"} gap={"24px"}>
@@ -393,7 +482,7 @@ const Earning = () => {
                   gap={{ base: "15px", "2xl": "30px" }}
                 >
                   <Text
-                    fontSize={{ base: "24px", sm: "48px" }}
+                    fontSize={{ base: "24px", "3xl": "72px" }}
                     fontWeight={400}
                     fontFamily="var(--font-text-extra)"
                     color="var(--color-main)"
@@ -401,16 +490,17 @@ const Earning = () => {
                     TAIKO Balance
                   </Text>
                   <MainButton
+                    height={{ base: "44px", "3xl": "80px" }}
                     backgroundColor="var(--color-main)"
                     padding={{
                       base: "16px 36px",
-                      xl: "16px 30px 15px 30px",
+                      xl: "16px 36px 16px 36px",
                     }}
                     color="white"
                     borderRadius={"8px !important"}
                   >
                     <Text
-                      fontSize={{ base: "18px", "2xl": "24px" }}
+                      fontSize={{ base: "18px", "2xl": "24px", "3xl": "32px" }}
                       fontWeight={400}
                       fontFamily={"var(--font-text-main)"}
                     >
@@ -419,16 +509,17 @@ const Earning = () => {
                   </MainButton>
                 </Flex>
                 <Text
-                  fontSize={{ base: "24px", sm: "48px" }}
+                  lineHeight={{ base: "32px" }}
+                  fontSize={{ base: "24px", lg: "32px", "3xl": "72px" }}
                   fontWeight={700}
-                  fontFamily={"var(--font-heading)"}
+                  fontFamily={"var(--font-text-main)"}
                 >
                   {formatTokenBalance(
                     convertAndDivide(taikoClaimedAmount, chainDecimal)
                   )}
                 </Text>
               </Flex>
-            </CommonButton>
+            </Box>
           </Flex>
           <Box
             border="0.5px solid #FCDDEC"
@@ -439,14 +530,14 @@ const Earning = () => {
             sx={{
               backdropFilter: "blur(10px) !important",
               clipPath:
-                "polygon(0 50px, 50px 0, 100% 0, 100% calc(100% - 50px), calc(100% - 50px) 100%, 0 100%)",
+                "polygon(0 30px, 30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)",
               "::before": {
                 content: '""',
                 position: "absolute",
                 top: 0,
                 left: 0,
-                width: "50px",
-                height: "50px",
+                width: "30px",
+                height: "30px",
                 backgroundColor: "#FCDDEC",
                 clipPath: "polygon(0 100%, 100% 0, 0 0)",
               },
@@ -455,8 +546,8 @@ const Earning = () => {
                 position: "absolute",
                 bottom: 0,
                 right: 0,
-                width: "50px",
-                height: "50px",
+                width: "30px",
+                height: "30px",
                 backgroundColor: "#FCDDEC",
                 clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
               },
@@ -466,8 +557,9 @@ const Earning = () => {
               flexDirection={"column"}
               alignItems={"center"}
               padding={{
-                base: "40px 24px",
-                md: "64px 48px",
+                base: "40px 24px 32px 24px",
+                md: "64px 56px",
+                "3xl": "88px 244px",
               }}
               gap={"16px"}
             >
@@ -476,20 +568,21 @@ const Earning = () => {
                 alignItems={"center"}
                 width="100%"
                 justifyContent={"space-around"}
-                gap={"16px"}
+                gap={{ base: "8px", lg: "16px" }}
               >
                 <MainButton
+                  borderRadius={{ base: "8px" }}
                   width={"100%"}
                   backgroundColor={tab == 0 ? "var(--color-main)" : "#FCDDEC"}
                   color={tab == 0 ? "#FFF" : "#040926"}
                   padding={{
-                    base: "36px 16px",
+                    base: "16px 36px",
                   }}
                   onClick={() => setTab(0)}
-                  height={{ base: "44px", md: "54px" }}
+                  height={{ base: "44px", md: "54px", "3xl": "88px" }}
                 >
                   <Text
-                    fontSize={{ base: "20px !important", sm: "24px" }}
+                    fontSize={{ base: "20px", lg: "24px", "3xl": "32px" }}
                     fontWeight={400}
                     textAlign={"center"}
                     fontFamily={"var(--font-text-main)"}
@@ -498,17 +591,18 @@ const Earning = () => {
                   </Text>
                 </MainButton>
                 <MainButton
+                  borderRadius={{ base: "8px" }}
                   width={"100%"}
                   padding={{
-                    base: "36px 16px",
+                    base: "16px 36px",
                   }}
                   backgroundColor={tab == 1 ? "var(--color-main)" : "#FCDDEC"}
                   color={tab == 1 ? "#FFF" : "#040926"}
                   onClick={() => setTab(1)}
-                  height={{ base: "44px", md: "54px" }}
+                  height={{ base: "44px", md: "54px", "3xl": "88px" }}
                 >
                   <Text
-                    fontSize={{ base: "20px !important", sm: "24px" }}
+                    fontSize={{ base: "20px", lg: "24px", "3xl": "32px" }}
                     fontWeight={400}
                     textAlign={"center"}
                     fontFamily={"var(--font-text-main)"}
@@ -519,7 +613,7 @@ const Earning = () => {
               </Box>
               <Image src={earningNode} w={{ base: "224px", md: "596px" }} />
               <Text
-                fontSize={{ base: "20px", md: "48px" }}
+                fontSize={{ base: "20px", md: "48px", "3xl": "72px" }}
                 fontWeight={700}
                 fontFamily={"var(--font-heading)"}
                 color="var(--color-main)"
@@ -553,12 +647,12 @@ const Earning = () => {
                   display={"flex"}
                   justifyContent={"center"}
                   padding="16px 36px"
-                  height={{ base: "54px", md: "88px" }}
+                  height={{ base: "44px", lg: "54px", "3xl": "88px" }}
                 >
                   <Flex alignItems={"center"}>
                     <Text
                       color={"#000"}
-                      fontSize={{ base: "24px" }}
+                      fontSize={{ base: "20px", "3xl": "24px" }}
                       fontWeight={500}
                       fontFamily={"var(--font-text-main)"}
                     >
@@ -572,13 +666,13 @@ const Earning = () => {
                   display={"flex"}
                   justifyContent={"center"}
                   padding="16px 36px"
-                  height={{ base: "54px", md: "88px" }}
+                  height={{ base: "44px", lg: "54px", "3xl": "88px" }}
                   onClick={address ? handleClaim : onOpenConnectWalletModal}
                   isDisabled={disabled}
                 >
                   <Text
                     textAlign={"center"}
-                    fontSize={{ base: "24px" }}
+                    fontSize={{ base: "20px", "3xl": "24px" }}
                     fontWeight={400}
                     color={"white"}
                     fontFamily={"var(--font-text-main)"}

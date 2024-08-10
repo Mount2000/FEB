@@ -1,5 +1,8 @@
-import React from "react";
-import { useTransactionHistory } from "../../../../hooks/useTransacitonHistory";
+import React, { useEffect } from "react";
+import {
+  useTransactionHistory,
+  useTransactionHistoryInfinity,
+} from "../../../../hooks/useTransacitonHistory";
 import { useAccount } from "wagmi";
 import CommonButton from "../../../../components/button/commonbutton";
 import {
@@ -11,8 +14,14 @@ import {
   Th,
   Box,
   Tbody,
+  Tfoot,
+  Text,
+  HStack,
 } from "@chakra-ui/react";
 import { formatTableValue } from "./formatTable";
+import { useInView } from "react-intersection-observer";
+import { BeatLoader } from "react-spinners";
+import useInterval from "../../../../hooks/useInterval";
 
 const RuneExplorer = () => {
   const {
@@ -26,7 +35,28 @@ const RuneExplorer = () => {
     setCurrentPage,
     currentPage,
   } = useTransactionHistory();
-  console.log({ transactionHistoryData });
+
+  const {
+    transactionHistoryDataInfinity,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    refetch,
+  } = useTransactionHistoryInfinity();
+
+  const { ref, inView } = useInView();
+
+  useInterval(() => {
+    refetch();
+    refetchTransactionHistoryData();
+  }, 3000);
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView]);
   const historyTableData = {
     headers: [
       {
@@ -46,9 +76,9 @@ const RuneExplorer = () => {
         key: "Status",
       },
     ],
-    data: transactionHistoryData,
+    data: transactionHistoryDataInfinity,
   };
-  
+
   return (
     <>
       <CommonButton
@@ -122,7 +152,7 @@ const RuneExplorer = () => {
                       border={"none"}
                       color={"white"}
                       fontFamily={"var(--font-text-main)"}
-                      fontSize={"24px"}
+                      fontSize={{base: "16px", xl: "24px"}}
                       w={width}
                     >
                       <Box ml={"24px"}>{e.label}</Box>
@@ -147,10 +177,10 @@ const RuneExplorer = () => {
                         return (
                           <Td w={width}>
                             <Box
-                            mt={"24px"}
+                              mt={"24px"}
                               ml={"24px"}
                               fontFamily={"var(--font-text-main)"}
-                              fontSize={"24px"}
+                              fontSize={{base: "16px", xl: "24px"}}
                             >
                               {formatTableValue(e[keyvalue], keyvalue)}
                             </Box>
@@ -169,6 +199,21 @@ const RuneExplorer = () => {
               )}
             </Tbody>
           </Table>
+          {historyTableData.data?.length ? (
+            <HStack pt="32px" pb="20px" justifyContent="center" w="full">
+              <Text ref={ref} fontFamily={"var(--font-text-main)"}>
+                {isFetchingNextPage ? (
+                  <BeatLoader color="#7ae7ff" size="10px" />
+                ) : hasNextPage ? (
+                  ""
+                ) : (
+                  "Nothing more to load"
+                )}
+              </Text>
+            </HStack>
+          ) : (
+            ""
+          )}
         </TableContainer>
       </CommonButton>
     </>

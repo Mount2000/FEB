@@ -9,13 +9,14 @@ const MainButton = ({
   border,
   onClick,
   borderRadius,
+  padding,
   ...props
 }) => {
   return (
     <Button
       {...props}
       borderRadius={borderRadius || "12px"}
-      padding={"16px 36px"}
+      padding={padding || "16px 36px"}
       fontWeight={400}
       backgroundColor={backgroundColor}
       width={width}

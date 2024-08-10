@@ -43,8 +43,8 @@ export default function ConnectWalletModal() {
           width={{ base: "90%", md: "100%" }}
           borderRadius={"0px"}
           backgroundColor={"var(--color-background-popup)"}
-          pt={"28px"}
-          pb={"48px"}
+          pt={{ base: "16px", lg: "23.27px", "3xl": "24px" }}
+          pb={{ base: "22px", lg: "46px", "3xl": "60px  " }}
           border={"1px solid #FCDDEC"}
           sx={{
             clipPath:
@@ -74,21 +74,22 @@ export default function ConnectWalletModal() {
           <ModalBody py={"0px"}>
             <Flex w={"100%"} justifyContent={"end"}>
               <CloseButton onClick={onCloseWalletModal}>
-                <IoCloseSharp
-                  color="black"
-                  
-                />
+                <IoCloseSharp color="black" />
               </CloseButton>
             </Flex>
             {address && (
               <Box w={"100%"} h={"100px"} mx={"auto"} position={"relative"}>
                 <Box
                   position={"absolute"}
-                  top={"-24px"}
+                  top={{ base: "25px", lg: "-24px" }}
                   left={"50%"}
                   transform={"translateX(-50%)"}
                 >
-                  <Image src={EllipseIcon} alt="" />
+                  <Image
+                    width={{ base: "40px", lg: "80px", "3xl": "82px" }}
+                    src={EllipseIcon}
+                    alt=""
+                  />
                 </Box>
               </Box>
             )}

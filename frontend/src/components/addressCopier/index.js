@@ -33,7 +33,7 @@ export const AddressCopier = ({
         sx={{ fontWeight: fontWeight || "bold", color: "#F7F7F8" }}
         style={style}
       >
-        <Text mr="4px" fontSize={fontSize}>
+        <Text mr="8px" fontSize={fontSize}>
           {truncated ? addressShortener(address) : address}
         </Text>
         <MdOutlineContentCopy size={"24px"} />

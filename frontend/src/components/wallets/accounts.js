@@ -18,6 +18,7 @@ import { RxExit } from "react-icons/rx";
 // for example call contract
 import bachi_node_contract from "../../utils/contracts/bachi_node_contract";
 import { useReadContract, useWriteContract } from "wagmi";
+import MainButton from "../button/MainButton";
 import { base } from "viem/chains";
 
 export function Account() {
@@ -46,12 +47,12 @@ export function Account() {
       width={"100%"}
       textAlign={"center"}
       flexDirection={"column"}
-      gap={{ base: "10px", md: "20px" }}
+      gap={{ base: "16px", md: "20px" }}
       alignItems={"center"}
     >
       {ensAvatar && (
-        <img
-          w={{ base: "40px" }}
+        <Image
+          width={{ base: "40px" }}
           height={{ base: "40px" }}
           alt="ENS Avatar"
           src={ensAvatar}
@@ -61,33 +62,36 @@ export function Account() {
         <Box>
           <AddressCopier
             address={ensName ? `${ensName} (${address})` : address}
-            fontSize={{ base: "24px", xl: "28px" }}
+            fontSize={{ base: "24px", xl: "28px", "3xl": "40px" }}
             fontWeight={"600"}
           />
         </Box>
       )}
       {address && !isLoading && (
         <Text
-          fontSize={{ base: "16px", xl: "20px" }}
+          fontSize={{ base: "16px", lg: "24px" }}
           color={"var(--color-main)"}
         >{`${formatBalacne(balance?.formatted)} ${balance?.symbol}`}</Text>
       )}
-      <ActionButton
+      <MainButton
         my="12px"
-        w={{ base: "200px", md: "250px" }}
+        w={{ base: "191px", md: "250px" }}
+        height={{ base: "40px", lg: "62px", "3xl": "64px" }}
         bgColor={"#FCDDEC"}
         onClick={() => {
           window.open(currentChain?.blockExplorers?.default?.url, "_blank");
         }}
+        padding={{ base: "8px 16px" }}
       >
         <Flex
-          w={{ base: "80%", md: "100%" }}
-          justifyContent={"space-between"}
+          w={{ base: "100%", md: "100%" }}
+          justifyContent={"space-around"}
           alignItems={"center"}
+          gap={{ base: "8px" }}
         >
           <Text
             color={"black"}
-            fontSize={{ base: "16px", md: "24px" }}
+            fontSize={{ base: "20px", md: "24px" }}
             fontWeight={"500"}
           >
             Block Explorer
@@ -96,7 +100,7 @@ export function Account() {
             <IoArrowForwardSharp color="black" />
           </Box>
         </Flex>
-      </ActionButton>
+      </MainButton>
       <Select
         borderRadius={"0px"}
         size={"lg"}
@@ -139,20 +143,28 @@ export function Account() {
           </Box>
         </Flex>
       </ActionButton> */}
-      <ActionButton
+      <MainButton
+        height={{ base: "44px", lg: "62px", "3xl": "64px" }}
+        backgroundColor="var(--color-main)"
+        borderRadius={"8px"}
+        padding={"16px 16px"}
         w={"100%"}
         onClick={() => disconnect()}
         _hover={{ bg: "var(--color-main)" }}
       >
         <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
-          <Text fontSize={{ base: "16px", md: "24px" }} fontWeight={"500"}>
+          <Text
+            fontSize={{ base: "20px", md: "24px" }}
+            fontWeight={"500"}
+            color={"#FFF"}
+          >
             Disconnect
           </Text>
-          <Box w={"36px"}>
-            <RxExit color="black" />
+          <Box w={"15px"}>
+            <RxExit color="white" />
           </Box>
         </Flex>
-      </ActionButton>
+      </MainButton>
     </Flex>
   );
 }

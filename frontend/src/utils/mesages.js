@@ -8,6 +8,7 @@ export const PENDING = {
 
 export const FAIURE = {
   txFalure: "Transaction failed.",
+  ipBlocked: "You are locked",
 };
 
 export const ERROR = {

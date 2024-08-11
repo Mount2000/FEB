@@ -302,7 +302,7 @@ const MintRune = () => {
     setPaymentStatus(null);
 
     if (isBlocked) {
-      dispatch(setMessage(FAIURE.txFalure));
+      dispatch(setMessage(FAIURE.ipBlocked));
       setPaymentStatus("failure");
       setIsLoading(true);
       setDisabled(false);

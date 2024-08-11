@@ -34,8 +34,14 @@ const BachiSwapFooter = () => {
           <Flex
             justifyContent={"space-between"}
             flexDirection={{ base: "column", lg: "row" }}
-            gap={{ base: "32px", md: "120px", xl: "200px", xl: "280px", "2xl": "120px" }}
-            alignItems={{ base: "center", md: "flex-start" }}
+            gap={{
+              base: "32px",
+              md: "120px",
+              xl: "200px",
+              xl: "280px",
+              "2xl": "120px",
+            }}
+            alignItems={{ base: "center", sm: "flex-start" }}
           >
             <Flex
               flexDirection={"column"}
@@ -46,9 +52,9 @@ const BachiSwapFooter = () => {
                 alignItems={"center"}
                 gap={"8px"}
               >
-                <Image src={appLogo} />
+                <Image src={appLogo} w={{ base: "100px", md: "unset" }} />
                 <Text
-                  fontSize={{ base: "32px", md: "40px" }}
+                  fontSize={{ base: "28px", md: "40px" }}
                   fontFamily="var(--font-heading)"
                   lineHeight={{ base: "40px" }}
                 >

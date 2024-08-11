@@ -592,7 +592,7 @@ const Earning = () => {
                   height={{ base: "44px", md: "54px", "3xl": "88px" }}
                 >
                   <Text
-                    fontSize={{ base: "20px", lg: "24px", "3xl": "32px" }}
+                    fontSize={{ base: "14px", lg: "24px", "3xl": "32px" }}
                     fontWeight={400}
                     textAlign={"center"}
                     fontFamily={"var(--font-text-main)"}
@@ -612,7 +612,7 @@ const Earning = () => {
                   height={{ base: "44px", md: "54px", "3xl": "88px" }}
                 >
                   <Text
-                    fontSize={{ base: "20px", lg: "24px", "3xl": "32px" }}
+                    fontSize={{ base: "14px", lg: "24px", "3xl": "32px" }}
                     fontWeight={400}
                     textAlign={"center"}
                     fontFamily={"var(--font-text-main)"}
@@ -662,7 +662,7 @@ const Earning = () => {
                   <Flex alignItems={"center"}>
                     <Text
                       color={"#000"}
-                      fontSize={{ base: "20px", "3xl": "24px" }}
+                      fontSize={{ base: "14px", md: "24px" }}
                       fontWeight={500}
                       fontFamily={"var(--font-text-main)"}
                     >
@@ -682,7 +682,7 @@ const Earning = () => {
                 >
                   <Text
                     textAlign={"center"}
-                    fontSize={{ base: "20px", "3xl": "24px" }}
+                    fontSize={{ base: "14px", md: "24px" }}
                     fontWeight={400}
                     color={"white"}
                     fontFamily={"var(--font-text-main)"}

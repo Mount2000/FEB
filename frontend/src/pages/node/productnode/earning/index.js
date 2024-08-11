@@ -259,7 +259,7 @@ const Earning = () => {
           caller: address,
           chainId: chainId,
           hash: hash,
-          type: txObj.functionName,
+          type: "Claim reward",
           ipAddress: ipAddress,
           status: status,
         });

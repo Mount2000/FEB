@@ -321,7 +321,7 @@ const MintRune = () => {
           caller: address,
           chainId: chainId,
           hash: hash,
-          type: txObj.functionName,
+          type: "Buy node",
           ipAddress: ipAddress,
           status: status,
         });

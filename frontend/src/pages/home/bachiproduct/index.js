@@ -27,7 +27,7 @@ const ProductHome = () => {
       >
         <Image
           src={appProduct}
-          height={"100%"}
+          // height={"100%"}
           // paddingRight={{ base: "18px" }}
           // paddingLeft={{ base: "18px" }}
           // paddingBottom={{ base: "6px" }}
@@ -168,7 +168,7 @@ const ProductHome = () => {
           </Text>
         </SectionContainer>
         <Image
-          height={{ base: "100%", lg: "432px", xl: "530px", "3xl": "800px" }}
+          height={{ base: "unset", lg: "432px", xl: "530px", "3xl": "800px" }}
           width={{ md: "70%", lg: "50%", "3xl": "872px" }}
           position={{ base: "relative", lg: "absolute" }}
           right={{ lg: "0px" }}

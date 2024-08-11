@@ -105,7 +105,7 @@ const Navbar = () => {
                 >
                   <Text
                     lineHeight={{ base: "", xl: "32px" }}
-                    fontSize={{ base: "20px", xl: "24px" }}
+                    fontSize={{ base: "16px", xl: "20px" }}
                     fontWeight={400}
                     fontFamily="var(--font-text-main)"
                   >
@@ -192,13 +192,14 @@ const Navbar = () => {
             display={{ base: "none", xl: "flex" }}
           >
             <MainButton
-              width={{ "2xl": "200px", "3xl": "240px" }}
+              // width={{ "2xl": "200px", "3xl": "240px" }}
               height="64px"
               _hover={{
                 backgroundColor: "var(--color-main)",
               }}
               onClick={onOpenConnectWalletModal}
               backgroundColor="var(--color-main)"
+              padding={"16px 32px"}
             >
               <Text
                 lineHeight={{ base: "", "3xl": "32px" }}

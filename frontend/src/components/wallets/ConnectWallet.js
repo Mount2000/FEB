@@ -17,7 +17,6 @@ import { useModal } from "../../contexts/useModal";
 import CloseButton from "../button/CloseButton";
 import { IoCloseSharp } from "react-icons/io5";
 import EllipseIcon from "../../assets/img/node/ellipse-2.png";
-import { base } from "viem/chains";
 
 function ConnectWallet() {
   const { isConnected } = useAccount();
@@ -71,7 +70,7 @@ export default function ConnectWalletModal() {
             },
           }}
         >
-          <ModalBody py={"0px"}>
+          <ModalBody py={"0px"} fontFamily={"var(--font-heading-main)"}>
             <Flex w={"100%"} justifyContent={"end"}>
               <CloseButton onClick={onCloseWalletModal}>
                 <IoCloseSharp color="black" />

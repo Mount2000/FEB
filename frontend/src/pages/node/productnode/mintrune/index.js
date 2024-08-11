@@ -542,6 +542,7 @@ const MintRune = () => {
           </Flex>
           {/* <PayNow /> */}
           <Box
+          fontFamily={"var(--font-heading-main)"}
             sx={{
               backdropFilter: "blur(10px) !important",
               clipPath:

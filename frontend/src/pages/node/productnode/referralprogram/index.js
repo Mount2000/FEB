@@ -151,7 +151,7 @@ const ReferralProgram = () => {
 
   return (
     <>
-      <Flex flexDirection={"column"} gap={"66px"}>
+      <Flex flexDirection={"column"} gap={"66px"} fontFamily={"var(--font-heading-main)"}>
         <Flex
           flexDirection={{ base: "column", md: "row" }}
           alignItems={"stretch"}
@@ -292,6 +292,7 @@ const ReferralProgram = () => {
                 <Box
                   padding={"32px"}
                   borderBottom={"0.5px solid var(--color-main)"}
+                  fontFamily={"var(--font-heading-main)"}
                 >
                   <Flex direction={"column"} w={"100%"}>
                     {historyTableData.headersMobile.map((item) => {
@@ -321,6 +322,7 @@ const ReferralProgram = () => {
             <Box
               padding={"32px"}
               borderBottom={"0.5px solid var(--color-main)"}
+              fontFamily={"var(--font-heading-main)"}
             >
               <Text textAlign={"center"}>No record</Text>
             </Box>
@@ -423,7 +425,7 @@ const ReferralProgram = () => {
                         border={"none"}
                         color={"white"}
                         fontFamily={"var(--font-text-main)"}
-                        fontSize={{ base: "16px", xl: "24px" }}
+                        fontSize={{ base: "16px", xl: "20px" }}
                         w={width}
                       >
                         <Box ml={"24px"}>{e.label}</Box>
@@ -451,7 +453,7 @@ const ReferralProgram = () => {
                                 mt={"24px"}
                                 ml={"24px"}
                                 fontFamily={"var(--font-text-main)"}
-                                fontSize={{ base: "16px", xl: "24px" }}
+                                fontSize={{ base: "16px", xl: "20px" }}
                               >
                                 {formatTableValue(e[keyvalue], keyvalue)}
                               </Box>
@@ -462,7 +464,7 @@ const ReferralProgram = () => {
                     );
                   })
                 ) : (
-                  <Tr w={"100%"}>
+                  <Tr w={"100%"} fontFamily={"var(--font-heading-main)"}>
                     <Td colSpan={4} w={"100%"}>
                       <Box textAlign={"center"}>No records found</Box>
                     </Td>

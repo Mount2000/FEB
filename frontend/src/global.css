@@ -1,8 +1,8 @@
 :root {
   --font-heading: "Bruno Ace SC Regular", sans-serif;
-  --font-text-main: "Ubuntu Mono Regular", sans-serif;
+  --font-text-main: "Bruno Ace Regular", sans-serif;
   --font-heading-main: "Bruno Ace Regular", sans-serif;
-  --font-text-extra: "Ubuntu Condensed Regular", sans-serif;
+  --font-text-extra: "Bruno Ace Regular", sans-serif;
   --color-border-bottom: #fcddec;
   --color-background: #0e001f;
   --color-main: #e42493;
@@ -11,10 +11,11 @@
 }
 
 html {
-  font-family: "Bruno Ace SC Regular", sans-serif;
+  font-family: "Bruno Ace SC Regular", sans-serif !important;
   font-weight: 400;
   font-style: normal;
 }
+
 * {
   padding: 0;
   margin: 0;
@@ -74,7 +75,7 @@ input:focus {
 }
 
 .pagination a {
-  border-color: #EB7FB3 !important;
+  border-color: #eb7fb3 !important;
   cursor: pointer;
   margin: 0 5px;
   padding: 8px;
@@ -97,7 +98,7 @@ input:focus {
 .pagination li.active a {
   /* background-color: #1BECA6; */
   color: var(--color-background-popup);
-  background-color: #EB7FB3;
+  background-color: #eb7fb3;
 }
 
 .pagination .ellipsis {

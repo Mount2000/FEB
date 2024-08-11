@@ -169,6 +169,7 @@ const RuneExplorer = () => {
             <Box
               padding={"32px"}
               borderBottom={"0.5px solid var(--color-main)"}
+              fontFamily={"var(--font-heading-main)"}
             >
               <Text textAlign={"center"}>No record</Text>
             </Box>
@@ -275,7 +276,7 @@ const RuneExplorer = () => {
                       border={"none"}
                       color={"white"}
                       fontFamily={"var(--font-text-main)"}
-                      fontSize={{ base: "16px", xl: "24px" }}
+                      fontSize={{ base: "16px", xl: "20px" }}
                       w={width}
                     >
                       <Box ml={"24px"}>{e.label}</Box>
@@ -303,7 +304,7 @@ const RuneExplorer = () => {
                               mt={"24px"}
                               ml={"24px"}
                               fontFamily={"var(--font-text-main)"}
-                              fontSize={{ base: "16px", xl: "24px" }}
+                              fontSize={{ base: "16px", xl: "20px" }}
                             >
                               {formatTableValue(e[keyvalue], keyvalue)}
                             </Box>
@@ -314,7 +315,7 @@ const RuneExplorer = () => {
                   );
                 })
               ) : (
-                <Tr w={"100%"}>
+                <Tr w={"100%"} fontFamily={"var(--font-heading-main)"}>
                   <Td colSpan={4} w={"100%"}>
                     <Box textAlign={"center"}>No records found</Box>
                   </Td>
@@ -323,7 +324,7 @@ const RuneExplorer = () => {
             </Tbody>
           </Table>
           {historyTableData.data?.length ? (
-            <HStack pt="32px" pb="20px" justifyContent="center" w="full">
+            <HStack pt="32px" pb="20px" justifyContent="center" w="full" fontFamily={"var(--font-heading-main)"}>
               <Text ref={ref} fontFamily={"var(--font-text-main)"}>
                 {isFetchingNextPage ? (
                   <BeatLoader color="#7ae7ff" size="10px" />

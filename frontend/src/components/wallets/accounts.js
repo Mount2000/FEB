@@ -9,7 +9,7 @@ import {
 } from "wagmi";
 import { getBalance, getChainId, getChains, switchChain } from "@wagmi/core";
 import { config } from "./config";
-import { formatBalacne } from "../../utils";
+import { formatBalacne, formatTokenBalance } from "../../utils";
 import { AddressCopier } from "../addressCopier";
 import ActionButton from "../button/ActionButton";
 import IconEth from "../../assets/img/node/icon-eth.png";
@@ -71,13 +71,13 @@ export function Account() {
         <Text
           fontSize={{ base: "16px", lg: "24px" }}
           color={"var(--color-main)"}
-        >{`${formatBalacne(balance?.formatted)} ${balance?.symbol}`}</Text>
+        >{`${formatTokenBalance(balance?.formatted)} ${balance?.symbol}`}</Text>
       )}
       <MainButton
         my="12px"
-        w={{ base: "191px", md: "250px" }}
+        w={{ base: "191px", md: "300px" }}
         height={{ base: "40px", lg: "62px", "3xl": "64px" }}
-        bgColor={"#FCDDEC"}
+        bgColor={"white"}
         onClick={() => {
           window.open(currentChain?.blockExplorers?.default?.url, "_blank");
         }}
@@ -97,7 +97,7 @@ export function Account() {
             Block Explorer
           </Text>
           <Box sx={{ transform: "rotate(-45deg)" }}>
-            <IoArrowForwardSharp color="black" />
+            <IoArrowForwardSharp color="black" size={"32px"} />
           </Box>
         </Flex>
       </MainButton>
@@ -161,7 +161,7 @@ export function Account() {
             Disconnect
           </Text>
           <Box w={"15px"}>
-            <RxExit color="white" />
+            <RxExit color="white" size={"20px"} />
           </Box>
         </Flex>
       </MainButton>

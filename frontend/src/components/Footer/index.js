@@ -3,6 +3,7 @@ import {
   Flex,
   Image,
   ListItem,
+  SimpleGrid,
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
@@ -33,14 +34,18 @@ const BachiSwapFooter = () => {
           <Flex
             justifyContent={"space-between"}
             flexDirection={{ base: "column", lg: "row" }}
-            gap={{ base: "32px", xl: "150px" }}
+            gap={{ base: "32px", xl: "120px" }}
             alignItems={{ base: "center", md: "flex-start" }}
           >
             <Flex
               flexDirection={"column"}
               gap={{ base: "24px", "2xl": "82px" }}
             >
-              <Flex alignItems={"center"} gap={"8px"}>
+              <Flex
+                justifyContent={{ base: "center", md: "unset" }}
+                alignItems={"center"}
+                gap={"8px"}
+              >
                 <Image src={appLogo} />
                 <Text
                   fontSize={{ base: "32px", md: "40px" }}
@@ -53,11 +58,11 @@ const BachiSwapFooter = () => {
               <Flex alignItems={"center"} gap={{ base: "7px", lg: "8px" }}>
                 <MainButton
                   backgroundColor="var(--color-main)"
-                  width={{ base: "158.5px", md: "172px", lg: "189px" }}
                   height={{ base: "44px", md: "60px" }}
+                  padding={{ base: "8px 16px", md: "16px 32px" }}
                 >
                   <Text
-                    fontSize={{ base: "16px", md: "20px" }}
+                    fontSize={{ base: "12px", md: "16px" }}
                     color={"#FFF"}
                     fontFamily="var(--font-text-main)"
                   >
@@ -67,11 +72,11 @@ const BachiSwapFooter = () => {
                 <MainButton
                   border={"0.5px solid #EB7FB3"}
                   backgroundColor={"transparent"}
-                  width={{ base: "158.5px", md: "229px", lg: "189px" }}
                   height={{ base: "44px", md: "60px" }}
+                  padding={{ base: "8px 16px", md: "16px 32px" }}
                 >
                   <Text
-                    fontSize={{ base: "16px", md: "20px" }}
+                    fontSize={{ base: "12px", md: "16px" }}
                     color={"#FFF"}
                     fontFamily="var(--font-text-main)"
                   >
@@ -80,10 +85,12 @@ const BachiSwapFooter = () => {
                 </MainButton>
               </Flex>
             </Flex>
-            <Flex
-              wrap={"wrap"}
-              gap={{ base: "56px", xl: "80px", "3xl": "150px" }}
-              justifyContent={{ base: "space-around", md: "space-between" }}
+            <SimpleGrid
+              w={"100%"}
+              // wrap={"wrap"}
+              spacing={{ base: "56px", xl: "80px", "3xl": "150px" }}
+              columns={{ base: 2, xl: 4 }}
+              // justifyContent={{ base: "space-around", md: "space-between" }}
               padding={{
                 base: "32px 0px 32px 0px",
                 lg: "8px 0px 0px 48px",
@@ -92,7 +99,7 @@ const BachiSwapFooter = () => {
             >
               <Flex flexDirection={"column"} gap={{ base: "16px" }}>
                 <Text
-                  fontSize={{ base: "24px", md: "32px" }}
+                  fontSize={{ base: "20px", md: "28px" }}
                   fontFamily="var(--font-text-extra)"
                   color={"#E42493"}
                 >
@@ -100,7 +107,7 @@ const BachiSwapFooter = () => {
                 </Text>
                 <Link to={""}>
                   <Text
-                    fontSize={{ base: "16px", md: "24px" }}
+                   fontSize={{ base: "16px", md: "20px" }}
                     fontWeight={400}
                     fontFamily={"var(--font-text-main)"}
                   >
@@ -110,7 +117,7 @@ const BachiSwapFooter = () => {
               </Flex>
               <Flex flexDirection={"column"} gap={{ base: "16px" }}>
                 <Text
-                  fontSize={{ base: "24px", md: "32px" }}
+                 fontSize={{ base: "20px", md: "28px" }}
                   color={"#E42493"}
                   fontFamily="var(--font-text-extra)"
                 >
@@ -119,7 +126,7 @@ const BachiSwapFooter = () => {
                 <UnorderedList
                   listStyleType="none"
                   marginLeft={"0px"}
-                  fontSize={{ base: "16px", md: "24px" }}
+                  fontSize={{ base: "16px", md: "20px" }}
                   fontWeight={400}
                   fontFamily={"var(--font-text-main)"}
                 >
@@ -136,7 +143,7 @@ const BachiSwapFooter = () => {
               </Flex>
               <Flex flexDirection={"column"} gap={{ base: "16px" }}>
                 <Text
-                  fontSize={{ base: "24px", md: "32px" }}
+                  fontSize={{ base: "20px", md: "28px" }}
                   color="var(--color-main)"
                   fontFamily="var(--font-text-extra)"
                 >
@@ -145,7 +152,7 @@ const BachiSwapFooter = () => {
                 <UnorderedList
                   listStyleType="none"
                   marginLeft={"0px"}
-                  fontSize={{ base: "16px", md: "24px" }}
+                  fontSize={{ base: "16px", md: "20px" }}
                   fontWeight={400}
                   fontFamily="var( --font-text-main)"
                 >
@@ -185,7 +192,7 @@ const BachiSwapFooter = () => {
               </Flex> */}
               <Flex flexDirection={"column"} gap={{ base: "16px" }}>
                 <Text
-                  fontSize={{ base: "24px", md: "32px" }}
+                  fontSize={{ base: "20px", md: "28px" }}
                   color={"#E42493"}
                   fontFamily="var(--font-text-extra)"
                 >
@@ -194,7 +201,7 @@ const BachiSwapFooter = () => {
                 <UnorderedList
                   listStyleType="none"
                   marginLeft={"0px"}
-                  fontSize={{ base: "16px", md: "24px" }}
+                  fontSize={{ base: "16px", md: "20px" }}
                   fontWeight={400}
                   fontFamily={"var(--font-text-main)"}
                 >
@@ -206,7 +213,7 @@ const BachiSwapFooter = () => {
                   </Link>
                 </UnorderedList>
               </Flex>
-            </Flex>
+            </SimpleGrid>
           </Flex>
           <Flex
             gap={{ base: "0px", md: "145px", lg: "48px" }}
@@ -214,6 +221,7 @@ const BachiSwapFooter = () => {
             fontSize={{ base: "16px", "2xl": "20px" }}
             fontWeight={500}
             color={"#757575"}
+            fontFamily={"var(--font-heading-main)"}
           >
             <Text>© 2024 BACHI</Text>
             <Text>Privacy policy</Text>

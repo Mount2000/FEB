@@ -204,7 +204,7 @@ const Navbar = () => {
                 lineHeight={{ base: "", "3xl": "32px" }}
                 fontSize={{ base: "20px", "3xl": "24px" }}
                 color={"#FFF"}
-                fontWeight="var(--font-text-main)"
+                fontFamily={"var(--font-heading-main)"}
               >
                 {address ? truncateStr(address) : "Connect Wallet"}
               </Text>

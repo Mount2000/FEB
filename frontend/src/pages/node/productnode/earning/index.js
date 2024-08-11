@@ -687,7 +687,7 @@ const Earning = () => {
                     color={"white"}
                     fontFamily={"var(--font-text-main)"}
                   >
-                    {address ? "Claim" : "CONNECT WALLET NOW"}
+                    {address ? "Claim" : "Connect wallet"}
                   </Text>
                 </MainButton>
               </Flex>

@@ -52,6 +52,7 @@ const ReferralProgram = () => {
   };
 
   const [totalEth, setTotalEth] = useState(0);
+  const [referralCode, setReferralCode] = useState("...");
 
   useEffect(() => {
     if (address) {
@@ -85,8 +86,6 @@ const ReferralProgram = () => {
     refetch,
   } = useReferralsHistoryInfinity(address);
 
-  console.log({ referralsHistoryDataInfinity });
-
   /********get total************/
   const getTotal = async () => {
     const ReferralCode = await readContract(config, {
@@ -100,6 +99,7 @@ const ReferralProgram = () => {
       functionName: "referrals",
       args: [ReferralCode],
     });
+    setReferralCode(ReferralInformation[0]);
     setTotalEth(Number(ReferralInformation[1]) / 10 ** chainDecimal);
   };
 
@@ -151,7 +151,11 @@ const ReferralProgram = () => {
 
   return (
     <>
-      <Flex flexDirection={"column"} gap={"66px"} fontFamily={"var(--font-heading-main)"}>
+      <Flex
+        flexDirection={"column"}
+        gap={"66px"}
+        fontFamily={"var(--font-heading-main)"}
+      >
         <Flex
           flexDirection={{ base: "column", md: "row" }}
           alignItems={"stretch"}
@@ -161,7 +165,7 @@ const ReferralProgram = () => {
           height={"100%"}
         >
           {[
-            "YOUR INVITEES",
+            "YOUR INVITES",
             "TOTAL BACHI COMMISSION",
             "TOTAL ETH COMMISSION",
           ].map((title, index) => (
@@ -242,13 +246,14 @@ const ReferralProgram = () => {
                     {title}
                   </Text>
                   {index === 0 ? (
-                    <Text
-                      fontSize={{ base: "18px", xl: "24px" }}
-                      fontWeight={600}
-                      lineHeight={"normal"}
-                    >
-                      ...
-                    </Text>
+                    // <Text
+                    //   fontSize={{ base: "18px", xl: "24px" }}
+                    //   fontWeight={600}
+                    //   lineHeight={"normal"}
+                    // >
+                    //  {referralCode}
+                    // </Text>
+                    <AddressCopier address={referralCode} digits={8} />
                   ) : (
                     <Flex alignItems="center">
                       {index === 2 && (

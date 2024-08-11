@@ -224,7 +224,7 @@ const BachiSwapFooter = () => {
           <Flex
             gap={{ base: "0px", md: "145px", lg: "48px" }}
             justifyContent={{ base: "space-around", md: "flex-start" }}
-            fontSize={{ base: "16px", "2xl": "20px" }}
+            fontSize={{ base: "12px", "md": "20px" }}
             fontWeight={500}
             color={"#757575"}
             fontFamily={"var(--font-heading-main)"}

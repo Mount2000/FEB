@@ -3,7 +3,8 @@ import { holesky, taikoHekla } from "wagmi/chains";
 import { injected, metaMask } from "wagmi/connectors";
 
 export const config = createConfig({
-  chains: [holesky, taikoHekla],
+  autoConnect: true,
+  chains: [taikoHekla, holesky],
   connectors: [injected(), metaMask()],
   storage: createStorage({ storage: window.localStorage }),
   transports: {

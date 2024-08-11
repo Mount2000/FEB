@@ -60,6 +60,7 @@ const AirDrop = () => {
           alignItems={"center"}
           padding={"64px 59px 65px 83px"}
           gap={"30px"}
+          fontFamily={"var(--font-heading-main)"}
         >
           <Flex flexDirection={"column"} gap={"18px"}>
             <Flex flexDirection={"column"} gap={"10px"}>

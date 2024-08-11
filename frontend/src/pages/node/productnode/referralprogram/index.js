@@ -284,7 +284,7 @@ const ReferralProgram = () => {
           marginTop={"65px"}
           backgroundColor="var(--color-background-footer)"
           fontFamily={"var(--font-text-main)"}
-          fontSize={{ base: "16px" }}
+          fontSize={{ base: "12px" }}
         >
           {historyTableData.data?.length > 0 ? (
             historyTableData.data?.map((record) => {
@@ -294,7 +294,7 @@ const ReferralProgram = () => {
                   borderBottom={"0.5px solid var(--color-main)"}
                   fontFamily={"var(--font-heading-main)"}
                 >
-                  <Flex direction={"column"} w={"100%"}>
+                  <Flex direction={"column"} w={"100%"} gap={"8px"}>
                     {historyTableData.headersMobile.map((item) => {
                       return (
                         <SimpleGrid columns={2} w={"100%"}>

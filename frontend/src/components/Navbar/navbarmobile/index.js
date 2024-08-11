@@ -46,6 +46,7 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
       height={"100vh"}
       className="slideIn-animation"
       overflowY={"auto"}
+      fontFamily={"var(--font-heading-main)"}
     >
       <Flex
         flexDirection={"column"}
@@ -109,7 +110,7 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
                             ? "var(--color-main)"
                             : ""
                         }
-                        fontSize={{ base: "20px", md: "40px" }}
+                        fontSize={{ base: "20px", md: "32px" }}
                       >
                         {item.name}
                       </Text>

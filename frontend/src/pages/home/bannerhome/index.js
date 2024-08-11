@@ -96,6 +96,7 @@ const BannerHome = () => {
               lineHeight={{ "3xl": "32px" }}
               color={"#FFF"}
               fontWeight={400}
+              fontFamily={"var(--font-heading-main)"}
             >
               Launch App
             </Text>
@@ -314,6 +315,7 @@ const BannerHome = () => {
                 // marginBottom={{ base: "21px", "3xl": "58px" }}
                 fontFamily="var(--font-text-extra)"
                 letterSpacing={"-1px"}
+                textAlign={{ base: "center", md: "start" }}
               >
                 With Bachi Ecosystem
               </Text>

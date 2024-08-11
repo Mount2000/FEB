@@ -382,6 +382,7 @@ const ResourcesHome = () => {
               fontWeight={500}
               lineHeight={"28px"}
               letterSpacing={"-1px"}
+              fontFamily={"var(--font-heading-main)"}
             >
               Join Now
             </Text>

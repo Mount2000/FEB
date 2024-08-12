@@ -44,7 +44,7 @@ const BackgroundHome = () => {
           Earn $TAIKO and $BACHI by using BachiSwap today
         </Text>
         <Flex
-          alignItems={"center"}
+          alignItems={"stretch"}
           gap={{ base: "24px", lg: "48px", "2xl": "48px" }}
           flexDirection={{ base: "column", lg: "row" }}
         >
@@ -113,7 +113,6 @@ const BackgroundHome = () => {
                     letterSpacing={"-1px"}
                     fontSize={{
                       base: "24px",
-                      xl: "32px",
                       "2xl": "36px",
                       "3xl": "40px",
                     }}
@@ -250,7 +249,6 @@ const BackgroundHome = () => {
                   <Text
                     fontSize={{
                       base: "24px",
-                      xl: "32",
                       "2xl": "36px",
                       "3xl": "40px",
                     }}

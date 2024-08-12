@@ -199,7 +199,7 @@ const Navbar = () => {
               }}
               onClick={onOpenConnectWalletModal}
               backgroundColor="var(--color-main)"
-              padding={"16px 32px"}
+              padding={"16px 36px"}
             >
               <Text
                 lineHeight={{ base: "", "3xl": "32px" }}

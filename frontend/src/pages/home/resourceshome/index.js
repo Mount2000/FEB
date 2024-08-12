@@ -123,6 +123,7 @@ const ResourcesHome = () => {
                   padding={{
                     base: "24px 29px 24px 20px",
                     lg: "21.5px 16px 21.5px 16px",
+                    xl: "24px 36px 24px 36px",
                     "3xl": "48px 56px 48px 56px",
                   }}
                   gap={"22px"}
@@ -255,6 +256,7 @@ const ResourcesHome = () => {
                   padding={{
                     base: "24px 29px 24px 20px",
                     lg: "21.5px 16px 21.5px 16px",
+                    xl: "24px 36px 24px 36px",
                     "3xl": "48px 56px 48px 56px",
                   }}
                   gap={{ base: "16px", lg: "5px" }}

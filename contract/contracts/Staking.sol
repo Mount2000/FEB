@@ -45,19 +45,27 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
     event FundsWithdrawn(address indexed to, uint256 value);
     event Staked(
         address indexed user,
-        uint256 indexed _stakeId,
+        uint256 indexed stakeId,
         uint256 indexed nodeId,
         uint256 stakeTime
     );
     event UnStaked(
         address indexed user,
-        uint256 indexed _stakeId,
+        uint256 indexed stakeId,
         uint256 indexed nodeId,
         uint256 unStakeTime
     );
     event Claimed(
         address indexed user,
-        uint256 indexed _stakeId,
+        uint256 nodeIds,
+        uint256 claimTime,
+        uint256 rewardBachi,
+        uint256 rewardTaiko
+    );
+
+    event RewardsClaimed(
+        address indexed user,
+        uint256[] nodeIds,
         uint256 claimTime,
         uint256 rewardBachi,
         uint256 rewardTaiko
@@ -69,6 +77,15 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
         uint256 indexed nodeId
     );
     event Received(address operator, address from, uint256 tokenId, bytes data);
+    enum RewardType {
+        Bachi,
+        Taiko
+    }
+    event WithDrawReward(
+        address indexed user,
+        RewardType rewardType,
+        uint256 amount
+    );
     error AlreadyStaked(uint256 nodeId);
 
     constructor(
@@ -229,6 +246,15 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
         emit UnStaked(staker, _stakeId, nodeId, block.timestamp);
     }
 
+    function updateRewardAmount(
+        address user,
+        uint256 taikoRewardAmount,
+        uint256 bachiRewardAmount
+    ) public whenNotPaused onlyRole(ADMIN_ROLE) {
+        rewardClaimedInfors[user].bachiRewardAmount += bachiRewardAmount;
+        rewardClaimedInfors[user].taikoRewardAmount += taikoRewardAmount;
+    }
+
     function claimReward(
         uint256 _nodeId,
         uint8 claimMode
@@ -255,7 +281,6 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
                 bachiRewardAmount >= bachiMinClaimAmount,
                 "Claim amount is too small"
             );
-            tokenContract.mint(staker, bachiRewardAmount);
             stakeInfors[stakeId].bachiStakeStartTime = currentTimestamp;
             rewardClaimedInfors[msg.sender]
                 .bachiRewardAmount += bachiRewardAmount;
@@ -265,12 +290,6 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
                 taikoRewardAmount >= taikoMinClaimAmount,
                 "Claim amount is too small"
             );
-            require(
-                address(this).balance >= taikoRewardAmount,
-                "Not enough balance"
-            );
-            (bool sent, ) = staker.call{value: taikoRewardAmount}("");
-            require(sent, "Failed to send Ether");
             stakeInfors[stakeId].taikoStakeStartTime = currentTimestamp;
             rewardClaimedInfors[msg.sender]
                 .taikoRewardAmount += taikoRewardAmount;
@@ -282,13 +301,6 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
                     taikoRewardAmount >= taikoMinClaimAmount,
                 "Claim amount is too small"
             );
-            tokenContract.mint(staker, bachiRewardAmount);
-            require(
-                address(this).balance >= taikoRewardAmount,
-                "Not enough balance"
-            );
-            (bool sent, ) = staker.call{value: taikoRewardAmount}("");
-            require(sent, "Failed to send Ether");
             stakeInfors[stakeId].bachiStakeStartTime = currentTimestamp;
             stakeInfors[stakeId].taikoStakeStartTime = currentTimestamp;
             rewardClaimedInfors[msg.sender]
@@ -299,7 +311,7 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
 
         emit Claimed(
             staker,
-            stakeId,
+            _nodeId,
             currentTimestamp,
             bachiRewardAmount,
             taikoRewardAmount
@@ -353,46 +365,51 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
             );
             rewardClaimedInfors[msg.sender]
                 .bachiRewardAmount += totalBachiRewardAmount;
-            tokenContract.mint(msg.sender, totalBachiRewardAmount);
         } else if (claimMode == 1) {
             require(
                 totalTaikoRewardAmount >= taikoMinClaimAmount,
                 "Claim amount is too small"
             );
-            require(
-                address(this).balance >= totalTaikoRewardAmount,
-                "Not enough balance"
-            );
             rewardClaimedInfors[msg.sender]
                 .taikoRewardAmount += totalTaikoRewardAmount;
-            (bool sent, ) = msg.sender.call{value: totalTaikoRewardAmount}("");
-            require(sent, "Failed to send Ether");
         } else {
             require(
                 totalBachiRewardAmount >= bachiMinClaimAmount &&
                     totalTaikoRewardAmount >= taikoMinClaimAmount,
                 "Claim amount is too small"
             );
-            require(
-                address(this).balance >= totalTaikoRewardAmount,
-                "Not enough balance"
-            );
             rewardClaimedInfors[msg.sender]
                 .bachiRewardAmount += totalBachiRewardAmount;
             rewardClaimedInfors[msg.sender]
                 .taikoRewardAmount += totalTaikoRewardAmount;
-            tokenContract.mint(msg.sender, totalBachiRewardAmount);
-            (bool sent, ) = msg.sender.call{value: totalTaikoRewardAmount}("");
-            require(sent, "Failed to send Ether");
         }
 
-        emit Claimed(
+        emit RewardsClaimed(
             msg.sender,
-            0,
+            nodeids,
             currentTimestamp,
             totalBachiRewardAmount,
             totalTaikoRewardAmount
         );
+    }
+
+    function withdrawBachiReward(uint amount) public whenNotPaused {
+        uint256 rewardAmount = rewardClaimedInfors[msg.sender].bachiRewardAmount;
+        require(amount <= rewardAmount, "not enough reward");
+        tokenContract.mint(msg.sender, amount);
+        emit WithDrawReward(msg.sender, RewardType.Bachi, amount);
+    }
+
+    function withdrawTaikoReward(uint amount) public whenNotPaused {
+        uint256 rewardAmount = rewardClaimedInfors[msg.sender].bachiRewardAmount;
+        require(amount <= rewardAmount, "not enough reward");
+        require(
+            address(this).balance >= amount,
+            "Insufficient contract balance"
+        );
+        (bool sent, ) = msg.sender.call{value: amount}("");
+        require(sent, "Failed to send Ether");
+        emit WithDrawReward(msg.sender, RewardType.Taiko, amount);
     }
 
     function getRewardAmountsIncremental(

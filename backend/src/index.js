@@ -7,6 +7,7 @@ const routes = require("./routes");
 const cors = require("cors");
 require("./crons/Transaction_cronjob");
 const passport = require("passport");
+require("../src/services/passportService");
 
 const app = express();
 

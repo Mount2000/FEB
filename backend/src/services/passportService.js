@@ -14,7 +14,7 @@ passport.use(
       callbackURL: `${process.env.API_BASE_URL}/auth/twitter/callback`,
       passReqToCallback: true,
     },
-    function (token, tokenSecret, profile, cb) {
+    function (token, tokenSecret, profile, done) {
       console.log(profile);
       // Save the user profile or any other relevant information
       return done(null, profile);

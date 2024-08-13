@@ -297,6 +297,7 @@ const Earning = () => {
       setStatus("failure");
       setIsLoading(true);
       setDisabled(false);
+      return;
     }
   };
 

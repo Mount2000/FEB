@@ -1,6 +1,6 @@
 const contract = {
   testnet: {
-    CONTRACT_ADDRESS: "0x3E97e2622704355FeC11A72b8B6815161c6Fb223",
+    CONTRACT_ADDRESS: "0x1933F2a57298A9f7E6fb5b0e182B47a3aff203dc",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -647,6 +647,19 @@ const contract = {
             internalType: "bool",
             name: "",
             type: "bool",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "taskId",
+        outputs: [
+          {
+            internalType: "uint8",
+            name: "",
+            type: "uint8",
           },
         ],
         stateMutability: "view",
@@ -741,7 +754,7 @@ const contract = {
     ],
   },
   mainnet: {
-    CONTRACT_ADDRESS: "0x3E97e2622704355FeC11A72b8B6815161c6Fb223",
+    CONTRACT_ADDRESS: "0x1933F2a57298A9f7E6fb5b0e182B47a3aff203dc",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -1388,6 +1401,19 @@ const contract = {
             internalType: "bool",
             name: "",
             type: "bool",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "taskId",
+        outputs: [
+          {
+            internalType: "uint8",
+            name: "",
+            type: "uint8",
           },
         ],
         stateMutability: "view",

@@ -21,6 +21,9 @@ import {
 import { config } from "../../../components/wallets/config";
 import { taikoHeklaClient } from "../../../components/wallets/viemConfig";
 import { getUserIpAddress } from "../../../utils";
+import toast from "react-hot-toast";
+import MessageBox from "../../../components/message/messageBox";
+import { FAIURE, PENDING } from "../../../utils/mesages";
 
 const TWITTER_API = process.env.REACT_APP_TWITTER_API;
 
@@ -62,8 +65,23 @@ const SocialQuest = () => {
     if (isSuccess?.data) setStatus("success");
     if (isComplete) setStatus("completed");
   };
-  const completeTask = async (task_id, setStatus) => {
+
+  const [message, setMessage] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState(null);
+  const [txHash, setTxHash] = useState("");
+  const [disabled, setDisabled] = useState(false);
+  const handleCloseMessage = () => {
+    setIsLoading(false);
+    setStatus(null);
+  };
+  const completeTask = async (task_id, setStatustx) => {
+    setDisabled(true);
     if (!address) {
+      setMessage("You not connected wallet");
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
       return;
     }
 
@@ -89,15 +107,23 @@ const SocialQuest = () => {
     const gasFeeToEther = Number(gasLimit * gasPrice) / 10 ** chainDecimal;
 
     if (Number(balance.formatted) < gasFeeToEther) {
+      setMessage("Not enough balance");
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
       return;
     }
 
+    setMessage(PENDING.txAwait);
+    setStatus(null);
+    setIsLoading(true);
     try {
       const hash = await writeContract(config, {
         ...txObj,
       });
       if (hash) {
         console.log({ hash });
+        setTxHash(hash);
         const status = await getTransactionStatus(config, hash);
         await clientAPI("post", "/api/transaction/create-transaction", {
           caller: address,
@@ -116,7 +142,12 @@ const SocialQuest = () => {
             hash: hash,
             status: status,
           });
-          setStatus(task_id, "completed");
+          setMessage("Claim successful");
+          setStatus("success");
+          setIsLoading(true);
+          setDisabled(false);
+          await getStatusTask(task_id, setStatustx);
+          // setStatus(task_id, "completed");
           return;
         } else {
           const status = await getTransactionStatus(config, hash);
@@ -124,11 +155,20 @@ const SocialQuest = () => {
             hash: hash,
             status: status,
           });
+          setMessage(FAIURE.txFalure);
+          setStatus("failure");
+          setIsLoading(true);
+          setDisabled(false);
           return;
         }
       }
     } catch (e) {
       console.log(e);
+      setMessage(FAIURE.txFalure);
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
     }
   };
   useEffect(() => {
@@ -145,9 +185,17 @@ const SocialQuest = () => {
     }
   }, [address]);
   const handleSuccessTask2 = async () => {
+    if (!address) {
+      toast.error("Please Connect wallet!");
+      return;
+    }
     window.location.href = `${process.env.REACT_APP_TWITTER_API}/auth/twitter?wallet=${address}&&task_id=2`;
   };
   const handleSuccessTaskLike = async (task_id, setStatus) => {
+    if (!address) {
+      toast.error("Please Connect wallet!");
+      return;
+    }
     window.open("https://x.com/BachiSwap", "_blank");
 
     try {
@@ -157,7 +205,23 @@ const SocialQuest = () => {
         { task_id: task_id }
       );
       if (data) {
-        console.log(data);
+        const { data: user } = await clientAPI(
+          "post",
+          "/api/rewardAirdrop/getUserReward",
+          { caller: address }
+        );
+        if (!user) {
+          await clientAPI("post", "/api/rewardAirdrop/addUserReward", {
+            wallet_address: address,
+            point: data.reward_point,
+          });
+        } else {
+          const point = Number(data.reward_point) + Number(user.point);
+          await clientAPI("post", "/api/rewardAirdrop/updateUserReward", {
+            wallet_address: address,
+            point: point,
+          });
+        }
         const options = {
           wallet_address: address,
           task_id: task_id,
@@ -168,10 +232,9 @@ const SocialQuest = () => {
           "/api/rewardAirdropHistory/addRewardHistory",
           options
         );
-
-        if (result) {
-          setStatus(task_id, "success");
-        }
+        await getStatusTask(task_id, setStatus);
+        toast.success(`Complete the mission ${task_id}!`);
+        // setStatus(task_id, "success");
       }
     } catch (e) {
       console.log(e);
@@ -179,7 +242,6 @@ const SocialQuest = () => {
     }
   };
 
-  console.log({task1Status})
   const quests = [
     {
       title: "INVITE YOUR FRIEND",
@@ -194,7 +256,8 @@ const SocialQuest = () => {
     },
     {
       title: "CONNECT YOUR TIWTTER ACCOUNT",
-      rewardText: null,
+      rewardText: "Reward",
+      rewardTotal: 0.005,
       buttonText: "Do Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       handleTask: handleSuccessTask2,
@@ -205,7 +268,8 @@ const SocialQuest = () => {
     },
     {
       title: "CONNECT YOUR DISCORD ACCOUNT",
-      rewardText: null,
+      rewardText: "Reward",
+      rewardTotal: 0.005,
       buttonText: "Do Quest",
       onClick: () => console.log("Twitter Connect Clicked"),
       handleTask: () => handleSuccessTaskLike(3, setTask3Status),
@@ -217,7 +281,7 @@ const SocialQuest = () => {
     {
       title: "CLAIM YOUR DAILY REWARD",
       rewardText: "Reward",
-      rewardTotal: "10",
+      rewardTotal: 0.005,
       buttonText: "Do Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       handleTask: () => handleSuccessTaskLike(4, setTask4Status),
@@ -229,7 +293,7 @@ const SocialQuest = () => {
     {
       title: "FOLLOW @BachiSwap_io ON X",
       rewardText: "Reward",
-      rewardTotal: "30",
+      rewardTotal: 0.005,
       buttonText: "Do Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       handleTask: () => handleSuccessTaskLike(5, setTask5Status),
@@ -241,7 +305,7 @@ const SocialQuest = () => {
     {
       title: "JOIN SERVER DISCORD",
       rewardText: "Reward",
-      rewardTotal: "100",
+      rewardTotal: 0.005,
       buttonText: "Do Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       handleTask: () => handleSuccessTaskLike(6, setTask6Status),
@@ -253,7 +317,7 @@ const SocialQuest = () => {
     {
       title: "LIKE THIS TWEET ON X",
       rewardText: "Reward",
-      rewardTotal: "30",
+      rewardTotal: 0.005,
       buttonText: "Do Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       handleTask: () => handleSuccessTaskLike(7, setTask7Status),
@@ -265,11 +329,11 @@ const SocialQuest = () => {
     {
       title: "LIKE THIS TWEET ON X",
       rewardText: "Reward",
-      rewardTotal: "30",
+      rewardTotal: 0.005,
       buttonText: "Do Quest",
       onClick: () => console.log("Daily Reward Clicked"),
-      handleTask: () => handleSuccessTaskLike(8, setTask5Status),
-      completeTask: () => completeTask(8, setTask5Status),
+      handleTask: () => handleSuccessTaskLike(8, setTask8Status),
+      completeTask: () => completeTask(8, setTask8Status),
       inputPlaceholder: null,
       task_id: 8,
       status: task8Status,
@@ -277,11 +341,11 @@ const SocialQuest = () => {
     {
       title: "LIKE THIS TWEET ON X",
       rewardText: "Reward",
-      rewardTotal: "100",
+      rewardTotal: 0.005,
       buttonText: "Do Quest",
       onClick: () => console.log("Daily Reward Clicked"),
-      handleTask: () => handleSuccessTaskLike(9, setTask5Status),
-      completeTask: () => completeTask(9, setTask5Status),
+      handleTask: () => handleSuccessTaskLike(9, setTask9Status),
+      completeTask: () => completeTask(9, setTask9Status),
       inputPlaceholder: null,
       task_id: 9,
       status: task9Status,
@@ -304,182 +368,193 @@ const SocialQuest = () => {
     return status;
   };
   return (
-    <SectionContainer py={{ base: "24px", lg: "50px", "3xl": "64px" }}>
-      <SimpleGrid
-        spacing={{ base: "17px" }}
-        columns={{ base: 1, lg: 2, xl: 3 }}
-      >
-        {quests.map((quest, index) => (
-          <QuestBox
-            key={index}
-            title={quest.title}
-            rewardText={quest.rewardText}
-            rewardTotal={quest.rewardTotal}
-            buttonText={quest.buttonText}
-            onClick={quest.onClick}
-            inputPlaceholder={quest.inputPlaceholder}
-            handleTask={quest.handleTask}
-            completeTask={quest.completeTask}
-            status={quest.status}
-          />
-        ))}
-      </SimpleGrid>
-      <Flex flexDirection={"column"} gap={{ base: "24px" }}>
-        <Text
-          fontSize={{ base: "24px", "2xl": "64px" }}
-          fontWeight={400}
-          fontFamily="var(--font-heading)"
-          textAlign={"center"}
-          paddingTop={{ base: "50px", "2xl": "135px" }}
+    <>
+      <SectionContainer py={{ base: "24px", lg: "50px", "3xl": "64px" }}>
+        <SimpleGrid
+          spacing={{ base: "17px" }}
+          columns={{ base: 1, lg: 2, xl: 3 }}
         >
-          Airdrop history
-        </Text>
-        <Box
-          width={"100%"}
-          height={"100%"}
-          sx={{
-            backdropFilter: "blur(10px) !important",
-            clipPath:
-              "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
-            "::before": {
-              content: '""',
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "20px",
-              height: "20px",
-              backgroundColor: "pink.500",
-              clipPath: "polygon(0 100%, 100% 0, 0 0)",
-            },
-            "::after": {
-              content: '""',
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              width: "20px",
-              height: "20px",
-              backgroundColor: "pink.500",
-              clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
-            },
-            "@media (max-width: 992px)": {
+          {quests.map((quest, index) => (
+            <QuestBox
+              key={index}
+              title={quest.title}
+              rewardText={quest.rewardText}
+              rewardTotal={quest.rewardTotal}
+              buttonText={quest.buttonText}
+              onClick={quest.onClick}
+              inputPlaceholder={quest.inputPlaceholder}
+              handleTask={quest.handleTask}
+              completeTask={quest.completeTask}
+              status={quest.status}
+              isDisabled={disabled}
+            />
+          ))}
+        </SimpleGrid>
+        <Flex flexDirection={"column"} gap={{ base: "24px" }}>
+          <Text
+            fontSize={{ base: "24px", "2xl": "64px" }}
+            fontWeight={400}
+            fontFamily="var(--font-heading)"
+            textAlign={"center"}
+            paddingTop={{ base: "50px", "2xl": "135px" }}
+          >
+            Airdrop history
+          </Text>
+          <Box
+            width={"100%"}
+            height={"100%"}
+            sx={{
+              backdropFilter: "blur(10px) !important",
               clipPath:
                 "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
               "::before": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
                 width: "20px",
                 height: "20px",
                 backgroundColor: "pink.500",
+                clipPath: "polygon(0 100%, 100% 0, 0 0)",
               },
               "::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                right: 0,
                 width: "20px",
                 height: "20px",
                 backgroundColor: "pink.500",
+                clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
               },
-            },
-          }}
-        >
-          <CommonButton
-            backgroundColor={"rgba(27, 27, 27, 0.20)"}
-            boxShadow={"inset 0 0 10px var(--color-main)"}
-            border="0.5px solid var(--color-main)"
-            position="relative"
-            zIndex="10"
-            p={{ "3xl": "47px 48px 65px 48px" }}
-          >
-            <Box
-              width={"100%"}
-              height={"100%"}
-              backgroundColor="var(--color-main)"
-              sx={{
-                backdropFilter: "blur(10px) !important",
+              "@media (max-width: 992px)": {
                 clipPath:
                   "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
                 "::before": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
                   width: "20px",
                   height: "20px",
                   backgroundColor: "pink.500",
-                  clipPath: "polygon(0 100%, 100% 0, 0 0)",
                 },
                 "::after": {
-                  content: '""',
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
                   width: "20px",
                   height: "20px",
                   backgroundColor: "pink.500",
-                  clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                 },
-                "@media (max-width: 992px)": {
+              },
+            }}
+          >
+            <CommonButton
+              backgroundColor={"rgba(27, 27, 27, 0.20)"}
+              boxShadow={"inset 0 0 10px var(--color-main)"}
+              border="0.5px solid var(--color-main)"
+              position="relative"
+              zIndex="10"
+              p={{ "3xl": "47px 48px 65px 48px" }}
+            >
+              <Box
+                width={"100%"}
+                height={"100%"}
+                backgroundColor="var(--color-main)"
+                sx={{
+                  backdropFilter: "blur(10px) !important",
                   clipPath:
                     "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
                   "::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
                     width: "20px",
                     height: "20px",
                     backgroundColor: "pink.500",
+                    clipPath: "polygon(0 100%, 100% 0, 0 0)",
                   },
                   "::after": {
+                    content: '""',
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
                     width: "20px",
                     height: "20px",
                     backgroundColor: "pink.500",
+                    clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                   },
-                },
-              }}
-            >
-              <CommonButton
-                backgroundColor={"rgba(27, 27, 27, 0.20)"}
-                boxShadow={"inset 0 0 10px var(--color-main)"}
-                border="0.5px solid var(--color-main)"
-                position="relative"
-                zIndex="10"
+                  "@media (max-width: 992px)": {
+                    clipPath:
+                      "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                    "::before": {
+                      width: "20px",
+                      height: "20px",
+                      backgroundColor: "pink.500",
+                    },
+                    "::after": {
+                      width: "20px",
+                      height: "20px",
+                      backgroundColor: "pink.500",
+                    },
+                  },
+                }}
               >
-                <SimpleGrid
-                  p={{ base: "20px 40px" }}
-                  justifyContent={"space-between"}
-                  display={"flex"}
-                  spacing={{ base: "17px" }}
-                  columns={{ base: 4 }}
-                  fontSize={"32px"}
-                  fontFamily="var(--font-text-main)"
+                <CommonButton
+                  backgroundColor={"rgba(27, 27, 27, 0.20)"}
+                  boxShadow={"inset 0 0 10px var(--color-main)"}
+                  border="0.5px solid var(--color-main)"
+                  position="relative"
+                  zIndex="10"
                 >
-                  <Text>#</Text>
-                  <Text>Wallet</Text>
-                  <Text>XP</Text>
-                  <Text>Date</Text>
-                </SimpleGrid>
-              </CommonButton>
-            </Box>
-            <Flex
-              flexDirection={"column"}
-              padding={{
-                base: "24px 32px",
-                lg: "16px 20px 16px 20px",
-                xl: "24px 36px 24px 36px",
-                "3xl": "32px 32px 50px 40px",
-              }}
-              gap={{ base: "24px", lg: "32px", "2xl": "22px", "3xl": "25px" }}
-            >
-              <Flex flexDirection={"column"}>
-                <Text
-                  py={{ base: "15px" }}
-                  fontSize={{
-                    base: "20px",
-                    "2xl": "36px",
-                    "3xl": "40px",
-                  }}
-                  fontFamily="var(--font-text-extra)"
-                >
-                  Invite Your Friend and come to AirDrop History
-                </Text>
+                  <SimpleGrid
+                    p={{ base: "20px 40px" }}
+                    justifyContent={"space-between"}
+                    display={"flex"}
+                    spacing={{ base: "17px" }}
+                    columns={{ base: 4 }}
+                    fontSize={"32px"}
+                    fontFamily="var(--font-text-main)"
+                  >
+                    <Text>#</Text>
+                    <Text>Wallet</Text>
+                    <Text>XP</Text>
+                    <Text>Date</Text>
+                  </SimpleGrid>
+                </CommonButton>
+              </Box>
+              <Flex
+                flexDirection={"column"}
+                padding={{
+                  base: "24px 32px",
+                  lg: "16px 20px 16px 20px",
+                  xl: "24px 36px 24px 36px",
+                  "3xl": "32px 32px 50px 40px",
+                }}
+                gap={{ base: "24px", lg: "32px", "2xl": "22px", "3xl": "25px" }}
+              >
+                <Flex flexDirection={"column"}>
+                  <Text
+                    py={{ base: "15px" }}
+                    fontSize={{
+                      base: "20px",
+                      "2xl": "36px",
+                      "3xl": "40px",
+                    }}
+                    fontFamily="var(--font-text-extra)"
+                  >
+                    Invite Your Friend and come to AirDrop History
+                  </Text>
+                </Flex>
               </Flex>
-            </Flex>
-          </CommonButton>
-        </Box>
-      </Flex>
-    </SectionContainer>
+            </CommonButton>
+          </Box>
+        </Flex>
+      </SectionContainer>
+
+      <MessageBox
+        isLoading={isLoading}
+        status={status}
+        message={message}
+        handleCloseMessage={handleCloseMessage}
+        txHash={txHash}
+      />
+    </>
   );
 };
 

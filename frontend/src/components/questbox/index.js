@@ -14,6 +14,7 @@ const QuestBox = ({
   handleTask,
   status = "pending",
   completeTask,
+  isDisabled
 }) => {
   return (
     <Box
@@ -89,10 +90,10 @@ const QuestBox = ({
                   backgroundColor={"transparent"}
                   border={"2px solid #23F600"}
                   borderRadius={"20px"}
-                  width={{ base: "80px" }}
+                  padding={"8px 16px"}
                   height={{ base: "40px" }}
                 >
-                  <Text color={"#23F600"}>{rewardTotal} XP</Text>
+                  <Text color={"#23F600"}>{rewardTotal} Taiko</Text>
                 </MainButton>
               </Flex>
             )}
@@ -152,6 +153,7 @@ const QuestBox = ({
               backgroundColor="var(--color-main)"
               onClick={handleTask}
               height={{ "3xl": "71px" }}
+              isDisabled={isDisabled}
             >
               <Text
                 color={"#FFF"}
@@ -168,6 +170,7 @@ const QuestBox = ({
               backgroundColor="var(--color-main)"
               onClick={completeTask}
               height={{ "3xl": "71px" }}
+              isDisabled={isDisabled}
             >
               <Text
                 color={"#FFF"}

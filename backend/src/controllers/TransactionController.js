@@ -101,7 +101,7 @@ const getTransaction = async (req, res) => {
 
 const getReferrals = async (req, res) => {
   try {
-    let { caller, limit, offset, sort } = req.body;
+    let { caller, limit, offset, sort } = req.body; 
     if (!limit) limit = 15;
     if (!offset) offset = 0;
     if (!sort) sort = -1;

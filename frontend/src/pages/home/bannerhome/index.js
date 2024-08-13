@@ -8,8 +8,15 @@ import appBanner from "../../../assets/img/homepage/app-banner.png";
 import appBannerTabnet from "../../../assets/img/homepage/banner-hometabnet.png";
 import appBannerMobile from "../../../assets/img/homepage/banner-homemobile.png";
 import MainButton from "../../../components/button/MainButton";
-import { base } from "viem/chains";
+
+import { Link } from "react-router-dom";
+import { enumMenu } from "../../../utils/contants";
+
 const BannerHome = () => {
+  const earningPath = enumMenu[0].children.find(
+    (item) => item.name === "Earning"
+  ).path;
+  console.log({ earningPath });
   return (
     <>
       <SectionContainer position={"relative"}>
@@ -27,7 +34,7 @@ const BannerHome = () => {
             sm: "97%",
             md: "80%",
             lg: "89%",
-            xl: "65%",
+            xl: "66%",
             "2xl": "62%",
             "3xl": "59%",
           }}
@@ -62,9 +69,9 @@ const BannerHome = () => {
             }}
             marginBottom={{
               base: "10px",
-              sm: "20px",
+              sm: "16px",
               md: "30px",
-              xl: "40px",
+              lg: "40px",
               "3xl": "48px",
             }}
             fontFamily="var(--font-heading)"
@@ -75,9 +82,15 @@ const BannerHome = () => {
           <Text
             fontSize={{ base: "16px", md: "24px" }}
             fontWeight={400}
-            marginBottom={{ base: "20px", md: "45px", "3xl": "48px" }}
+            marginBottom={{
+              base: "10px",
+              sm: "16px",
+              md: "30px",
+              lg: "40px",
+              "3xl": "48px",
+            }}
             fontFamily="var(--font-text-main)"
-            lineHeight={{ lg: "32px" }}
+            lineHeight={{ base: "24px", md: "32px" }}
             width={{ lg: "95%", "2xl": "98%", "3xl": "85%" }}
           >
             Welcome to BachiSwap, the ultimate AMM DEX. Including Layer 1 and
@@ -85,22 +98,29 @@ const BannerHome = () => {
             With BachiSwap, effortlessly swap any token and transfer your assets
             across different networks with ease
           </Text>
-          <MainButton
-            borderRadius={{ base: "8px", md: "12px" }}
-            width={{ base: "163px", md: "150px", lg: "193px", xl: "230px" }}
-            height={{ base: "44px", md: "48px", lg: "64px" }}
-            backgroundColor="var(--color-main)"
-          >
-            <Text
-              fontSize={{ base: "16px", sm: "20px", "3xl": "24px" }}
-              lineHeight={{ "3xl": "32px" }}
-              color={"#FFF"}
-              fontWeight={400}
-              fontFamily={"var(--font-heading-main)"}
+          <Link to={earningPath}>
+            <MainButton
+              borderRadius={{ base: "8px", md: "12px" }}
+              width={{ base: "163px", md: "193px", lg: "193px", xl: "230px" }}
+              height={{ base: "44px", md: "54px", lg: "64px" }}
+              backgroundColor="var(--color-main)"
             >
-              Launch App
-            </Text>
-          </MainButton>
+              <Text
+                fontSize={{
+                  base: "16px",
+                  md: "20px",
+                  lg: "20px",
+                  "3xl": "24px",
+                }}
+                lineHeight={{ "3xl": "32px" }}
+                color={"#FFF"}
+                fontWeight={400}
+                fontFamily={"var(--font-heading-main)"}
+              >
+                Launch App
+              </Text>
+            </MainButton>
+          </Link>
         </Flex>
         <Image
           display={{ base: "none", xl: "block" }}
@@ -127,7 +147,7 @@ const BannerHome = () => {
       </SectionContainer>
       <SectionContainer
         padding={{
-          base: "64px 70px 64px 70px",
+          base: "64px 40px 64px 40px",
           lg: "40px 64px 40px 64px",
           xl: "40px 86px 40px 86px",
           "2xl": "41px 100px 41px 100px",
@@ -138,7 +158,7 @@ const BannerHome = () => {
         z-index={"10"}
         position={"relative"}
       >
-        <Flex flexDirection={"column"}>
+        <Flex flexDirection={"column"} alignItems={"stretch"}>
           <Flex
             justifyContent={"space-between"}
             paddingBottom={{
@@ -163,24 +183,24 @@ const BannerHome = () => {
                 base: "100%",
                 md: "49%",
                 lg: "209px",
-
+                xl: "240px",
                 "3xl": "408px",
               }}
               gap={{ base: "16px", lg: "0px" }}
               marginBottom={{ base: "0px", md: "60px", lg: "0px" }}
             >
               <Text
-                width={{ lg: "209px", "3xl": "408px" }}
+                width={{ lg: "209px", xl: "240px", "3xl": "408px" }}
                 fontSize={{
                   base: "40px",
-                  md: "48px",
+                  lg: "48px",
                   "2xl": "68px",
                   "3xl": "96px",
                 }}
                 fontWeight={"400"}
-                lineHeight={"normal"}
+                lineHeight={{ base: "48px" }}
                 fontFamily="var(--font-heading)"
-                // marginBottom={{ base: "27px", "3xl": "42px" }}
+                letterSpacing={"-1px"}
               >
                 100+
               </Text>
@@ -188,15 +208,12 @@ const BannerHome = () => {
                 display={{ base: "block", lg: "none" }}
                 fontSize={{
                   base: "24px",
-                  md: "28px",
                   lg: "32px",
-
                   "3xl": "40px",
                 }}
                 fontWeight={"400"}
-                lineHeight={"normal"}
+                lineHeight={{ base: "32px" }}
                 fontFamily="var(--font-text-extra)"
-                // marginBottom={{ base: "21px", "3xl": "32px" }}
                 textAlign={{ base: "center", md: "start" }}
               >
                 Supported Tokens Pair
@@ -205,12 +222,11 @@ const BannerHome = () => {
                 display={{ base: "block", lg: "none" }}
                 fontSize={{
                   base: "16px",
-                  md: "18px",
                   "2xl": "20px",
                   "3xl": "24px",
                 }}
                 fontWeight={"400"}
-                lineHeight={"normal"}
+                lineHeight={{ base: "24px" }}
                 fontFamily="var(--font-text-main)"
                 textAlign={{ base: "center", md: "start" }}
               >
@@ -224,24 +240,23 @@ const BannerHome = () => {
                 base: "100%",
                 md: "49%",
                 lg: "245px",
-
+                xl: "285px",
                 "3xl": "426px",
               }}
               gap={{ base: "16px", lg: "0px" }}
-              // paddingBottom={{ base: "63px", xl: "0px" }}
             >
               <Text
-                width={{ lg: "245px", "3xl": "426px" }}
+                textAlign={{ base: "start", lg: "center" }}
+                width={{ lg: "245px", xl: "285px", "3xl": "426px" }}
                 fontSize={{
                   base: "40px",
-                  md: "48px",
-
+                  lg: "48px",
                   "2xl": "68px",
                   "3xl": "96px",
                 }}
-                lineHeight={"normal"}
+                lineHeight={{ base: "48px" }}
+                letterSpacing={"-1px"}
                 fontFamily="var(--font-heading)"
-                // marginBottom={{ base: "27px", "3xl": "42px" }}
               >
                 Easy
               </Text>
@@ -249,16 +264,13 @@ const BannerHome = () => {
                 display={{ base: "block", lg: "none" }}
                 fontSize={{
                   base: "24px",
-                  md: "28px",
                   lg: "32px",
 
                   "3xl": "40px",
                 }}
-                lineHeight={"1"}
+                lineHeight={{ base: "32px" }}
                 fontFamily="var(--font-text-extra)"
-                // marginBottom={{ base: "21px", xl: "0px" }}
                 textAlign={{ base: "center", md: "start" }}
-                letterSpacing={"-1px"}
               >
                 To use BachiSwap on both EVM and non-EVM evviroments
               </Text>
@@ -266,12 +278,11 @@ const BannerHome = () => {
                 display={{ base: "block", lg: "none" }}
                 fontSize={{
                   base: "16px",
-                  md: "18px",
                   "2xl": "20px",
                   "3xl": "24px",
                 }}
                 fontWeight={"400"}
-                lineHeight={"normal"}
+                lineHeight={{ base: "24px" }}
                 fontFamily="var(--font-text-main)"
                 textAlign={{ base: "center", md: "start" }}
               >
@@ -291,15 +302,16 @@ const BannerHome = () => {
               gap={{ base: "16px", lg: "0px" }}
             >
               <Text
+                width={{ lg: "237px", "3xl": "307px" }}
                 fontSize={{
                   base: "40px",
                   md: "48px",
                   "2xl": "68px",
                   "3xl": "96px",
                 }}
-                lineHeight={"normal"}
+                lineHeight={{ base: "48px" }}
+                letterSpacing={"-1px"}
                 fontFamily="var(--font-heading)"
-                // marginBottom={{ base: "27px", "3xl": "42px" }}
               >
                 Grow
               </Text>
@@ -311,8 +323,7 @@ const BannerHome = () => {
                   lg: "32px",
                   "3xl": "40px",
                 }}
-                lineHeight={"normal"}
-                // marginBottom={{ base: "21px", "3xl": "58px" }}
+                lineHeight={{ base: "32px" }}
                 fontFamily="var(--font-text-extra)"
                 letterSpacing={"-1px"}
                 textAlign={{ base: "center", md: "start" }}
@@ -327,7 +338,7 @@ const BannerHome = () => {
                   "2xl": "20px",
                   "3xl": "24px",
                 }}
-                lineHeight={"normal"}
+                lineHeight={{ base: "24px" }}
                 fontFamily="var(--font-text-main)"
                 textAlign={{ base: "center", md: "start" }}
               >
@@ -359,24 +370,21 @@ const BannerHome = () => {
                 base: "100%",
                 md: "49%",
                 lg: "209px",
-
+                xl: "240px",
                 "3xl": "408px",
               }}
-              // paddingBottom={{ base: "63px", xl: "0px" }}
             >
               <Text
-                width={{ lg: "209px", "3xl": "408px" }}
+                width={{ lg: "209px", xl: "240px", "3xl": "408px" }}
                 fontSize={{
                   base: "24px",
                   md: "28px",
-                  lg: "32px",
+                  xl: "32px",
                   "3xl": "40px",
                 }}
                 fontWeight={"400"}
                 lineHeight={"normal"}
                 fontFamily="var(--font-text-extra)"
-                // marginBottom={{ base: "21px", "3xl": "32px" }}
-                textAlign={{ base: "center", md: "start" }}
               >
                 Supported Tokens Pair
               </Text>
@@ -388,23 +396,21 @@ const BannerHome = () => {
                 base: "100%",
                 md: "49%",
                 lg: "245px",
-
+                xl: "285px",
                 "3xl": "426px",
               }}
-              // paddingBottom={{ base: "63px", xl: "0px" }}
             >
               <Text
-                width={{ lg: "245px", "3xl": "426px" }}
+                width={{ lg: "245px", xl: "285px", "3xl": "426px" }}
                 fontSize={{
                   base: "24px",
                   md: "28px",
-                  lg: "32px",
+                  xl: "32px",
                   "3xl": "40px",
                 }}
                 lineHeight={"normal"}
                 fontFamily="var(--font-text-extra)"
-                // marginBottom={{ base: "21px", xl: "0px" }}
-                textAlign={{ base: "center", md: "start" }}
+                textAlign={{ base: "center" }}
                 letterSpacing={"-1px"}
               >
                 To use BachiSwap on both EVM and non-EVM evviroments
@@ -420,11 +426,10 @@ const BannerHome = () => {
                 fontSize={{
                   base: "24px",
                   md: "28px",
-                  lg: "32px",
+                  xl: "32px",
                   "3xl": "40px",
                 }}
                 lineHeight={"normal"}
-                // marginBottom={{ base: "21px", "3xl": "58px" }}
                 fontFamily="var(--font-text-extra)"
                 letterSpacing={"-1px"}
               >
@@ -433,6 +438,7 @@ const BannerHome = () => {
             </Flex>
           </Flex>
           <Flex
+            flex={"1"}
             display={{ base: "none", lg: "flex" }}
             justifyContent={"space-between"}
             gap={{
@@ -450,18 +456,18 @@ const BannerHome = () => {
                 base: "100%",
                 md: "49%",
                 lg: "209px",
-
+                xl: "240px",
                 "3xl": "408px",
               }}
               paddingBottom={{ base: "63px", xl: "0px" }}
             >
               <Text
-                width={{ lg: "209px", "3xl": "408px" }}
+                width={{ lg: "209px", xl: "240px", "3xl": "408px" }}
                 fontSize={{
                   base: "16px",
                   md: "18px",
                   lg: "20px",
-
+                  xl: "22px",
                   "3xl": "24px",
                 }}
                 fontWeight={"400"}
@@ -479,24 +485,24 @@ const BannerHome = () => {
                 base: "100%",
                 md: "49%",
                 lg: "245px",
-
+                xl: "285px",
                 "3xl": "426px",
               }}
               paddingBottom={{ base: "63px", xl: "0px" }}
             >
               <Text
-                width={{ lg: "245px", "3xl": "426px" }}
+                width={{ lg: "245px", xl: "285px", "3xl": "426px" }}
                 fontSize={{
                   base: "16px",
                   md: "18px",
                   lg: "20px",
-
+                  xl: "22px",
                   "3xl": "24px",
                 }}
                 fontWeight={"400"}
                 lineHeight={"normal"}
                 fontFamily="var(--font-text-main)"
-                textAlign={{ base: "center", md: "start" }}
+                textAlign={{ base: "center" }}
               >
                 Bringing you closer to the edge.
               </Text>
@@ -512,7 +518,7 @@ const BannerHome = () => {
                   base: "16px",
                   md: "18px",
                   lg: "20px",
-
+                  xl: "22px",
                   "3xl": "24px",
                 }}
                 lineHeight={"normal"}

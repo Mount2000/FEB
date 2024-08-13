@@ -87,15 +87,22 @@ const Navbar = () => {
           >
             {enumMenu.map((item) => (
               <NavLink
-                to={item.path}
+                to={item.disabled ? "#" : item.path}
                 key={item.name}
                 onClick={() => {
-                  setNavActive(navActive != item.name ? item.name : "");
-                  setNavColor(item.name);
+                  if (!item.disabled) {
+                    setNavActive(navActive !== item.name ? item.name : "");
+                    setNavColor(item.name);
+                  }
                 }}
                 style={{
-                  color: navColor == item.name ? "var(--color-main)" : "white",
+                  color: item.disabled
+                    ? "#B0B0B0"
+                    : navColor === item.name
+                      ? "var(--color-main)"
+                      : "white",
                   position: "relative",
+                  pointerEvents: item.disabled ? "none" : "auto",
                 }}
               >
                 <Flex
@@ -199,7 +206,7 @@ const Navbar = () => {
               }}
               onClick={onOpenConnectWalletModal}
               backgroundColor="var(--color-main)"
-              padding={"16px 32px"}
+              padding={"16px 36px"}
             >
               <Text
                 lineHeight={{ base: "", "3xl": "32px" }}

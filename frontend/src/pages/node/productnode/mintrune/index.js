@@ -509,6 +509,11 @@ const MintRune = () => {
                         {products.nameproduct}
                       </Text>
                       <Image
+                        className={
+                          selectProduct?.tierId === products.tierId
+                            ? "spinning-image"
+                            : ""
+                        }
                         src={products.image}
                         display={{ base: "none", md: "block" }}
                       />
@@ -531,6 +536,11 @@ const MintRune = () => {
                       </Flex>
                     </Flex>
                     <Image
+                      className={
+                        selectProduct?.tierId === products.tierId
+                          ? "spinning-image"
+                          : ""
+                      }
                       src={products.image}
                       display={{ base: "block", md: "none" }}
                       width={"80px"}
@@ -542,7 +552,7 @@ const MintRune = () => {
           </Flex>
           {/* <PayNow /> */}
           <Box
-          fontFamily={"var(--font-heading-main)"}
+            fontFamily={"var(--font-heading-main)"}
             sx={{
               backdropFilter: "blur(10px) !important",
               clipPath:

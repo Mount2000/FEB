@@ -37,8 +37,8 @@ const BachiSwapFooter = () => {
             gap={{
               base: "32px",
               md: "120px",
-              xl: "200px",
-              xl: "280px",
+              lg: "90px",
+              xl: "260px",
               "2xl": "120px",
             }}
             alignItems={{ base: "center", sm: "flex-start" }}
@@ -95,7 +95,7 @@ const BachiSwapFooter = () => {
               w={"100%"}
               // wrap={"wrap"}
               spacing={{ base: "36px", xl: "72px", "2xl": "136px" }}
-              columns={{ base: 2, "2xl": 4 }}
+              columns={{ base: 2, "2xl": 3 }}
               // justifyContent={{ base: "space-around", md: "space-between" }}
               padding={{
                 base: "32px 16px",
@@ -136,15 +136,15 @@ const BachiSwapFooter = () => {
                   fontWeight={400}
                   fontFamily={"var(--font-text-main)"}
                 >
-                  <Link to={""}>
+                  {/* <Link to={""}>
                     <ListItem>Ecosystem</ListItem>
-                  </Link>
+                  </Link> */}
                   <Link to={""}>
                     <ListItem>Docs</ListItem>
                   </Link>
-                  <Link to={""}>
+                  {/* <Link to={""}>
                     <ListItem>Blog</ListItem>
-                  </Link>
+                  </Link> */}
                 </UnorderedList>
               </Flex>
               <Flex flexDirection={"column"} gap={{ base: "16px" }}>
@@ -162,13 +162,13 @@ const BachiSwapFooter = () => {
                   fontWeight={400}
                   fontFamily="var( --font-text-main)"
                 >
-                  <Link to="">
+                  <Link to="https://x.com/i/flow/login?redirect_after_login=%2FBachiSwap">
                     <ListItem>X</ListItem>
                   </Link>
-                  <Link to="">
+                  <Link to="https://discord.gg/bachiswap">
                     <ListItem>Discord</ListItem>
                   </Link>
-                  <Link to="">
+                  <Link to="https://www.youtube.com/@BachiSwap">
                     <ListItem>Youtube</ListItem>
                   </Link>
                 </UnorderedList>
@@ -196,7 +196,7 @@ const BachiSwapFooter = () => {
                   </Link>
                 </UnorderedList>
               </Flex> */}
-              <Flex flexDirection={"column"} gap={{ base: "16px" }}>
+              {/* <Flex flexDirection={"column"} gap={{ base: "16px" }}>
                 <Text
                   fontSize={{ base: "16px", md: "24px" }}
                   color={"#E42493"}
@@ -218,13 +218,14 @@ const BachiSwapFooter = () => {
                     <ListItem>Staking</ListItem>
                   </Link>
                 </UnorderedList>
-              </Flex>
+              </Flex> */}
             </SimpleGrid>
           </Flex>
           <Flex
-            gap={{ base: "0px", md: "145px", lg: "48px" }}
-            justifyContent={{ base: "space-around", md: "flex-start" }}
-            fontSize={{ base: "12px", "md": "20px" }}
+            px={{ base: "16px", lg: "0px" }}
+            gap={{ base: "0px", md: "125px", lg: "48px" }}
+            justifyContent={{ base: "space-between", md: "flex-start" }}
+            fontSize={{ base: "12px", md: "20px" }}
             fontWeight={500}
             color={"#757575"}
             fontFamily={"var(--font-heading-main)"}

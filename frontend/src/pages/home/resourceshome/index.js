@@ -12,6 +12,7 @@ import resourcesHome from "../../../assets/img/homepage/resources-home.png";
 import backgroundResources from "../../../assets/img/homepage/background-resources-home.png";
 import resourcesMobile from "../../../assets/img/homepage/resources-homemobile.png";
 import MainButton from "../../../components/button/MainButton";
+import { Link } from "react-router-dom";
 
 const ResourcesHome = () => {
   return (
@@ -68,138 +69,144 @@ const ResourcesHome = () => {
             gap={{ base: "36px", lg: "32px" }}
             alignItems="stretch"
           >
-            <Box
-              width={"100%"}
-              height={"100%"}
-              sx={{
-                backdropFilter: "blur(10px) !important",
-                clipPath:
-                  "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
-                "::before": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "20px",
-                  height: "20px",
-                  backgroundColor: "pink.500",
-                  clipPath: "polygon(0 100%, 100% 0, 0 0)",
-                },
-                "::after": {
-                  content: '""',
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                  width: "20px",
-                  height: "20px",
-                  backgroundColor: "pink.500",
-                  clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
-                },
-                "@media (max-width: 992px)": {
+            <Link to="/node">
+              <Box
+                width={"100%"}
+                height={"100%"}
+                sx={{
+                  backdropFilter: "blur(10px) !important",
                   clipPath:
-                    "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
+                    "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
                   "::before": {
-                    width: "10px",
-                    height: "10px",
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "20px",
+                    height: "20px",
                     backgroundColor: "pink.500",
+                    clipPath: "polygon(0 100%, 100% 0, 0 0)",
                   },
                   "::after": {
-                    width: "10px",
-                    height: "10px",
+                    content: '""',
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    width: "20px",
+                    height: "20px",
                     backgroundColor: "pink.500",
+                    clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                   },
-                },
-              }}
-            >
-              <CommonButton
-                backgroundColor={"rgba(27, 27, 27, 0.20)"}
-                boxShadow={"inset 0 0 10px var(--color-main)"}
-                border="0.5px solid var(--color-main)"
-                position="relative"
-                zIndex="10"
+                  "@media (max-width: 992px)": {
+                    clipPath:
+                      "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)",
+                    "::before": {
+                      width: "10px",
+                      height: "10px",
+                      backgroundColor: "pink.500",
+                    },
+                    "::after": {
+                      width: "10px",
+                      height: "10px",
+                      backgroundColor: "pink.500",
+                    },
+                  },
+                }}
               >
-                <Flex
-                  flexDirection={"column"}
-                  padding={{
-                    base: "24px 29px 24px 20px",
-                    lg: "21.5px 16px 21.5px 16px",
-                    "3xl": "48px 56px 48px 56px",
-                  }}
-                  gap={"22px"}
+                <CommonButton
+                  backgroundColor={"rgba(27, 27, 27, 0.20)"}
+                  boxShadow={"inset 0 0 10px var(--color-main)"}
+                  border="0.5px solid var(--color-main)"
+                  position="relative"
+                  zIndex="10"
                 >
-                  <Flex alignItems={"center"} justifyContent={"space-between"}>
-                    <Text
-                      letterSpacing={"-1px"}
-                      width={{ base: "80%", "3xl": "90%" }}
-                      fontSize={{
-                        base: "20px",
-                        "2xl": "32px",
-                        "3xl": "40px",
-                      }}
-                      fontFamily="var(--font-heading-main)"
-                      lineHeight={{ base: "28px", "2xl": "48px" }}
+                  <Flex
+                    flexDirection={"column"}
+                    padding={{
+                      base: "24px 29px 24px 20px",
+                      lg: "21.5px 16px 21.5px 16px",
+                      xl: "24px 36px 24px 36px",
+                      "3xl": "48px 56px 48px 56px",
+                    }}
+                    gap={"22px"}
+                  >
+                    <Flex
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
                     >
-                      BachiSwap Mining Program
-                    </Text>
-                    <Button
-                      sx={{
-                        backdropFilter: "blur(10px) !important",
-                        clipPath:
-                          "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%) ",
-                        "::before": {
-                          content: '""',
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "10px",
-                          height: "10px",
-                          backgroundColor: "pink.500",
-                          clipPath: "polygon(0 100%, 100% 0, 0 0)",
-                        },
-                        "::after": {
-                          content: '""',
-                          position: "absolute",
-                          bottom: 0,
-                          right: 0,
-                          width: "10px",
-                          height: "10px",
-                          backgroundColor: "pink.500",
-                          clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
-                        },
-                        "@media (width: 1920px)": {
+                      <Text
+                        letterSpacing={"-1px"}
+                        width={{ base: "80%", "3xl": "90%" }}
+                        fontSize={{
+                          base: "20px",
+                          "2xl": "32px",
+                          "3xl": "40px",
+                        }}
+                        fontFamily="var(--font-heading-main)"
+                        lineHeight={{ base: "28px", "2xl": "48px" }}
+                      >
+                        BachiSwap Mining Program
+                      </Text>
+                      <Button
+                        sx={{
+                          backdropFilter: "blur(10px) !important",
                           clipPath:
-                            "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                            "polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%) ",
                           "::before": {
-                            width: "20px",
-                            height: "20px",
+                            content: '""',
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "10px",
+                            height: "10px",
                             backgroundColor: "pink.500",
+                            clipPath: "polygon(0 100%, 100% 0, 0 0)",
                           },
                           "::after": {
-                            width: "20px",
-                            height: "20px",
+                            content: '""',
+                            position: "absolute",
+                            bottom: 0,
+                            right: 0,
+                            width: "10px",
+                            height: "10px",
                             backgroundColor: "pink.500",
+                            clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
                           },
-                        },
-                      }}
-                      width={{ base: "40px", lg: "40px", "3xl": "61px" }}
-                      height={{ base: "40px", lg: "40px", "3xl": "61px" }}
-                      backgroundColor="var(--color-main)"
-                      display={"flex"}
-                      alignItems={"center"}
-                      justifyContent={"center"}
-                    >
-                      <Box sx={{ transform: "rotate(-45deg)" }}>
-                        <HiArrowSmRight fontSize={"30px"} color="#000" />
-                      </Box>
-                    </Button>
+                          "@media (width: 1920px)": {
+                            clipPath:
+                              "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                            "::before": {
+                              width: "20px",
+                              height: "20px",
+                              backgroundColor: "pink.500",
+                            },
+                            "::after": {
+                              width: "20px",
+                              height: "20px",
+                              backgroundColor: "pink.500",
+                            },
+                          },
+                        }}
+                        width={{ base: "40px", lg: "40px", "3xl": "61px" }}
+                        height={{ base: "40px", lg: "40px", "3xl": "61px" }}
+                        backgroundColor="var(--color-main)"
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                      >
+                        <Box sx={{ transform: "rotate(-45deg)" }}>
+                          <HiArrowSmRight fontSize={"30px"} color="#000" />
+                        </Box>
+                      </Button>
+                    </Flex>
+                    <Text
+                      fontSize={{ base: "16px", "2xl": "24px" }}
+                      fontFamily="var(--font-text-main)"
+                    ></Text>
                   </Flex>
-                  <Text
-                    fontSize={{ base: "16px", "2xl": "24px" }}
-                    fontFamily="var(--font-text-main)"
-                  ></Text>
-                </Flex>
-              </CommonButton>
-            </Box>
+                </CommonButton>
+              </Box>
+            </Link>
             <Box
               width={"100%"}
               height={"100%"}
@@ -255,6 +262,7 @@ const ResourcesHome = () => {
                   padding={{
                     base: "24px 29px 24px 20px",
                     lg: "21.5px 16px 21.5px 16px",
+                    xl: "24px 36px 24px 36px",
                     "3xl": "48px 56px 48px 56px",
                   }}
                   gap={{ base: "16px", lg: "5px" }}
@@ -367,26 +375,28 @@ const ResourcesHome = () => {
           >
             The next evolution of Decentralized Exchange
           </Text>
-          <MainButton
-            width={{ base: "172px", lg: "136px", "2xl": "230px" }}
-            height={{ base: "44px", lg: "56px", "2xl": "64px" }}
-            backgroundColor="var(--color-background)"
-            display={"flex"}
-            justifyContent={"center"}
-            flexDirection={"column"}
-          >
-            <Text
-              textAlign={"center"}
-              fontSize={{ base: "20px", "3xl": "24px" }}
-              color={"#FCDDEC"}
-              fontWeight={500}
-              lineHeight={"28px"}
-              letterSpacing={"-1px"}
-              fontFamily={"var(--font-heading-main)"}
+          <Link to="/node">
+            <MainButton
+              width={{ base: "172px", lg: "136px", "2xl": "230px" }}
+              height={{ base: "44px", lg: "56px", "2xl": "64px" }}
+              backgroundColor="var(--color-background)"
+              display={"flex"}
+              justifyContent={"center"}
+              flexDirection={"column"}
             >
-              Join Now
-            </Text>
-          </MainButton>
+              <Text
+                textAlign={"center"}
+                fontSize={{ base: "20px", "3xl": "24px" }}
+                color={"#FCDDEC"}
+                fontWeight={500}
+                lineHeight={"28px"}
+                letterSpacing={"-1px"}
+                fontFamily={"var(--font-heading-main)"}
+              >
+                Join Now
+              </Text>
+            </MainButton>
+          </Link>
         </Flex>
       </SectionContainer>
     </>

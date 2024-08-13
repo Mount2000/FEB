@@ -1,6 +1,6 @@
 const contract = {
   testnet: {
-    CONTRACT_ADDRESS: "0x0E9E29C0C605C9985729559c2c4B9cEA8EB552C9",
+    CONTRACT_ADDRESS: "0x11c3E968E0d56aF6c464AC88C5c60DfBE8E67597",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -97,9 +97,9 @@ const contract = {
             type: "address",
           },
           {
-            indexed: true,
+            indexed: false,
             internalType: "uint256",
-            name: "_stakeId",
+            name: "nodeIds",
             type: "uint256",
           },
           {
@@ -255,6 +255,43 @@ const contract = {
         inputs: [
           {
             indexed: true,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256[]",
+            name: "nodeIds",
+            type: "uint256[]",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "claimTime",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "rewardBachi",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "rewardTaiko",
+            type: "uint256",
+          },
+        ],
+        name: "RewardsClaimed",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
             internalType: "bytes32",
             name: "role",
             type: "bytes32",
@@ -337,7 +374,7 @@ const contract = {
           {
             indexed: true,
             internalType: "uint256",
-            name: "_stakeId",
+            name: "stakeId",
             type: "uint256",
           },
           {
@@ -368,7 +405,7 @@ const contract = {
           {
             indexed: true,
             internalType: "uint256",
-            name: "_stakeId",
+            name: "stakeId",
             type: "uint256",
           },
           {
@@ -398,6 +435,31 @@ const contract = {
           },
         ],
         name: "Unpaused",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "enum Staking.RewardType",
+            name: "rewardType",
+            type: "uint8",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "WithDrawReward",
         type: "event",
       },
       {
@@ -1090,6 +1152,29 @@ const contract = {
       {
         inputs: [
           {
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "taikoRewardAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "bachiRewardAmount",
+            type: "uint256",
+          },
+        ],
+        name: "updateRewardAmount",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
             internalType: "address payable",
             name: "to",
             type: "address",
@@ -1101,6 +1186,20 @@ const contract = {
           },
         ],
         name: "withdraw",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "withdrawBachiReward",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "withdrawTaikoReward",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
@@ -1108,7 +1207,7 @@ const contract = {
     ],
   },
   mainnet: {
-    CONTRACT_ADDRESS: "0x0E9E29C0C605C9985729559c2c4B9cEA8EB552C9",
+    CONTRACT_ADDRESS: "0x11c3E968E0d56aF6c464AC88C5c60DfBE8E67597",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -1205,9 +1304,9 @@ const contract = {
             type: "address",
           },
           {
-            indexed: true,
+            indexed: false,
             internalType: "uint256",
-            name: "_stakeId",
+            name: "nodeIds",
             type: "uint256",
           },
           {
@@ -1363,6 +1462,43 @@ const contract = {
         inputs: [
           {
             indexed: true,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256[]",
+            name: "nodeIds",
+            type: "uint256[]",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "claimTime",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "rewardBachi",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "rewardTaiko",
+            type: "uint256",
+          },
+        ],
+        name: "RewardsClaimed",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
             internalType: "bytes32",
             name: "role",
             type: "bytes32",
@@ -1445,7 +1581,7 @@ const contract = {
           {
             indexed: true,
             internalType: "uint256",
-            name: "_stakeId",
+            name: "stakeId",
             type: "uint256",
           },
           {
@@ -1476,7 +1612,7 @@ const contract = {
           {
             indexed: true,
             internalType: "uint256",
-            name: "_stakeId",
+            name: "stakeId",
             type: "uint256",
           },
           {
@@ -1506,6 +1642,31 @@ const contract = {
           },
         ],
         name: "Unpaused",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "enum Staking.RewardType",
+            name: "rewardType",
+            type: "uint8",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "WithDrawReward",
         type: "event",
       },
       {
@@ -2198,6 +2359,29 @@ const contract = {
       {
         inputs: [
           {
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "taikoRewardAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "bachiRewardAmount",
+            type: "uint256",
+          },
+        ],
+        name: "updateRewardAmount",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
             internalType: "address payable",
             name: "to",
             type: "address",
@@ -2209,6 +2393,20 @@ const contract = {
           },
         ],
         name: "withdraw",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "withdrawBachiReward",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "withdrawTaikoReward",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",

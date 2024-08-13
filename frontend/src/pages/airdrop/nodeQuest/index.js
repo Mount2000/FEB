@@ -6,8 +6,10 @@ import MainButton from "../../../components/button/MainButton";
 import QuestBox from "../../../components/questbox";
 
 const NodeQuest = () => {
+   
   const quests = [
     {
+      task_id: 1,
       title: "INVITE YOUR FRIEND",
       rewardText: null,
       buttonText: "Claim Quest",
@@ -15,6 +17,7 @@ const NodeQuest = () => {
       inputPlaceholder: "Input",
     },
     {
+      task_id: 2,
       title: "CONNECT YOUR TIWTTER ACCOUNT",
       rewardText: null,
       buttonText: "Claim Quest",
@@ -22,6 +25,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
+      task_id: 3,
       title: "CONNECT YOUR DISCORD ACCOUNT",
       rewardText: null,
       buttonText: "Claim Quest",
@@ -29,6 +33,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
+      task_id: 4,
       title: "CLAIM YOUR DAILY REWARD",
       rewardText: "Reward",
       rewardTotal: "10",
@@ -37,6 +42,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
+      task_id: 5,
       title: "FOLLOW @BachiSwap_io ON X",
       rewardText: "Reward",
       rewardTotal: "30",
@@ -45,6 +51,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
+      task_id: 6,
       title: "JOIN SERVER DISCORD",
       rewardText: "Reward",
       rewardTotal: "100",
@@ -53,6 +60,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
+      task_id: 7,
       title: "LIKE THIS TWEET ON X",
       rewardText: "Reward",
       rewardTotal: "30",
@@ -61,6 +69,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
+      task_id: 8,
       title: "LIKE THIS TWEET ON X",
       rewardText: "Reward",
       rewardTotal: "30",
@@ -69,6 +78,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
+      task_id: 9,
       title: "LIKE THIS TWEET ON X",
       rewardText: "Reward",
       rewardTotal: "100",

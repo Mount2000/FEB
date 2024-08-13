@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SectionContainer from "../../../components/container";
 import { Box, Button, Flex, Input, SimpleGrid, Text } from "@chakra-ui/react";
 import CommonButton from "../../../components/button/commonbutton";
 import MainButton from "../../../components/button/MainButton";
 import QuestBox from "../../../components/questbox";
 
+const TWITTER_API = process.env.REACT_APP_TWITTER_API;
+
 const SocialQuest = () => {
+  const [task2Status, setTask2Status] = useState("pending");
+  const getStatusTask2 = async () => {
+    
+  };
+  useEffect(() => {}, []);
   const quests = [
     {
       title: "INVITE YOUR FRIEND",
@@ -13,6 +20,7 @@ const SocialQuest = () => {
       buttonText: "Claim Quest",
       onClick: () => console.log("Invite Friend Quest Clicked"),
       inputPlaceholder: "Input",
+      task_id: 1,
     },
     {
       title: "CONNECT YOUR TIWTTER ACCOUNT",
@@ -20,6 +28,7 @@ const SocialQuest = () => {
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       inputPlaceholder: null,
+      task_id: 2,
     },
     {
       title: "CONNECT YOUR DISCORD ACCOUNT",
@@ -27,6 +36,7 @@ const SocialQuest = () => {
       buttonText: "Claim Quest",
       onClick: () => console.log("Twitter Connect Clicked"),
       inputPlaceholder: null,
+      task_id: 3,
     },
     {
       title: "CLAIM YOUR DAILY REWARD",
@@ -35,6 +45,7 @@ const SocialQuest = () => {
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       inputPlaceholder: null,
+      task_id: 4,
     },
     {
       title: "FOLLOW @BachiSwap_io ON X",
@@ -43,6 +54,7 @@ const SocialQuest = () => {
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       inputPlaceholder: null,
+      task_id: 5,
     },
     {
       title: "JOIN SERVER DISCORD",
@@ -51,6 +63,7 @@ const SocialQuest = () => {
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       inputPlaceholder: null,
+      task_id: 6,
     },
     {
       title: "LIKE THIS TWEET ON X",
@@ -59,6 +72,7 @@ const SocialQuest = () => {
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       inputPlaceholder: null,
+      task_id: 7,
     },
     {
       title: "LIKE THIS TWEET ON X",
@@ -67,6 +81,7 @@ const SocialQuest = () => {
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       inputPlaceholder: null,
+      task_id: 8,
     },
     {
       title: "LIKE THIS TWEET ON X",
@@ -75,6 +90,7 @@ const SocialQuest = () => {
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       inputPlaceholder: null,
+      task_id: 9,
     },
   ];
   return (

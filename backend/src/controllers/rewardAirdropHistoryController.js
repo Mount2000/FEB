@@ -5,16 +5,16 @@ const RewardHistory = db.rewardHistory;
 
 const addRewardHistory = async (req, res) => {
   try {
-    const { wallet_address, task_code, point } = req.body;
+    const { wallet_address, task_id, point } = req.body;
 
-    if (!wallet_address || !task_code || !point) {
+    if (!wallet_address || !task_id || !point) {
       return res.status(400).json({
         status: STATUS.FAILED,
         message: "Missing required fields",
       });
     }
 
-    const filter = { wallet_address: wallet_address, task_code: task_code };
+    const filter = { wallet_address: wallet_address, task_id: task_id };
     let found = await RewardHistory.findOne(filter);
     if (!found) {
       await RewardHistory.create(req.body)
@@ -55,16 +55,16 @@ const addRewardHistory = async (req, res) => {
 
 const updateRewardHistory = async (req, res) => {
   try {
-    const { wallet_address, task_code, point } = req.body;
+    const { wallet_address, task_id, point } = req.body;
 
-    if (!wallet_address || !task_code || !point) {
+    if (!wallet_address || !task_id || !point) {
       return res.status(400).json({
         status: STATUS.FAILED,
         message: "Missing required fields",
       });
     }
 
-    const filter = { wallet_address: wallet_address, task_code: task_code };
+    const filter = { wallet_address: wallet_address, task_id: task_id };
     const update = { point: point };
     let found = await RewardHistory.findOne(filter);
     if (found) {
@@ -162,10 +162,10 @@ const getRewardHistory = async (req, res) => {
   }
 };
 
-const getRewardHistoryByCode = async (req, res) => {
+const getRewardHistoryByTaskId = async (req, res) => {
   try {
-    let { wallet_address, task_code } = req.body;
-    if (!wallet_address || !task_code) {
+    let { wallet_address, task_id } = req.body;
+    if (!wallet_address || !task_id) {
       return res.status(400).json({
         status: STATUS.FAILED,
         message: "Missing required fields",
@@ -174,7 +174,7 @@ const getRewardHistoryByCode = async (req, res) => {
 
     const data = await RewardHistory.findOne({
       wallet_address: wallet_address,
-      task_code: task_code,
+      task_id: task_id,
     });
 
     return res.status(200).json({
@@ -198,5 +198,5 @@ module.exports = {
   updateRewardHistory,
   getRewardHistory,
   getAllRewardHistory,
-  getRewardHistoryByCode
+  getRewardHistoryByTaskId
 };

@@ -1,7 +1,8 @@
-import { Box, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Input, Text } from "@chakra-ui/react";
 import React from "react";
 import CommonButton from "../button/commonbutton";
 import MainButton from "../button/MainButton";
+import airDropComplete from "../../assets/img/airdrop/airdrop-complete.png";
 
 const QuestBox = ({
   title,
@@ -10,6 +11,9 @@ const QuestBox = ({
   buttonText,
   onClick,
   inputPlaceholder,
+  handleTask,
+  status = "pending",
+  completeTask,
 }) => {
   return (
     <Box
@@ -143,20 +147,52 @@ const QuestBox = ({
               </Flex>
             </Box>
           )}
-          <MainButton
-            backgroundColor="var(--color-main)"
-            onClick={onClick}
-            height={{ "3xl": "71px" }}
-          >
-            <Text
-              color={"#FFF"}
-              fontSize={"20px"}
-              lineHeight={{ base: "24px" }}
-              fontFamily="var(--font-text-main)"
+          {status == "pending" && (
+            <MainButton
+              backgroundColor="var(--color-main)"
+              onClick={handleTask}
+              height={{ "3xl": "71px" }}
             >
-              {buttonText}
-            </Text>
-          </MainButton>
+              <Text
+                color={"#FFF"}
+                fontSize={"20px"}
+                lineHeight={{ base: "24px" }}
+                fontFamily="var(--font-text-main)"
+              >
+                {buttonText}
+              </Text>
+            </MainButton>
+          )}
+          {status == "success" && (
+            <MainButton
+              backgroundColor="var(--color-main)"
+              onClick={completeTask}
+              height={{ "3xl": "71px" }}
+            >
+              <Text
+                color={"#FFF"}
+                fontSize={"20px"}
+                lineHeight={{ base: "24px" }}
+                fontFamily="var(--font-text-main)"
+              >
+                {"Claim reward"}
+              </Text>
+            </MainButton>
+          )}
+          {status == "completed" && (
+            <Flex justifyContent={"center"} alignItems={"center"} gap={"16px"}>
+              <Text
+                fontSize={{ base: "", lg: "", "3xl": "32px" }}
+                fontWeight={400}
+                lineHeight={{ base: "", "3xl": "40px" }}
+                fontFamily="var(--font-text-main)"
+                color="#23F600"
+              >
+                Complete
+              </Text>
+              <Image src={airDropComplete} />
+            </Flex>
+          )}
         </Flex>
       </CommonButton>
     </Box>

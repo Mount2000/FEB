@@ -10,8 +10,13 @@ import appBannerMobile from "../../../assets/img/homepage/banner-homemobile.png"
 import MainButton from "../../../components/button/MainButton";
 
 import { Link } from "react-router-dom";
+import { enumMenu } from "../../../utils/contants";
 
 const BannerHome = () => {
+  const earningPath = enumMenu[0].children.find(
+    (item) => item.name === "Earning"
+  ).path;
+  console.log({ earningPath });
   return (
     <>
       <SectionContainer position={"relative"}>
@@ -93,7 +98,7 @@ const BannerHome = () => {
             With BachiSwap, effortlessly swap any token and transfer your assets
             across different networks with ease
           </Text>
-          <Link to="/node">
+          <Link to={earningPath}>
             <MainButton
               borderRadius={{ base: "8px", md: "12px" }}
               width={{ base: "163px", md: "193px", lg: "193px", xl: "230px" }}

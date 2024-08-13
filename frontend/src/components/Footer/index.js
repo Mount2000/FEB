@@ -136,15 +136,15 @@ const BachiSwapFooter = () => {
                   fontWeight={400}
                   fontFamily={"var(--font-text-main)"}
                 >
-                  <Link to={""}>
+                  {/* <Link to={""}>
                     <ListItem>Ecosystem</ListItem>
-                  </Link>
+                  </Link> */}
                   <Link to={""}>
                     <ListItem>Docs</ListItem>
                   </Link>
-                  <Link to={""}>
+                  {/* <Link to={""}>
                     <ListItem>Blog</ListItem>
-                  </Link>
+                  </Link> */}
                 </UnorderedList>
               </Flex>
               <Flex flexDirection={"column"} gap={{ base: "16px" }}>
@@ -162,13 +162,13 @@ const BachiSwapFooter = () => {
                   fontWeight={400}
                   fontFamily="var( --font-text-main)"
                 >
-                  <Link to="">
+                  <Link to="https://x.com/i/flow/login?redirect_after_login=%2FBachiSwap">
                     <ListItem>X</ListItem>
                   </Link>
-                  <Link to="">
+                  <Link to="https://discord.gg/bachiswap">
                     <ListItem>Discord</ListItem>
                   </Link>
-                  <Link to="">
+                  <Link to="https://www.youtube.com/@BachiSwap">
                     <ListItem>Youtube</ListItem>
                   </Link>
                 </UnorderedList>

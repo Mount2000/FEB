@@ -19,10 +19,6 @@ export const enumMenu = [
         path: "/node",
         name: "Referral Program",
       },
-      {
-        path: "/node",
-        name: "Rank",
-      },
     ],
   },
   {
@@ -40,11 +36,13 @@ export const enumMenu = [
     ],
   },
   {
-    path: "/swap",
+    path: "#",
     name: "Swap",
+    disabled: true,
   },
   {
-    path: "/staking",
+    path: "#",
     name: "Staking",
+    disabled: true,
   },
 ];

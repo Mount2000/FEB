@@ -5,12 +5,12 @@ import SectionContainer from "../../../components/container";
 import Earning from "./earning";
 import MintRune from "./mintrune";
 import RuneExplorer from "./runeexplorer";
-import Rank from "./rank";
+
 import ReferralProgram from "./referralprogram";
 //import image
 import backgroundNode from "../../../assets/img/node/background-node.png";
 import backgroundReferral from "../../../assets/img/node/background-referral.png";
-import { base } from "viem/chains";
+
 import { useTab } from "../../../contexts/useTab";
 const ProductNode = () => {
   const { farmTab, setFarmTab } = useTab();
@@ -31,10 +31,6 @@ const ProductNode = () => {
     {
       title: "Referral Program",
       content: <ReferralProgram />,
-    },
-    {
-      title: "Rank",
-      content: <Rank />,
     },
   ];
 

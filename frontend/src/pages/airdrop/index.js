@@ -1,155 +1,107 @@
 import React, { useRef } from "react";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
 //import component
 import SectionContainer from "../../components/container";
 import CustomButton from "../../components/button";
 //import image
-import backgroundMain from "../../assets/img/node/backgroundmain-node.png";
-import CommonButton from "../../components/button/commonbutton";
+import backgroundNode from "../../assets/img/node/background-node.png";
+import { useTab } from "../../contexts/useTab";
+import SocialQuest from "./socialQuest";
+import NodeQuest from "./nodeQuest";
 
 const AirDrop = () => {
-  return (
-    <SectionContainer
-      marginLeft={"44px"}
-      marginRight={"40px"}
-      paddingLeft={"0px"}
-      paddingRight={"0px"}
-    >
-      <Box height="800px">
-        <CustomButton
-          width="100%"
-          height="100% "
-          backgroundImage={`url(${backgroundMain})`}
-          backgroundSize="cover"
-          backgroundColor="transparent"
-          backgroundRepeat="no-repeat"
-          backgroundPosition="center"
-          boder="none"
-          _hover={{
-            backgroundColor: "var(--color-background)",
-          }}
-        >
-          <Flex flexDirection={"column"} alignItems={"center"}>
-            <Text
-              fontSize={"64px"}
-              fontWeight={400}
-              fontFamily="var(--font-heading-main)"
-              lineHeight={"50px"}
-            >
-              Bachi Swap
-            </Text>
-            <Text
-              fontSize={"36px"}
-              fontWeight={400}
-              fontFamily="var(--font-text-main)"
-              lineHeight={"50px"}
-            >
-              Power the future of AI and Gaming, achieve ATH
-            </Text>
-          </Flex>
-        </CustomButton>
-      </Box>
+  const { farmTab, setFarmTab } = useTab();
 
-      <CommonButton
-        border="0.5px solid var(--color-main)"
-        width="100%"
-        height="100%"
-        marginTop={"89px"}
+  const productTab = [
+    {
+      title: "SocialQuest",
+      content: <SocialQuest />,
+    },
+    {
+      title: "NodeQuest",
+      content: <NodeQuest />,
+    },
+  ];
+  return (
+    <>
+      <Image
+        src={backgroundNode}
+        position={"absolute"}
+        right={"0px"}
+        top={"70px"}
+      />
+      <SectionContainer
+        px={{ base: "25px", xl: "48px", "3xl": "68px" }}
+        marginBottom={"24px"}
+        position={"relative"}
       >
-        <Flex
-          alignItems={"center"}
-          padding={"64px 59px 65px 83px"}
-          gap={"30px"}
-          fontFamily={"var(--font-heading-main)"}
-        >
-          <Flex flexDirection={"column"} gap={"18px"}>
-            <Flex flexDirection={"column"} gap={"10px"}>
-              <Text
-                fontSize={"32px"}
-                fontWeight={400}
-                fontFamily="var(--font-heading-main)"
-              >
-                223,762,017.076 veATH TVL
-              </Text>
-              <Text
-                fontSize={"24px"}
-                fontWeight={400}
-                fontFamily="var(--font-heading-main)"
-              >
-                Stake to Gaming Ecosystem
-              </Text>
-              <Text
-                fontSize={"24px"}
-                fontWeight={400}
-                fontFamily="var(--font-text-main)"
-              >
-                Empower the next generation of blockchain-based games. By
-                staking Bachi in the Gaming Pool, you will be able to earn
-                rewards from our gaming partners, alongside ATH rewards. All
-                stakers will be able to participate in BachiDAO’s governance
-                system upon BachiDAO launch.
-              </Text>
-            </Flex>
-            <CommonButton
-              backgroundColor="var(--color-main)"
-              display={"flex"}
-              justifyContent={"center"}
-              alignItems={"center "}
-              height={"100px"}
-            >
-              <Text fontSize={"24px"} fontWeight={500}>
-                Explorer
-              </Text>
-            </CommonButton>
-          </Flex>
-          <CommonButton
-            padding={"56px 55px 60px 55px"}
-            backgroundColor="var(--color-main)"
+        <Flex flexDirection={"column"} alignItems={"center"}>
+          <Text
+            fontSize={{ base: "24px", "2xl": "64px" }}
+            fontWeight={400}
+            fontFamily="var(--font-heading)"
+            textAlign={"center"}
+            paddingTop={{ base: "50px", "2xl": "135px" }}
           >
-            <Flex flexDirection={"column"} gap={"18px"}>
-              <Flex flexDirection={"column"} gap={"10px"}>
-                <Text
-                  fontSize={"32px"}
-                  fontWeight={400}
-                  fontFamily="var(--font-heading-main)"
+            BachiSwap Airdrop
+          </Text>
+          <Flex
+            justifyContent={{ base: "center", xl: "flex-start" }}
+            wrap={"wrap"}
+            width={"100%"}
+            marginTop={{ base: "47px", "2xl": "99px" }}
+          >
+            {productTab.map((e, index) => {
+              return (
+                <Flex
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  key={index}
+                  onClick={() => setFarmTab(index)}
+                  cursor={"pointer"}
+                  padding={"12px 5px 0px 5px"}
+                  zIndex={"10"}
+                  borderBottom="1px solid #FCDDEC"
+                  flex={"1 1 0"}
                 >
-                  223,762,017.076 veATH TVL
-                </Text>
-                <Text
-                  fontSize={"24px"}
-                  fontWeight={400}
-                  fontFamily="var(--font-heading-main)"
-                >
-                  Stake to Gaming Ecosystem
-                </Text>
-                <Text
-                  fontSize={"24px"}
-                  fontWeight={400}
-                  fontFamily="var(--font-text-main)"
-                >
-                  Empower the next generation of blockchain-based games. By
-                  staking Bachi in the Gaming Pool, you will be able to earn
-                  rewards from our gaming partners, alongside ATH rewards. All
-                  stakers will be able to participate in BachiDAO’s governance
-                  system upon BachiDAO launch.
-                </Text>
-              </Flex>
-              <CommonButton
-                backgroundColor="var(--color-background)"
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center "}
-                height={"100px"}
-              >
-                <Text fontSize={"24px"} fontWeight={500}>
-                  Explorer
-                </Text>
-              </CommonButton>
-            </Flex>
-          </CommonButton>
+                  <Text
+                    position={"relative"}
+                    paddingBottom={"12px"}
+                    _before={{
+                      content: '""',
+                      position: "absolute",
+                      bottom: "-1px",
+                      left: 0,
+                      width: "100%",
+                      height: {
+                        base: farmTab === index ? "3px" : "0",
+                        "2xl": farmTab === index ? "5px" : "0",
+                      },
+                      backgroundColor: "var(--color-main)",
+                    }}
+                    fontSize={{
+                      base: "16px",
+                      md: "24px",
+                      "2xl": "32px",
+                      "3xl": "36px",
+                    }}
+                    fontWeight={400}
+                    lineHeight={"normal"}
+                    fontFamily="var(--font-heading-main)"
+                    color={farmTab == index ? "var(--color-main)" : "#FFF"}
+                    textAlign={"center"}
+                    whiteSpace="nowrap"
+                  >
+                    {e?.title}
+                  </Text>
+                </Flex>
+              );
+            })}
+          </Flex>
         </Flex>
-      </CommonButton>
-    </SectionContainer>
+        <Box>{productTab[farmTab].content}</Box>
+      </SectionContainer>
+    </>
   );
 };
 

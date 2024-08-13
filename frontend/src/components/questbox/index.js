@@ -1,7 +1,8 @@
-import { Box, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Input, Text } from "@chakra-ui/react";
 import React from "react";
 import CommonButton from "../button/commonbutton";
 import MainButton from "../button/MainButton";
+import airDropComplete from "../../assets/img/airdrop/airdrop-complete.png";
 
 const QuestBox = ({
   title,
@@ -69,8 +70,7 @@ const QuestBox = ({
               py={{ base: "15px", "3xl": "24px" }}
               fontSize={{
                 base: "20px",
-                "2xl": "36px",
-                "3xl": "24px",
+                "2xl": "24px",
               }}
               fontFamily="var(--font-text-extra)"
             >
@@ -106,14 +106,14 @@ const QuestBox = ({
                 left={{ base: "20px", xl: "50px" }}
                 width="fit-content"
                 padding="0 5px"
-                zIndex={1} // Đặt z-index để phần text nằm đè lên
+                zIndex={1}
               >
-                <Box
+                {/* <Box
                   width="100%"
-                  height="2px" // Chiều cao giống với chiều cao border
+                  height="2px"
                   backgroundColor="transparent"
                   clipPath="polygon(0 0, 100% 0, 100% 100%, 0 100%)"
-                />
+                /> */}
                 <Text
                   color="#FFFFFF"
                   fontSize={{ base: "16px", md: "18px", xl: "20px" }}
@@ -157,6 +157,18 @@ const QuestBox = ({
               {buttonText}
             </Text>
           </MainButton>
+          <Flex alignItems={"center"} gap={"16px"}>
+            <Text
+              fontSize={{ base: "", lg: "", "3xl": "32px" }}
+              fontWeight={400}
+              lineHeight={{ base: "", "3xl": "40px" }}
+              fontFamily="var(--font-text-main)"
+              color="#23F600"
+            >
+              Complete
+            </Text>
+            <Image src={airDropComplete} />
+          </Flex>
         </Flex>
       </CommonButton>
     </Box>

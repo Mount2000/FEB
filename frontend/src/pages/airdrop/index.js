@@ -41,15 +41,14 @@ const AirDrop = () => {
             fontWeight={400}
             fontFamily="var(--font-heading)"
             textAlign={"center"}
-            paddingTop={{ base: "50px", "2xl": "135px" }}
+            paddingTop={{ base: "50px", "2xl": "118.5px" }}
           >
             BachiSwap Airdrop
           </Text>
           <Flex
             justifyContent={{ base: "center", xl: "flex-start" }}
-            wrap={"wrap"}
             width={"100%"}
-            marginTop={{ base: "47px", "2xl": "99px" }}
+            marginTop={{ base: "47px", "2xl": "120.5px" }}
           >
             {productTab.map((e, index) => {
               return (

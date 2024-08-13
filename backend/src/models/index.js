@@ -7,5 +7,8 @@ db.blockedIps = require("./BlockedIPModel");
 db.scannedBlocks = require("./scannedBlocks.model");
 db.transactions = require("./TransactionModel");
 db.referrals = require("./referrals.model");
+db.users = require("./users.model");
+db.tasks = require("./tasks.model");
+db.rewardHistory = require("./rewardHistory.model");
 
 module.exports = db;

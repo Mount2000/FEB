@@ -8,6 +8,7 @@ async function main() {
   let bachiNodeAddress = "0x0000000000000000000000000000000000000000";
   let nodeManagerAddress = "0x0000000000000000000000000000000000000000";
   let stakingAddress = "0x0000000000000000000000000000000000000000";
+  let questManagerAddress = "0x0000000000000000000000000000000000000000";
 
   // Deploy BachiToken contract
   let tokenName = "BACHI TOKEN";
@@ -64,11 +65,24 @@ async function main() {
   console.log(`Deployed to: ${stakingAddress}`);
   console.log(`Transaction hash: ${stakingTx.hash}`);
 
+  // Deploy Quest manager contract
+  const QuestManager = await ethers.getContractFactory("QuestManager");
+  const questManager = await QuestManager.deploy(stakingAddress);
+  await questManager.waitForDeployment();
+  const questManagerTx = await questManager.deploymentTransaction();
+  questManagerAddress = questManager.target;
+  console.log("QuestManager deployed successfully.");
+  console.log(`Deployed to: ${stakingAddress}`);
+  console.log(`Transaction hash: ${questManagerTx.hash}`);
+
+  /********************** CONTRACT ADDRESS **************************/
+
   console.log({
     bachiTokenAddress,
     bachiNodeAddress,
     nodeManagerAddress,
     stakingAddress,
+    questManagerAddress
   });
 }
 

@@ -23,7 +23,7 @@ const QuestBox = ({
   isDisabled,
 }) => {
   const { address } = useAccount();
-  const [referralCode, setReferralCode] = useState("BACHISWAP_xxx_xxxx");
+  const [referralCode, setReferralCode] = useState(null);
   const nodeManagerContract = {
     address: node_manager_contract.CONTRACT_ADDRESS,
     abi: node_manager_contract.CONTRACT_ABI,
@@ -169,7 +169,11 @@ const QuestBox = ({
                   </Text>
                 </Box>
                 <Flex flexDirection={"column"} width={"100%"}>
-                  <ReferralCopier referralCode={referralCode} />
+                  {!referralCode ? (
+                    <Text>{"---"}</Text>
+                  ) : (
+                    <ReferralCopier referralCode={referralCode} />
+                  )}
                 </Flex>
               </Box>
             )}

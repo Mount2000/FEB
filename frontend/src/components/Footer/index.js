@@ -111,7 +111,7 @@ const BachiSwapFooter = () => {
                 >
                   QUICKLINKS
                 </Text>
-                <Link to={""}>
+                <Link to={"/airdrop"} onClick={() => window.scrollTo(0, 0)}>
                   <Text
                     fontSize={{ base: "14px", md: "18px" }}
                     fontWeight={400}

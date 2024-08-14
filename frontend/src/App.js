@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  ScrollRestoration,
+} from "react-router-dom";
 import NotFoundPage from "./pages/404";
 import AdminPage from "./pages/admin";
 import HomePage from "./pages/home";

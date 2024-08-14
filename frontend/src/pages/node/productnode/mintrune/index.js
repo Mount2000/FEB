@@ -509,11 +509,6 @@ const MintRune = () => {
                         {products.nameproduct}
                       </Text>
                       <Image
-                        className={
-                          selectProduct?.tierId === products.tierId
-                            ? "spinning-image"
-                            : ""
-                        }
                         src={products.image}
                         display={{ base: "none", md: "block" }}
                       />
@@ -536,11 +531,6 @@ const MintRune = () => {
                       </Flex>
                     </Flex>
                     <Image
-                      className={
-                        selectProduct?.tierId === products.tierId
-                          ? "spinning-image"
-                          : ""
-                      }
                       src={products.image}
                       display={{ base: "block", md: "none" }}
                       width={"80px"}

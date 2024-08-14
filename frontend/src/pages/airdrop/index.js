@@ -46,9 +46,11 @@ const AirDrop = () => {
             BachiSwap Airdrop
           </Text>
           <Flex
-            justifyContent={{ base: "center", xl: "flex-start" }}
+            justifyContent={{ base: "space-around", xl: "flex-start" }}
             width={"100%"}
+            gap={{ base: "", xl: "80px", "2xl": "100px" }}
             marginTop={{ base: "47px", "2xl": "120.5px" }}
+            borderBottom="1px solid #FCDDEC"
           >
             {productTab.map((e, index) => {
               return (
@@ -60,8 +62,6 @@ const AirDrop = () => {
                   cursor={"pointer"}
                   padding={"12px 5px 0px 5px"}
                   zIndex={"10"}
-                  borderBottom="1px solid #FCDDEC"
-                  flex={"1 1 0"}
                 >
                   <Text
                     position={"relative"}

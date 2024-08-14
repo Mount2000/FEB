@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import SectionContainer from "../../../components/container";
 import { Box, Button, Flex, Input, SimpleGrid, Text } from "@chakra-ui/react";
 import CommonButton from "../../../components/button/commonbutton";
 import MainButton from "../../../components/button/MainButton";
 import QuestBox from "../../../components/questbox";
-
+import useScreenWidth from "../../../hooks/useScreenWidth";
+import { AiOutlineLeft } from "react-icons/ai";
+import { AiOutlineRight } from "react-icons/ai";
 const NodeQuest = () => {
   const quests = [
     {
@@ -15,21 +17,23 @@ const NodeQuest = () => {
       inputPlaceholder: "Input",
     },
     {
-      title: "CONNECT YOUR TIWTTER ACCOUNT",
-      rewardText: null,
+      title: "PURCHASE YOUR FIRST BOOSTER",
+      rewardText: "Reward",
+      rewardTotal: "0.5",
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       inputPlaceholder: null,
     },
     {
-      title: "CONNECT YOUR DISCORD ACCOUNT",
-      rewardText: null,
+      title: "FOLLOW @TAIKOXYZ ON X",
+      rewardText: "Reward",
+      rewardTotal: "0.5",
       buttonText: "Claim Quest",
       onClick: () => console.log("Twitter Connect Clicked"),
       inputPlaceholder: null,
     },
     {
-      title: "CLAIM YOUR DAILY REWARD",
+      title: "SAY HELLO TO THE DISCORD SERVER!",
       rewardText: "Reward",
       rewardTotal: "10",
       buttonText: "Claim Quest",
@@ -37,7 +41,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
-      title: "FOLLOW @BachiSwap_io ON X",
+      title: "REACHED LEVEL 10 ON DISCORD SERVER",
       rewardText: "Reward",
       rewardTotal: "30",
       buttonText: "Claim Quest",
@@ -45,7 +49,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
-      title: "JOIN SERVER DISCORD",
+      title: "REACHED LEVEL 20 ON DISCORD SERVER",
       rewardText: "Reward",
       rewardTotal: "100",
       buttonText: "Claim Quest",
@@ -53,7 +57,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
-      title: "LIKE THIS TWEET ON X",
+      title: "REACHED LEVEL 50 ON DISCORD SERVER",
       rewardText: "Reward",
       rewardTotal: "30",
       buttonText: "Claim Quest",
@@ -61,7 +65,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
-      title: "LIKE THIS TWEET ON X",
+      title: "PURCHASED 3 BOOSTERS",
       rewardText: "Reward",
       rewardTotal: "30",
       buttonText: "Claim Quest",
@@ -69,7 +73,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
-      title: "LIKE THIS TWEET ON X",
+      title: "PURCHASED 5 BOOSTERS",
       rewardText: "Reward",
       rewardTotal: "100",
       buttonText: "Claim Quest",
@@ -77,24 +81,121 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
   ];
+  const isMobile = useScreenWidth(768);
+  const [currentPage, setCurrentPage] = useState(1);
+  const questsPerPage = 3;
+
+  const indexOfLastQuest = currentPage * questsPerPage;
+  const indexOfFirstQuest = indexOfLastQuest - questsPerPage;
+  const currentQuests = quests.slice(indexOfFirstQuest, indexOfLastQuest);
+  const totalPages = Math.ceil(quests.length / questsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
   return (
     <SectionContainer py={{ base: "24px", lg: "50px", "3xl": "64px" }}>
       <SimpleGrid
         spacing={{ base: "17px" }}
         columns={{ base: 1, lg: 2, xl: 3 }}
       >
-        {quests.map((quest, index) => (
-          <QuestBox
-            key={index}
-            title={quest.title}
-            rewardText={quest.rewardText}
-            rewardTotal={quest.rewardTotal}
-            buttonText={quest.buttonText}
-            onClick={quest.onClick}
-            inputPlaceholder={quest.inputPlaceholder}
-          />
-        ))}
+        {isMobile
+          ? currentQuests.map((quest, index) => (
+              <Box
+                key={index}
+                gridColumn={
+                  quest.inputPlaceholder
+                    ? { lg: "span 2", xl: "span 1" }
+                    : "auto"
+                }
+              >
+                <QuestBox
+                  title={quest.title}
+                  rewardText={quest.rewardText}
+                  rewardTotal={quest.rewardTotal}
+                  buttonText={quest.buttonText}
+                  onClick={quest.onClick}
+                  inputPlaceholder={quest.inputPlaceholder}
+                />
+              </Box>
+            ))
+          : quests.map((quest, index) => (
+              <Box
+                key={index}
+                gridColumn={
+                  quest.inputPlaceholder
+                    ? { lg: "span 2", xl: "span 1" }
+                    : "auto"
+                }
+              >
+                <QuestBox
+                  title={quest.title}
+                  rewardText={quest.rewardText}
+                  rewardTotal={quest.rewardTotal}
+                  buttonText={quest.buttonText}
+                  onClick={quest.onClick}
+                  inputPlaceholder={quest.inputPlaceholder}
+                />
+              </Box>
+            ))}
       </SimpleGrid>
+      {isMobile && (
+        <Flex justifyContent="center" mt="24px" alignItems="center" gap="8px">
+          <Button
+            color={"#FFF"}
+            border={"0.5px solid #EB7FB3"}
+            backgroundColor="var(--color-background)"
+            width={"30px"}
+            onClick={handlePrevPage}
+            isDisabled={currentPage === 1}
+            borderRadius="50%"
+          >
+            <Box boxSize="20px" paddingTop={"2px"}>
+              <AiOutlineLeft />
+            </Box>
+          </Button>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Button
+              border={"0.5px solid #EB7FB3"}
+              borderRadius={"50%"}
+              key={index + 1}
+              onClick={() => handlePageClick(index + 1)}
+              bg={
+                currentPage === index + 1
+                  ? "#EB7FB3"
+                  : "var(--color-background)"
+              }
+              color={currentPage === index + 1 ? "black" : "white"}
+            >
+              {index + 1}
+            </Button>
+          ))}
+          <Button
+            width={"30px"}
+            color={"#FFF"}
+            border={"0.5px solid #EB7FB3"}
+            backgroundColor="var(--color-background)"
+            onClick={handleNextPage}
+            isDisabled={currentPage === totalPages}
+            borderRadius="50%"
+          >
+            <Box boxSize="20px" paddingTop={"2px"}>
+              <AiOutlineRight />
+            </Box>
+          </Button>
+        </Flex>
+      )}
       <Flex flexDirection={"column"} gap={{ base: "24px" }}>
         <Text
           fontSize={{ base: "24px", "2xl": "64px" }}
@@ -154,7 +255,12 @@ const NodeQuest = () => {
             border="0.5px solid var(--color-main)"
             position="relative"
             zIndex="10"
-            p={{ "3xl": "47px 48px 65px 48px" }}
+            p={{
+              md: "16px 24px",
+              lg: "16px 49px",
+              xl: "32px 46px",
+              "3xl": "47px 48px 65px 48px",
+            }}
           >
             <Box
               width={"100%"}
@@ -201,6 +307,7 @@ const NodeQuest = () => {
               }}
             >
               <CommonButton
+                display={{ base: "none", md: "block" }}
                 backgroundColor={"rgba(27, 27, 27, 0.20)"}
                 boxShadow={"inset 0 0 10px var(--color-main)"}
                 border="0.5px solid var(--color-main)"
@@ -210,10 +317,10 @@ const NodeQuest = () => {
                 <SimpleGrid
                   p={{ base: "20px 40px" }}
                   justifyContent={"space-between"}
-                  display={"flex"}
+                  display={{ base: "none", md: "flex" }}
                   spacing={{ base: "17px" }}
                   columns={{ base: 4 }}
-                  fontSize={"32px"}
+                  fontSize={{ base: "16px", lg: "24px", xl: "32px" }}
                   fontFamily="var(--font-text-main)"
                 >
                   <Text>#</Text>
@@ -238,8 +345,7 @@ const NodeQuest = () => {
                   py={{ base: "15px" }}
                   fontSize={{
                     base: "20px",
-                    "2xl": "36px",
-                    "3xl": "40px",
+                    "2xl": "32px",
                   }}
                   fontFamily="var(--font-text-extra)"
                 >

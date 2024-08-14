@@ -191,11 +191,75 @@ const SocialQuest = () => {
     }
     window.location.href = `${process.env.REACT_APP_TWITTER_API}/auth/twitter?wallet=${address}&&task_id=2`;
   };
+  const handleSuccessTask3 = async () => {
+    if (!address) {
+      toast.error("Please Connect wallet!");
+      return;
+    }
+    window.location.href = `${process.env.REACT_APP_TWITTER_API}/auth/discord?wallet=${address}&&task_id=3`;
+  };
+  const handleSuccessTask4 = async (task_id, setStatus) => {
+    if (!address) {
+      toast.error("Please Connect wallet!");
+      return;
+    }
+    try {
+      const { data } = await clientAPI(
+        "post",
+        "/api/airdropTask/getAirdropTaskById",
+        { task_id: task_id }
+      );
+      if (data) {
+        const { data: user } = await clientAPI(
+          "post",
+          "/api/rewardAirdrop/getUserReward",
+          { caller: address }
+        );
+        if (!user) {
+          await clientAPI("post", "/api/rewardAirdrop/addUserReward", {
+            wallet_address: address,
+            point: data.reward_point,
+          });
+        } else {
+          const point = Number(data.reward_point) + Number(user.point);
+          await clientAPI("post", "/api/rewardAirdrop/updateUserReward", {
+            wallet_address: address,
+            point: point,
+          });
+        }
+        const options = {
+          wallet_address: address,
+          task_id: task_id,
+          point: data.reward_point,
+        };
+        const result = await clientAPI(
+          "post",
+          "/api/rewardAirdropHistory/addRewardHistory",
+          options
+        );
+        await getStatusTask(task_id, setStatus);
+        toast.success(`Complete the mission ${task_id}!`);
+        // setStatus(task_id, "success");
+      }
+    } catch (error) {
+      if (error.response) {
+        // Extract response data in case of a 500 error
+        console.error("Server Error:", error.response.data);
+      } else {
+        // Handle other errors
+        console.error("Error:", error.message);
+      }
+      return;
+    }
+  };
+  // https://discord.com/invite/bachiswap
   const handleSuccessTaskLike = async (task_id, setStatus) => {
     if (!address) {
       toast.error("Please Connect wallet!");
       return;
     }
+    if (task_id === 6)
+      window.open("https://discord.com/invite/bachiswap", "_blank");
     window.open("https://x.com/BachiSwap", "_blank");
 
     try {
@@ -272,7 +336,7 @@ const SocialQuest = () => {
       rewardTotal: 0.005,
       buttonText: "Do Quest",
       onClick: () => console.log("Twitter Connect Clicked"),
-      handleTask: () => handleSuccessTaskLike(3, setTask3Status),
+      handleTask: handleSuccessTask3,
       completeTask: () => completeTask(3, setTask3Status),
       inputPlaceholder: null,
       task_id: 3,
@@ -284,7 +348,7 @@ const SocialQuest = () => {
       rewardTotal: 0.005,
       buttonText: "Do Quest",
       onClick: () => console.log("Daily Reward Clicked"),
-      handleTask: () => handleSuccessTaskLike(4, setTask4Status),
+      handleTask: () => handleSuccessTask4(4, setTask4Status),
       completeTask: () => completeTask(4, setTask4Status),
       inputPlaceholder: null,
       task_id: 4,

@@ -10,7 +10,7 @@ import SocialQuest from "./socialQuest";
 import NodeQuest from "./nodeQuest";
 
 const AirDrop = () => {
-  const { farmTab, setFarmTab } = useTab();
+  const { airdropTab, setAirdropTask } = useTab();
 
   const productTab = [
     {
@@ -57,7 +57,7 @@ const AirDrop = () => {
                   alignItems={"center"}
                   justifyContent={"center"}
                   key={index}
-                  onClick={() => setFarmTab(index)}
+                  onClick={() => setAirdropTask(index)}
                   cursor={"pointer"}
                   padding={"12px 5px 0px 5px"}
                   zIndex={"10"}
@@ -74,8 +74,8 @@ const AirDrop = () => {
                       left: 0,
                       width: "100%",
                       height: {
-                        base: farmTab === index ? "3px" : "0",
-                        "2xl": farmTab === index ? "5px" : "0",
+                        base: airdropTab === index ? "3px" : "0",
+                        "2xl": airdropTab === index ? "5px" : "0",
                       },
                       backgroundColor: "var(--color-main)",
                     }}
@@ -88,7 +88,7 @@ const AirDrop = () => {
                     fontWeight={400}
                     lineHeight={"normal"}
                     fontFamily="var(--font-heading-main)"
-                    color={farmTab == index ? "var(--color-main)" : "#FFF"}
+                    color={airdropTab == index ? "var(--color-main)" : "#FFF"}
                     textAlign={"center"}
                     whiteSpace="nowrap"
                   >
@@ -99,7 +99,7 @@ const AirDrop = () => {
             })}
           </Flex>
         </Flex>
-        <Box>{productTab[farmTab].content}</Box>
+        <Box>{productTab[airdropTab].content}</Box>
       </SectionContainer>
     </>
   );

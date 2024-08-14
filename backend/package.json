@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon src/index.js",
+    "discord": "nodemon discord.js",
     "scan-node-manager": "nodemon src/crons/node_manager_events_collector.js"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "node-cron": "^3.0.3",
     "nodemon": "^3.1.4",
     "passport": "^0.7.0",
+    "passport-discord": "^0.1.4",
     "passport-twitter": "^1.0.4"
   }
 }

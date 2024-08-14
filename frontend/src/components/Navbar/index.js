@@ -26,7 +26,7 @@ const Navbar = () => {
   const { setConnectWalletModalVisible } = useModal();
   const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
   const { address } = useAccount();
-  const { setFarmTab } = useTab();
+  const { setFarmTab, setAirdropTask } = useTab();
   const handleShowNav = () => {
     setShowNav(!shownav);
   };
@@ -162,8 +162,16 @@ const Navbar = () => {
                           to={subItem.path}
                           key={subItem.name}
                           onClick={() => {
+                            console.log({
+                              a: item.name,
+                              b: enumMenu[1].name,
+                              index,
+                            });
                             if (item.name == enumMenu[0].name)
                               setFarmTab(index);
+                            else if (item.name == enumMenu[1].name) {
+                              setAirdropTask(index);
+                            }
                           }}
                         >
                           <Flex

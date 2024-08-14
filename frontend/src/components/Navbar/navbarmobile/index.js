@@ -21,7 +21,7 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
   const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
   const { address } = useAccount();
   const [navActive, setNavActive] = useState([]);
-  const { setFarmTab } = useTab();
+  const { setFarmTab, setAirdropTask } = useTab();
   useEffect(() => {
     if (shownav) {
       document.body.style.overflow = "hidden";
@@ -149,6 +149,9 @@ const NavbarMobile = ({ zIndex, handleShowNav, shownav }) => {
                         to={subItem.path}
                         onClick={() => {
                           if (item.name == enumMenu[0].name) setFarmTab(index);
+                          else if (item.name == enumMenu[1].name) {
+                            setAirdropTask(index);
+                          }
                           handleShowNav();
                         }}
                       >

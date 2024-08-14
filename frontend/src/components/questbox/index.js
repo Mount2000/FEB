@@ -93,6 +93,7 @@ const QuestBox = ({
         flex="1"
         position="relative"
         zIndex="10"
+        w={"100%"}
       >
         <Flex
           flexDirection={"column"}
@@ -104,6 +105,7 @@ const QuestBox = ({
           }}
           gap={{ base: "24px", lg: "32px", "2xl": "22px", "3xl": "25px" }}
           height="100%"
+          w={"100%"}
         >
           <Flex flexDirection={"column"} flex="1">
             <Text
@@ -136,6 +138,7 @@ const QuestBox = ({
           <Flex
             flexDirection={{ base: "column", md: "row", xl: "column" }}
             gap={{ base: "24px" }}
+            w={"100%"}
           >
             {inputPlaceholder && (
               <Box
@@ -143,6 +146,7 @@ const QuestBox = ({
                 border="1px solid #FCDDEC"
                 padding="10px"
                 position="relative"
+                w={"100%"}
               >
                 <Box
                   position="absolute"
@@ -251,20 +255,21 @@ const ReferralCopier = ({ referralCode }) => {
       <Flex
         onClick={() => handleCopy("referral", referralCode)}
         alignItems="center"
-        maxWidth={{
-          base: "290px",
-          md: "450px",
-          xl: "250px",
-          "2xl": "340px",
-          "3xl": "400px",
-        }}
+        // maxWidth={{
+        //   base: "290px",
+        //   md: "450px",
+        //   xl: "250px",
+        //   "2xl": "340px",
+        //   "3xl": "400px",
+        // }}
+        w={"100%"}
         overflow="hidden"
       >
         <Text
           fontSize={{ base: "14px", md: "20px" }}
           fontWeight={300}
           isTruncated
-          whiteSpace="nowrap"
+          maxWidth="100%"
           overflow="hidden"
           textOverflow="ellipsis"
         >

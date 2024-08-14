@@ -2,7 +2,21 @@ import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 import React, { useEffect, useState } from "react";
 import SectionContainer from "../../../components/container";
-import { Box, Button, Flex, Input, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  SimpleGrid,
+  Text,
+  TableContainer,
+  Table,
+  Thead,
+  HStack,
+  Td,
+  Tr,
+  Tbody,
+} from "@chakra-ui/react";
 import CommonButton from "../../../components/button/commonbutton";
 import MainButton from "../../../components/button/MainButton";
 import QuestBox from "../../../components/questbox";
@@ -27,6 +41,20 @@ import toast from "react-hot-toast";
 import MessageBox from "../../../components/message/messageBox";
 import { FAIURE, PENDING } from "../../../utils/mesages";
 import useScreenWidth from "../../../hooks/useScreenWidth";
+import {
+  useQuestHistory,
+  useQuestHistoryInfinity,
+} from "../../../hooks/useQuestHistory";
+import { formatTableValue } from "./formatTable";
+import { useInView } from "react-intersection-observer";
+import { BeatLoader } from "react-spinners";
+import useInterval from "../../../hooks/useInterval";
+import { AddressCopier } from "../../../components/addressCopier";
+import ReactPaginate from "react-paginate";
+import {
+  MdOutlineArrowBackIosNew,
+  MdOutlineArrowForwardIos,
+} from "react-icons/md";
 
 const TWITTER_API = process.env.REACT_APP_TWITTER_API;
 const DISCORD_API = process.env.REACT_APP_DISCORD_API;
@@ -67,6 +95,31 @@ const SocialQuest = () => {
     });
 
     if (isSuccess?.data) setStatus("success");
+    if (isComplete) setStatus("completed");
+  };
+
+  const getStatusTask4 = async (task_id, setStatus) => {
+    const options = {
+      wallet_address: address,
+      task_id: task_id,
+    };
+    const { data } = await clientAPI(
+      "post",
+      "/api/rewardAirdropHistory/getRewardHistoryByTaskId",
+      options
+    );
+
+    const isComplete = await readContract(config, {
+      ...questManagerContract,
+      functionName: "isTaskCompletedByUser",
+      args: [address, task_id],
+    });
+
+    const currentTime = new Date();
+    const oneDayInMillis = 24 * 60 * 60 * 1000;
+    const timeDifference = currentTime - new Date(data.createdAt);
+    if (data && timeDifference >= oneDayInMillis) setStatus("pending");
+    else setStatus("success");
     if (isComplete) setStatus("completed");
   };
 
@@ -180,7 +233,7 @@ const SocialQuest = () => {
       getStatusTask(1, setTask1Status);
       getStatusTask(2, setTask2Status);
       getStatusTask(3, setTask3Status);
-      getStatusTask(4, setTask4Status);
+      getStatusTask4(4, setTask4Status);
       getStatusTask(5, setTask5Status);
       getStatusTask(6, setTask6Status);
       getStatusTask(7, setTask7Status);
@@ -207,6 +260,7 @@ const SocialQuest = () => {
       toast.error("Please Connect wallet!");
       return;
     }
+
     try {
       const { data } = await clientAPI(
         "post",
@@ -231,6 +285,7 @@ const SocialQuest = () => {
             point: point,
           });
         }
+
         const options = {
           wallet_address: address,
           task_id: task_id,
@@ -244,11 +299,12 @@ const SocialQuest = () => {
         await getStatusTask(task_id, setStatus);
         toast.success(`Complete the mission ${task_id}!`);
         // setStatus(task_id, "success");
-      }
+      } else toast.error("Task not exist");
     } catch (error) {
       if (error.response) {
         // Extract response data in case of a 500 error
         console.error("Server Error:", error.response.data);
+        toast.error(`${error.response.data.message}`);
       } else {
         // Handle other errors
         console.error("Error:", error.message);
@@ -256,7 +312,9 @@ const SocialQuest = () => {
       return;
     }
   };
-  // https://discord.com/invite/bachiswap
+
+  console.log({ task4Status });
+
   const handleSuccessTaskLike = async (task_id, setStatus) => {
     if (!address) {
       toast.error("Please Connect wallet!");
@@ -303,9 +361,16 @@ const SocialQuest = () => {
         await getStatusTask(task_id, setStatus);
         toast.success(`Complete the mission ${task_id}!`);
         // setStatus(task_id, "success");
+      } else toast.error("Task not exist");
+    } catch (error) {
+      if (error.response) {
+        // Extract response data in case of a 500 error
+        console.error("Server Error:", error.response.data);
+        toast.error(`${error.response.data.message}`);
+      } else {
+        // Handle other errors
+        console.error("Error:", error.message);
       }
-    } catch (e) {
-      console.log(e);
       return;
     }
   };
@@ -459,6 +524,81 @@ const SocialQuest = () => {
   const handlePageClick = (page) => {
     setCurrentPage(page);
   };
+
+  const {
+    questHistoryData,
+    totalPages: questHistoryTotalPages,
+    isLoading: isLoadingTransactionHistoryData,
+    refetch: refetchTransactionHistoryData,
+    isRefetching: isRefetchingTransactionHistoryData,
+    prevPage: handlePrev,
+    nextPage: handleNext,
+    setCurrentPage: questHistorySetCurrentPage,
+    currentPage: questHistoryCurrentPage,
+  } = useQuestHistory(address);
+
+  const {
+    questHistoryDataInfinity,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    refetch,
+  } = useQuestHistoryInfinity(address);
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage.selected + 1);
+    refetchTransactionHistoryData();
+  };
+
+  const { ref, inView } = useInView();
+
+  useInterval(() => {
+    refetch();
+    refetchTransactionHistoryData();
+  }, 3000);
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView]);
+
+  const historyTableData = {
+    headers: [
+      {
+        label: "No.",
+        key: "num",
+      },
+      {
+        label: "Wallet",
+        key: "wallet_address",
+      },
+      {
+        label: "XP",
+        key: "point",
+      },
+      {
+        label: "Time",
+        key: "date",
+      },
+    ],
+    headersMobile: [
+      {
+        label: "Wallet",
+        key: "wallet_address",
+      },
+      {
+        label: "XP",
+        key: "point",
+      },
+      {
+        label: "Time",
+        key: "date",
+      },
+    ],
+    data: isMobile ? questHistoryData : questHistoryDataInfinity,
+  };
   return (
     <>
       <SectionContainer py={{ base: "24px", lg: "50px", "3xl": "64px" }}>
@@ -570,7 +710,7 @@ const SocialQuest = () => {
           >
             Airdrop history
           </Text>
-          <Box
+          {/* <Box
             width={"100%"}
             height={"100%"}
             sx={{
@@ -718,7 +858,234 @@ const SocialQuest = () => {
                 </Flex>
               </Flex>
             </CommonButton>
-          </Box>
+          </Box> */}
+          {isMobile ? (
+            <CommonButton
+              border="0.5px solid var(--color-main)"
+              width={"100%"}
+              height={"100%"}
+              backgroundColor="var(--color-background-footer)"
+              fontFamily={"var(--font-text-main)"}
+              fontSize={{ base: "12px" }}
+            >
+              {historyTableData.data?.length > 0 ? (
+                historyTableData.data?.map((record) => {
+                  let color;
+                  if (record.status === "pending") color = "#F8A401";
+                  else if (record.status === "success") color = "#23F600";
+                  else color = "#E42493";
+                  return (
+                    <Box
+                      padding={"32px"}
+                      borderBottom={"0.5px solid var(--color-main)"}
+                    >
+                      <Flex w={"100%"} gap={"12px"}>
+                        <Box w={"24px"}>
+                          {record.num}
+                          {"."}
+                        </Box>
+                        <Flex direction={"column"} w={"100%"} gap={"8px"}>
+                          {historyTableData.headersMobile.map((item) => {
+                            return (
+                              <SimpleGrid columns={2} w={"100%"}>
+                                <Box>
+                                  <Text>{item.label}</Text>
+                                </Box>
+                                <Box>
+                                  {item.key === "caller" ? (
+                                    <AddressCopier
+                                      address={record.caller}
+                                      digits={4}
+                                    />
+                                  ) : (
+                                    <Text
+                                      color={item.key === "status" && color}
+                                    >
+                                      {record[item.key]}
+                                    </Text>
+                                  )}
+                                </Box>
+                              </SimpleGrid>
+                            );
+                          })}
+                        </Flex>
+                      </Flex>
+                    </Box>
+                  );
+                })
+              ) : (
+                <Box
+                  padding={"32px"}
+                  borderBottom={"0.5px solid var(--color-main)"}
+                  fontFamily={"var(--font-heading-main)"}
+                >
+                  <Text textAlign={"center"}>No record</Text>
+                </Box>
+              )}
+              <Box
+                display="flex"
+                justifyContent={"center"}
+                alignItems={"center"}
+                py={"24px"}
+              >
+                <ReactPaginate
+                  pageCount={questHistoryTotalPages}
+                  pageRangeDisplayed={3}
+                  marginPagesDisplayed={1}
+                  onPageChange={handlePageChange}
+                  containerClassName={"pagination"}
+                  activeClassName={"active"}
+                  breakClassName={"ellipsis"}
+                  breakLabel={"..."}
+                  previousLabel={<MdOutlineArrowBackIosNew />}
+                  nextLabel={<MdOutlineArrowForwardIos />}
+                  renderOnZeroPageCount={null}
+                  initialPage={currentPage - 1}
+                />
+              </Box>
+            </CommonButton>
+          ) : (
+            <CommonButton
+              border="0.5px solid var(--color-main)"
+              width={"100%"}
+              height={"100%"}
+              backgroundColor={"var(--color-background-footer)"}
+              padding={"32px 24px"}
+            >
+              <TableContainer w={"100%"}>
+                <Table w={"100%"} variant="unstyled" className="history-table">
+                  <Thead
+                    w={"100%"}
+                    h={"80px"}
+                    color="white"
+                    fontWeight="400"
+                    borderRadius="3px"
+                    backgroundColor="var(--color-main)"
+                    sx={{
+                      backdropFilter: "blur(10px) !important",
+                      clipPath:
+                        "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                      "::before": {
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "20px",
+                        height: "20px",
+                        backgroundColor: "pink.500",
+                        clipPath: "polygon(0 100%, 100% 0, 0 0)",
+                      },
+                      "::after": {
+                        content: '""',
+                        position: "absolute",
+                        bottom: 0,
+                        right: 0,
+                        width: "20px",
+                        height: "20px",
+                        backgroundColor: "pink.500",
+                        clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
+                      },
+                      "@media (max-width: 992px)": {
+                        clipPath:
+                          "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                        "::before": {
+                          width: "20px",
+                          height: "20px",
+                          backgroundColor: "pink.500",
+                        },
+                        "::after": {
+                          width: "20px",
+                          height: "20px",
+                          backgroundColor: "pink.500",
+                        },
+                      },
+                    }}
+                  >
+                    <Tr className="transaction-history-table-header-container">
+                      {historyTableData.headers.map((e, index) => {
+                        let width = "auto";
+                        if (e.key === "caller") {
+                          width = "40%";
+                        } else {
+                          width = "20%";
+                        }
+                        return (
+                          <Td
+                            className="transaction-table-header-column"
+                            border={"none"}
+                            color={"white"}
+                            fontFamily={"var(--font-text-main)"}
+                            fontSize={{ base: "16px", xl: "20px" }}
+                            w={width}
+                          >
+                            <Box ml={"24px"}>{e.label}</Box>
+                          </Td>
+                        );
+                      })}
+                    </Tr>
+                  </Thead>
+                  <Tbody w={"100%"}>
+                    {historyTableData.data?.length > 0 ? (
+                      historyTableData.data?.map((e, rowIndex) => {
+                        const keyValues = Object.keys(e);
+                        return (
+                          <Tr>
+                            {keyValues.map((keyvalue, index) => {
+                              let width = "auto";
+                              if (e.key === "caller") {
+                                width = "40%";
+                              } else {
+                                width = "20%";
+                              }
+                              return (
+                                <Td w={width}>
+                                  <Box
+                                    mt={"24px"}
+                                    ml={"24px"}
+                                    fontFamily={"var(--font-text-main)"}
+                                    fontSize={{ base: "16px", xl: "20px" }}
+                                  >
+                                    {formatTableValue(e[keyvalue], keyvalue)}
+                                  </Box>
+                                </Td>
+                              );
+                            })}
+                          </Tr>
+                        );
+                      })
+                    ) : (
+                      <Tr w={"100%"} fontFamily={"var(--font-heading-main)"}>
+                        <Td colSpan={4} w={"100%"}>
+                          <Box textAlign={"center"}>No records found</Box>
+                        </Td>
+                      </Tr>
+                    )}
+                  </Tbody>
+                </Table>
+                {historyTableData.data?.length ? (
+                  <HStack
+                    pt="32px"
+                    pb="20px"
+                    justifyContent="center"
+                    w="full"
+                    fontFamily={"var(--font-heading-main)"}
+                  >
+                    <Text ref={ref} fontFamily={"var(--font-text-main)"}>
+                      {isFetchingNextPage ? (
+                        <BeatLoader color="#7ae7ff" size="10px" />
+                      ) : hasNextPage ? (
+                        ""
+                      ) : (
+                        "Nothing more to load"
+                      )}
+                    </Text>
+                  </HStack>
+                ) : (
+                  ""
+                )}
+              </TableContainer>
+            </CommonButton>
+          )}
         </Flex>
       </SectionContainer>
       <MessageBox

@@ -43,7 +43,6 @@ const addRewardHistory = async (req, res) => {
         const currentTime = new Date();
         const oneDayInMillis = 24 * 60 * 60 * 1000;
         const timeDifference = currentTime - new Date(found.createdAt);
-        console.log({ timeDifference, createdAt: found.createdAt });
         if (timeDifference >= oneDayInMillis) {
           await RewardHistory.create(req.body)
             .then((data) => {
@@ -169,7 +168,10 @@ const getAllRewardHistory = async (req, res) => {
 
 const getRewardHistory = async (req, res) => {
   try {
-    let { wallet_address } = req.body;
+    let { wallet_address, limit, offset, sort } = req.body;
+    if (!limit) limit = 15;
+    if (!offset) offset = 0;
+    if (!sort) sort = -1;
     if (!wallet_address) {
       return res.status(400).json({
         status: STATUS.FAILED,
@@ -177,15 +179,20 @@ const getRewardHistory = async (req, res) => {
       });
     }
 
-    const data = await RewardHistory.find({
-      wallet_address: wallet_address,
-    });
+    const [totalData, data] = await Promise.all([
+      RewardHistory.find({ wallet_address: wallet_address }),
+      RewardHistory.find({ wallet_address: wallet_address })
+        .skip(Number(offset))
+        .limit(Number(limit))
+        .sort({ createdAt: Number(sort) }),
+    ]);
 
     return res.status(200).json({
       status: STATUS.OK,
       message: MESSAGE.SUCCESS,
       ret: {
         data: data,
+        total: totalData.length,
       },
     });
   } catch (e) {

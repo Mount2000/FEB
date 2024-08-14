@@ -422,7 +422,37 @@ const NodeQuest = () => {
                 borderBottom={"0.5px solid var(--color-main)"}
                 fontFamily={"var(--font-heading-main)"}
               >
-                <Text textAlign={"center"}>No record</Text>
+                <CommonButton
+                  backgroundColor={"rgba(27, 27, 27, 0.20)"}
+                  boxShadow={"inset 0 0 10px var(--color-main)"}
+                  border="0.5px solid var(--color-main)"
+                  display="flex"
+                  flexDirection="column"
+                  flex="1"
+                  position="relative"
+                  zIndex="10"
+                  height={{ base: "250px" }}
+                  width="100%"
+                  padding="40px"
+                >
+                  <Text
+                    py={{ base: "15px" }}
+                    fontSize={{
+                      base: "16px",
+                      md: "32px",
+                    }}
+                    fontFamily="var(--font-text-extra)"
+                  >
+                    Invite Your Friend and come to AirDrop History
+                  </Text>
+                  <Box mt={"12px"} fontSize={{ base: "16px" }}>
+                    {!referralCode ? (
+                      <Text>{"---"}</Text>
+                    ) : (
+                      <ReferralCopier referralCode={referralCode} />
+                    )}
+                  </Box>
+                </CommonButton>
               </Box>
             )}
             <Box

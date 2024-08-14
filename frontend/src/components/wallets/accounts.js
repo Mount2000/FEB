@@ -20,6 +20,7 @@ import bachi_node_contract from "../../utils/contracts/bachi_node_contract";
 import { useReadContract, useWriteContract } from "wagmi";
 import MainButton from "../button/MainButton";
 import { base } from "viem/chains";
+import useScreenWidth from "../../hooks/useScreenWidth";
 
 export function Account() {
   const { address } = useAccount();
@@ -42,6 +43,7 @@ export function Account() {
     const { value } = event?.target;
     await switchChain(config, { chainId: Number(value) });
   };
+  const isMobile = useScreenWidth(476);
   return (
     <Flex
       width={"100%"}
@@ -91,13 +93,13 @@ export function Account() {
         >
           <Text
             color={"black"}
-            fontSize={{ base: "20px", md: "24px" }}
+            fontSize={{ base: "16px", md: "24px" }}
             fontWeight={"500"}
           >
             Block Explorer
           </Text>
           <Box sx={{ transform: "rotate(-45deg)" }}>
-            <IoArrowForwardSharp color="black" size={"32px"} />
+            <IoArrowForwardSharp color="black" size={isMobile ? "16px":"32px"} />
           </Box>
         </Flex>
       </MainButton>

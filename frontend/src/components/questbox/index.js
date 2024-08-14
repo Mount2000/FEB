@@ -175,6 +175,7 @@ const QuestBox = ({
             )}
             {status == "pending" && (
               <MainButton
+                width={"100%"}
                 backgroundColor="var(--color-main)"
                 onClick={handleTask}
                 height={{ "3xl": "71px" }}
@@ -192,6 +193,7 @@ const QuestBox = ({
             )}
             {status == "success" && (
               <MainButton
+                width={"100%"}
                 backgroundColor="var(--color-main)"
                 onClick={completeTask}
                 height={{ "3xl": "71px" }}

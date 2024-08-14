@@ -7,6 +7,7 @@ import QuestBox from "../../../components/questbox";
 import useScreenWidth from "../../../hooks/useScreenWidth";
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
+import toast from "react-hot-toast";
 const NodeQuest = () => {
   const quests = [
     {
@@ -15,6 +16,7 @@ const NodeQuest = () => {
       rewardText: null,
       buttonText: "Claim Quest",
       onClick: () => console.log("Invite Friend Quest Clicked"),
+      handleTask: () => toast.error("You are not qualified!"),
       inputPlaceholder: "Input",
     },
     {
@@ -23,6 +25,7 @@ const NodeQuest = () => {
       rewardTotal: "0.005",
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
+      handleTask: () => toast.error("You are not qualified!"),
       inputPlaceholder: null,
     },
     {
@@ -31,6 +34,7 @@ const NodeQuest = () => {
       rewardTotal: "0.005",
       buttonText: "Claim Quest",
       onClick: () => console.log("Twitter Connect Clicked"),
+      handleTask: () => toast.error("You are not qualified!"),
       inputPlaceholder: null,
     },
     {
@@ -39,6 +43,7 @@ const NodeQuest = () => {
       rewardTotal: "0.005",
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
+      handleTask: () => toast.error("You are not qualified!"),
       inputPlaceholder: null,
     },
     {
@@ -47,6 +52,7 @@ const NodeQuest = () => {
       rewardTotal: "0.005",
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
+      handleTask: () => toast.error("You are not qualified!"),
       inputPlaceholder: null,
     },
     {
@@ -55,6 +61,7 @@ const NodeQuest = () => {
       rewardTotal: "0.005",
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
+      handleTask: () => toast.error("You are not qualified!"),
       inputPlaceholder: null,
     },
     {
@@ -63,6 +70,7 @@ const NodeQuest = () => {
       rewardTotal: "0.005",
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
+      handleTask: () => toast.error("You are not qualified!"),
       inputPlaceholder: null,
     },
     {
@@ -71,6 +79,7 @@ const NodeQuest = () => {
       rewardTotal: "0.005",
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
+      handleTask: () => toast.error("You are not qualified!"),
       inputPlaceholder: null,
     },
     {
@@ -79,6 +88,7 @@ const NodeQuest = () => {
       rewardTotal: "0.005",
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
+      handleTask: () => toast.error("You are not qualified!"),
       inputPlaceholder: null,
     },
   ];
@@ -128,6 +138,7 @@ const NodeQuest = () => {
                   buttonText={quest.buttonText}
                   onClick={quest.onClick}
                   inputPlaceholder={quest.inputPlaceholder}
+                  handleTask={quest.handleTask}
                 />
               </Box>
             ))
@@ -147,6 +158,7 @@ const NodeQuest = () => {
                   buttonText={quest.buttonText}
                   onClick={quest.onClick}
                   inputPlaceholder={quest.inputPlaceholder}
+                  handleTask={quest.handleTask}
                 />
               </Box>
             ))}

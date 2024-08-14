@@ -313,8 +313,6 @@ const SocialQuest = () => {
     }
   };
 
-  console.log({ task4Status });
-
   const handleSuccessTaskLike = async (task_id, setStatus) => {
     if (!address) {
       toast.error("Please Connect wallet!");

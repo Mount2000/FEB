@@ -13,8 +13,14 @@ import backgroundResources from "../../../assets/img/homepage/background-resourc
 import resourcesMobile from "../../../assets/img/homepage/resources-homemobile.png";
 import MainButton from "../../../components/button/MainButton";
 import { Link } from "react-router-dom";
+import { useTab } from "../../../contexts/useTab";
 
 const ResourcesHome = () => {
+  const { setFarmTab } = useTab();
+  const conectLink = () => {
+    setFarmTab(1);
+    window.scrollTo(0, 0);
+  };
   return (
     <>
       <SectionContainer
@@ -69,7 +75,7 @@ const ResourcesHome = () => {
             gap={{ base: "36px", lg: "32px" }}
             alignItems="stretch"
           >
-            <Link to="/node">
+            <Link to="/node" onClick={conectLink}>
               <Box
                 width={"100%"}
                 height={"100%"}
@@ -375,7 +381,7 @@ const ResourcesHome = () => {
           >
             The next evolution of Decentralized Exchange
           </Text>
-          <Link to="/node">
+          <Link to="/node" onClick={conectLink}>
             <MainButton
               width={{ base: "172px", lg: "136px", "2xl": "230px" }}
               height={{ base: "44px", lg: "56px", "2xl": "64px" }}

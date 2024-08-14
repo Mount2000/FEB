@@ -14,20 +14,20 @@ const AppLayout = ({ children }) => {
 };
 
 const LandingPageLayout = ({ children }) => {
-    return (
-      <Box>
-        <Navbar/>
-        <Box>{children}</Box>
-        <BachiSwapFooter />
-      </Box>
-    );
-  };
+  return (
+    <Box>
+      <Navbar />
+      <Box>{children}</Box>
+      <BachiSwapFooter />
+    </Box>
+  );
+};
 
 const DefaultLayout = ({ children }) => {
-    const location = useLocation();
-    if (["/node"].includes(location.pathname))
-      return <LandingPageLayout>{children}</LandingPageLayout>;
-    return <AppLayout>{children}</AppLayout>;
-  };
-  
-  export default DefaultLayout;
+  const location = useLocation();
+  if (["/node"].includes(location.pathname))
+    return <LandingPageLayout>{children}</LandingPageLayout>;
+  return <AppLayout>{children}</AppLayout>;
+};
+
+export default DefaultLayout;

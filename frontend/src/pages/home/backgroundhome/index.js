@@ -8,8 +8,14 @@ import backgroundHome from "../../../assets/img/homepage/background-home.png";
 //import icon
 import { HiArrowSmRight } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import { useTab } from "../../../contexts/useTab";
 
 const BackgroundHome = () => {
+  const { setFarmTab } = useTab();
+  const conectLink = () => {
+    setFarmTab(0);
+    window.scrollTo(0, 0);
+  };
   return (
     <Box
       backgroundImage={`url(${backgroundHome})`}
@@ -49,7 +55,7 @@ const BackgroundHome = () => {
           gap={{ base: "24px", lg: "48px", "2xl": "48px" }}
           flexDirection={{ base: "column", lg: "row" }}
         >
-          <Link to="/node">
+          <Link to="/node" onClick={conectLink}>
             <Box
               width={"100%"}
               height={"100%"}
@@ -95,6 +101,7 @@ const BackgroundHome = () => {
               backgroundColor={"rgba(27, 27, 27, 0.20)"}
             >
               <CommonButton
+                height="100%"
                 border="0.5px solid var(--color-main)"
                 boxShadow={"inset 0 0 10px var(--color-main)"}
                 position="relative"
@@ -193,7 +200,7 @@ const BackgroundHome = () => {
               </CommonButton>
             </Box>
           </Link>
-          <Link to="/airdrop">
+          <Link to="/airdrop" onClick={() => window.scrollTo(0, 0)}>
             <Box
               width={"100%"}
               height={"100%"}

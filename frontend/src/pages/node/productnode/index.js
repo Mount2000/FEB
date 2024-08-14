@@ -36,19 +36,15 @@ const ProductNode = () => {
 
   return (
     <>
-      <Image
-        src={backgroundNode}
-        position={"absolute"}
-        right={"0px"}
-        top={"70px"}
-      />
-      <Image
+      {/* <Image
         src={backgroundReferral}
         position={"absolute"}
         right={"0"}
         top={{ base: "280px", md: "380px" }}
-      />
+      /> */}
       <SectionContainer
+        backgroundImage={`url(${backgroundNode})`}
+        backgroundRepeat={"no-repeat"}
         px={{ base: "25px", xl: "48px", "3xl": "68px" }}
         marginBottom={"24px"}
         position={"relative"}

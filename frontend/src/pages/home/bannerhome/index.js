@@ -11,12 +11,14 @@ import MainButton from "../../../components/button/MainButton";
 
 import { Link } from "react-router-dom";
 import { enumMenu } from "../../../utils/contants";
+import { useTab } from "../../../contexts/useTab";
 
 const BannerHome = () => {
-  const earningPath = enumMenu[0].children.find(
-    (item) => item.name === "Earning"
-  ).path;
-  console.log({ earningPath });
+  const { setFarmTab } = useTab();
+  const conectLink = () => {
+    setFarmTab(0);
+    window.scrollTo(0, 0);
+  };
   return (
     <>
       <SectionContainer position={"relative"}>
@@ -98,7 +100,7 @@ const BannerHome = () => {
             With BachiSwap, effortlessly swap any token and transfer your assets
             across different networks with ease
           </Text>
-          <Link to={earningPath}>
+          <Link to={"/node"} onClick={conectLink}>
             <MainButton
               borderRadius={{ base: "8px", md: "12px" }}
               width={{ base: "163px", md: "193px", lg: "193px", xl: "230px" }}
@@ -241,13 +243,19 @@ const BannerHome = () => {
                 md: "49%",
                 lg: "245px",
                 xl: "285px",
+                "2xl": "400px",
                 "3xl": "426px",
               }}
               gap={{ base: "16px", lg: "0px" }}
             >
               <Text
                 textAlign={{ base: "start", lg: "center" }}
-                width={{ lg: "245px", xl: "285px", "3xl": "426px" }}
+                width={{
+                  lg: "245px",
+                  xl: "285px",
+                  "2xl": "400px",
+                  "3xl": "426px",
+                }}
                 fontSize={{
                   base: "40px",
                   lg: "48px",
@@ -397,11 +405,17 @@ const BannerHome = () => {
                 md: "49%",
                 lg: "245px",
                 xl: "285px",
+                "2xl": "400px",
                 "3xl": "426px",
               }}
             >
               <Text
-                width={{ lg: "245px", xl: "285px", "3xl": "426px" }}
+                width={{
+                  lg: "245px",
+                  xl: "285px",
+                  "2xl": "400px",
+                  "3xl": "426px",
+                }}
                 fontSize={{
                   base: "24px",
                   md: "28px",
@@ -486,12 +500,18 @@ const BannerHome = () => {
                 md: "49%",
                 lg: "245px",
                 xl: "285px",
+                "2xl": "400px",
                 "3xl": "426px",
               }}
               paddingBottom={{ base: "63px", xl: "0px" }}
             >
               <Text
-                width={{ lg: "245px", xl: "285px", "3xl": "426px" }}
+                width={{
+                  lg: "245px",
+                  xl: "285px",
+                  "2xl": "400px",
+                  "3xl": "426px",
+                }}
                 fontSize={{
                   base: "16px",
                   md: "18px",

@@ -28,6 +28,7 @@
     "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
     "react-spinners": "^0.14.1",
+    "react-sprite-animator": "^2.0.2",
     "remove": "^0.1.5",
     "three": "^0.167.1",
     "viem": "2.x",

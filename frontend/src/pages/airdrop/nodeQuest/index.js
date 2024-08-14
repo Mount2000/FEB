@@ -387,43 +387,31 @@ const NodeQuest = () => {
           >
             {historyTableData.data?.length > 0 ? (
               historyTableData.data?.map((record) => {
-                let color;
-                if (record.status === "pending") color = "#F8A401";
-                else if (record.status === "success") color = "#23F600";
-                else color = "#E42493";
                 return (
                   <Box
                     padding={"32px"}
                     borderBottom={"0.5px solid var(--color-main)"}
                   >
-                    <Flex w={"100%"} gap={"12px"}>
-                      <Box w={"24px"}>
-                        {record.num}
-                        {"."}
-                      </Box>
-                      <Flex direction={"column"} w={"100%"} gap={"8px"}>
-                        {historyTableData.headersMobile.map((item) => {
-                          return (
-                            <SimpleGrid columns={2} w={"100%"}>
-                              <Box>
-                                <Text>{item.label}</Text>
-                              </Box>
-                              <Box>
-                                {item.key === "caller" ? (
-                                  <AddressCopier
-                                    address={record.caller}
-                                    digits={4}
-                                  />
-                                ) : (
-                                  <Text color={item.key === "status" && color}>
-                                    {record[item.key]}
-                                  </Text>
-                                )}
-                              </Box>
-                            </SimpleGrid>
-                          );
-                        })}
-                      </Flex>
+                    <Flex direction={"column"} w={"100%"} gap={"8px"}>
+                      {historyTableData.headersMobile.map((item) => {
+                        return (
+                          <SimpleGrid columns={2} w={"100%"}>
+                            <Box>
+                              <Text>{item.label}</Text>
+                            </Box>
+                            <Box>
+                              {item.key === "wallet_address" ? (
+                                <AddressCopier
+                                  address={record.caller}
+                                  digits={5}
+                                />
+                              ) : (
+                                <Text>{record[item.key]}</Text>
+                              )}
+                            </Box>
+                          </SimpleGrid>
+                        );
+                      })}
                     </Flex>
                   </Box>
                 );

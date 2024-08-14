@@ -29,6 +29,7 @@ import { FAIURE, PENDING } from "../../../utils/mesages";
 import useScreenWidth from "../../../hooks/useScreenWidth";
 
 const TWITTER_API = process.env.REACT_APP_TWITTER_API;
+const DISCORD_API = process.env.REACT_APP_DISCORD_API;
 
 const SocialQuest = () => {
   const client = useClient();
@@ -199,7 +200,7 @@ const SocialQuest = () => {
       toast.error("Please Connect wallet!");
       return;
     }
-    window.location.href = `${process.env.REACT_APP_TWITTER_API}/auth/discord?wallet=${address}&&task_id=3`;
+    window.location.href = `${process.env.REACT_APP_DISCORD_API}/auth/discord?wallet=${address}&&task_id=3`;
   };
   const handleSuccessTask4 = async (task_id, setStatus) => {
     if (!address) {

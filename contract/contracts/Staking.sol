@@ -248,8 +248,8 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
 
     function updateRewardAmount(
         address user,
-        uint256 taikoRewardAmount,
-        uint256 bachiRewardAmount
+        uint256 bachiRewardAmount,
+        uint256 taikoRewardAmount
     ) public whenNotPaused onlyRole(ADMIN_ROLE) {
         rewardClaimedInfors[user].bachiRewardAmount += bachiRewardAmount;
         rewardClaimedInfors[user].taikoRewardAmount += taikoRewardAmount;
@@ -393,16 +393,14 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
         );
     }
 
-    function withdrawBachiReward(uint amount) public whenNotPaused {
-        uint256 rewardAmount = rewardClaimedInfors[msg.sender].bachiRewardAmount;
-        require(amount <= rewardAmount, "not enough reward");
+    function withdrawBachiReward() public whenNotPaused {
+        uint256 amount = rewardClaimedInfors[msg.sender].bachiRewardAmount;
         tokenContract.mint(msg.sender, amount);
         emit WithDrawReward(msg.sender, RewardType.Bachi, amount);
     }
 
-    function withdrawTaikoReward(uint amount) public whenNotPaused {
-        uint256 rewardAmount = rewardClaimedInfors[msg.sender].bachiRewardAmount;
-        require(amount <= rewardAmount, "not enough reward");
+    function withdrawTaikoReward() public whenNotPaused {
+        uint256 amount = rewardClaimedInfors[msg.sender].bachiRewardAmount;
         require(
             address(this).balance >= amount,
             "Insufficient contract balance"

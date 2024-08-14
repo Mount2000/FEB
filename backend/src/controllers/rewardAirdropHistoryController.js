@@ -5,17 +5,17 @@ const RewardHistory = db.rewardHistory;
 
 const addRewardHistory = async (req, res) => {
   try {
-    const { wallet_address, task_code, point } = req.body;
+    const { wallet_address, task_id, point } = req.body;
 
-    if (!wallet_address || !task_code || !point) {
+    if (!wallet_address || !task_id || !point) {
       return res.status(400).json({
         status: STATUS.FAILED,
         message: "Missing required fields",
       });
     }
 
-    const filter = { wallet_address: wallet_address, task_code: task_code };
-    let found = await RewardHistory.findOne(filter);
+    const filter = { wallet_address: wallet_address, task_id: task_id };
+    let found = await RewardHistory.findOne(filter).sort({ createdAt: -1 });
     if (!found) {
       await RewardHistory.create(req.body)
         .then((data) => {
@@ -39,10 +39,45 @@ const addRewardHistory = async (req, res) => {
             .send({ status: STATUS.FAILED, message: error.message });
         });
     } else {
-      return res.status(500).json({
-        status: STATUS.FAILED,
-        message: "User already exists",
-      });
+      if (task_id == 4) {
+        const currentTime = new Date();
+        const oneDayInMillis = 24 * 60 * 60 * 1000;
+        const timeDifference = currentTime - new Date(found.createdAt);
+        console.log({ timeDifference, createdAt: found.createdAt });
+        if (timeDifference >= oneDayInMillis) {
+          await RewardHistory.create(req.body)
+            .then((data) => {
+              if (!data) {
+                res.status(404).send({
+                  status: STATUS.FAILED,
+                  message: ERROR_MESSAGE.CAN_NOT_ADD,
+                });
+              } else {
+                res.send({
+                  status: STATUS.OK,
+                  message: MESSAGE.SUCCESS,
+                  data: data,
+                });
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+              res
+                .status(500)
+                .send({ status: STATUS.FAILED, message: error.message });
+            });
+        } else {
+          return res.status(500).json({
+            status: STATUS.FAILED,
+            message: "Invalid Time",
+          });
+        }
+      } else {
+        return res.status(500).json({
+          status: STATUS.FAILED,
+          message: "User already exists",
+        });
+      }
     }
   } catch (e) {
     return res.status(500).json({
@@ -55,16 +90,16 @@ const addRewardHistory = async (req, res) => {
 
 const updateRewardHistory = async (req, res) => {
   try {
-    const { wallet_address, task_code, point } = req.body;
+    const { wallet_address, task_id, point } = req.body;
 
-    if (!wallet_address || !task_code || !point) {
+    if (!wallet_address || !task_id || !point) {
       return res.status(400).json({
         status: STATUS.FAILED,
         message: "Missing required fields",
       });
     }
 
-    const filter = { wallet_address: wallet_address, task_code: task_code };
+    const filter = { wallet_address: wallet_address, task_id: task_id };
     const update = { point: point };
     let found = await RewardHistory.findOne(filter);
     if (found) {
@@ -162,10 +197,10 @@ const getRewardHistory = async (req, res) => {
   }
 };
 
-const getRewardHistoryByCode = async (req, res) => {
+const getRewardHistoryByTaskId = async (req, res) => {
   try {
-    let { wallet_address, task_code } = req.body;
-    if (!wallet_address || !task_code) {
+    let { wallet_address, task_id } = req.body;
+    if (!wallet_address || !task_id) {
       return res.status(400).json({
         status: STATUS.FAILED,
         message: "Missing required fields",
@@ -174,8 +209,8 @@ const getRewardHistoryByCode = async (req, res) => {
 
     const data = await RewardHistory.findOne({
       wallet_address: wallet_address,
-      task_code: task_code,
-    });
+      task_id: task_id,
+    }).sort({ createdAt: -1 });
 
     return res.status(200).json({
       status: STATUS.OK,
@@ -198,5 +233,5 @@ module.exports = {
   updateRewardHistory,
   getRewardHistory,
   getAllRewardHistory,
-  getRewardHistoryByCode
+  getRewardHistoryByTaskId,
 };

@@ -267,7 +267,6 @@ const Earning = () => {
           hash: hash,
         });
         if (result?.status == "success") {
-          getClaimedAmount();
           const status = await getTransactionStatus(config, hash);
           await clientAPI("post", "/api/transaction/update-transaction", {
             hash: hash,
@@ -277,6 +276,7 @@ const Earning = () => {
           setStatus("success");
           setIsLoading(true);
           setDisabled(false);
+          await getClaimedAmount();
           return;
         } else {
           const status = await getTransactionStatus(config, hash);
@@ -297,6 +297,7 @@ const Earning = () => {
       setStatus("failure");
       setIsLoading(true);
       setDisabled(false);
+      return;
     }
   };
 

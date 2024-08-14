@@ -4,6 +4,8 @@ const UsersSchema = new mongoose.Schema(
   {
     wallet_address: { type: String, required: true },
     point: { type: Number, required: true },
+    twitter_username: { type: String },
+    discord_username: { type: String },
   },
   {
     timestamps: true,

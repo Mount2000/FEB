@@ -14,7 +14,7 @@ contract QuestManager is Pausable, AccessControl, Ownable {
 
     Staking public stakingContract;
 
-    uint8 taskId;
+    uint8 public taskId;
     struct TaskInformation {
         string code;
         uint point;

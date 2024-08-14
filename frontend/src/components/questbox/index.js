@@ -1,15 +1,14 @@
-import { Box, Flex, Image, Input, Text } from "@chakra-ui/react";
+import { Box, Flex, Input, Text, Image } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import CommonButton from "../button/commonbutton";
 import MainButton from "../button/MainButton";
-import airDropComplete from "../../assets/img/airdrop/airdrop-complete.png";
-import { readContract } from "@wagmi/core";
 import { useAccount, useConfig } from "wagmi";
-
 import { config } from "../../components/wallets/config";
 import toast from "react-hot-toast";
 import iconNodedetail from "../../assets/img/node/icon-node-detail.png";
 import node_manager_contract from "../../utils/contracts/node_manager_contract";
+import { readContract } from "@wagmi/core";
+import airDropComplete from "../../assets/img/airdrop/airdrop-complete.png";
 import { base } from "viem/chains";
 const QuestBox = ({
   title,
@@ -18,6 +17,10 @@ const QuestBox = ({
   buttonText,
   onClick,
   inputPlaceholder,
+  handleTask,
+  status = "pending",
+  completeTask,
+  isDisabled,
 }) => {
   const { address } = useAccount();
   const [referralCode, setReferralCode] = useState("BACHISWAP_xxx_xxxx");
@@ -122,7 +125,7 @@ const QuestBox = ({
                   backgroundColor={"transparent"}
                   border={"2px solid #23F600"}
                   borderRadius={"20px"}
-                  width={{ base: "80px" }}
+                  padding={"8px 16px"}
                   height={{ base: "40px" }}
                 >
                   <Text color={"#23F600"}>{rewardTotal} TAIKO</Text>
@@ -136,15 +139,9 @@ const QuestBox = ({
           >
             {inputPlaceholder && (
               <Box
-                width={{ base: "100%", md: "60%", xl: "100%" }}
+                width="100%"
                 border="1px solid #FCDDEC"
-                padding={{
-                  base: "5px",
-                  md: "5px 10px",
-                  lg: "10px 20px",
-                  xl: "16px 24px",
-                  "3xl": "25px 18px 17px 32px",
-                }}
+                padding="10px"
                 position="relative"
               >
                 <Box
@@ -155,6 +152,12 @@ const QuestBox = ({
                   padding="0 5px"
                   zIndex={1}
                 >
+                  <Box
+                    width="100%"
+                    height="2px" // Chiều cao giống với chiều cao border
+                    backgroundColor="transparent"
+                    clipPath="polygon(0 0, 100% 0, 100% 100%, 0 100%)"
+                  />
                   <Text
                     backgroundColor="var(--color-background-popup)"
                     color="#FFFFFF"
@@ -170,34 +173,58 @@ const QuestBox = ({
                 </Flex>
               </Box>
             )}
-            <MainButton
-              width={"100%"}
-              padding={{ base: "", "3xl": "16px 24px" }}
-              backgroundColor="var(--color-main)"
-              onClick={onClick}
-              height={{ base: "44px", lg: "56px", "3xl": "71px" }}
-            >
-              <Text
-                color={"#FFF"}
-                fontSize={"20px"}
-                lineHeight={{ base: "24px" }}
-                fontFamily="var(--font-text-main)"
+            {status == "pending" && (
+              <MainButton
+                backgroundColor="var(--color-main)"
+                onClick={handleTask}
+                height={{ "3xl": "71px" }}
+                isDisabled={isDisabled}
               >
-                {buttonText}
-              </Text>
-            </MainButton>
-          </Flex>
-          <Flex alignItems={"center"} gap={"16px"} display={"none"}>
-            <Text
-              fontSize={{ base: "", lg: "", "3xl": "32px" }}
-              fontWeight={400}
-              lineHeight={{ base: "", "3xl": "40px" }}
-              fontFamily="var(--font-text-main)"
-              color="#23F600"
-            >
-              Complete
-            </Text>
-            <Image src={airDropComplete} />
+                <Text
+                  color={"#FFF"}
+                  fontSize={"20px"}
+                  lineHeight={{ base: "24px" }}
+                  fontFamily="var(--font-text-main)"
+                >
+                  {buttonText}
+                </Text>
+              </MainButton>
+            )}
+            {status == "success" && (
+              <MainButton
+                backgroundColor="var(--color-main)"
+                onClick={completeTask}
+                height={{ "3xl": "71px" }}
+                isDisabled={isDisabled}
+              >
+                <Text
+                  color={"#FFF"}
+                  fontSize={"20px"}
+                  lineHeight={{ base: "24px" }}
+                  fontFamily="var(--font-text-main)"
+                >
+                  {"Claim reward"}
+                </Text>
+              </MainButton>
+            )}
+            {status == "completed" && (
+              <Flex
+                justifyContent={"center"}
+                alignItems={"center"}
+                gap={"16px"}
+              >
+                <Text
+                  fontSize={{ base: "", lg: "", "3xl": "32px" }}
+                  fontWeight={400}
+                  lineHeight={{ base: "", "3xl": "40px" }}
+                  fontFamily="var(--font-text-main)"
+                  color="#23F600"
+                >
+                  Complete
+                </Text>
+                <Image src={airDropComplete} />
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </CommonButton>

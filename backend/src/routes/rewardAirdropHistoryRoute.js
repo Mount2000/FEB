@@ -6,6 +6,6 @@ route.post("/addRewardHistory", rewardAirdropHistory.addRewardHistory);
 route.post("/updateRewardHistory", rewardAirdropHistory.updateRewardHistory);
 route.post("/getAllRewardHistory", rewardAirdropHistory.getAllRewardHistory);
 route.post("/getRewardHistory", rewardAirdropHistory.getRewardHistory);
-route.post("/getRewardHistoryByCode", rewardAirdropHistory.getRewardHistoryByCode);
+route.post("/getRewardHistoryByTaskId", rewardAirdropHistory.getRewardHistoryByTaskId);
 
 module.exports = route;

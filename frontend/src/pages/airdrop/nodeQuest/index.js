@@ -8,8 +8,10 @@ import useScreenWidth from "../../../hooks/useScreenWidth";
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 const NodeQuest = () => {
+   
   const quests = [
     {
+      task_id: 1,
       title: "INVITE YOUR FRIEND",
       rewardText: null,
       buttonText: "Claim Quest",
@@ -17,23 +19,21 @@ const NodeQuest = () => {
       inputPlaceholder: "Input",
     },
     {
-      title: "PURCHASE YOUR FIRST BOOSTER",
-      rewardText: "Reward",
-      rewardTotal: "0.5",
+      title: "CONNECT YOUR TIWTTER ACCOUNT",
+      rewardText: null,
       buttonText: "Claim Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       inputPlaceholder: null,
     },
     {
-      title: "FOLLOW @TAIKOXYZ ON X",
-      rewardText: "Reward",
-      rewardTotal: "0.5",
+      title: "CONNECT YOUR DISCORD ACCOUNT",
+      rewardText: null,
       buttonText: "Claim Quest",
       onClick: () => console.log("Twitter Connect Clicked"),
       inputPlaceholder: null,
     },
     {
-      title: "SAY HELLO TO THE DISCORD SERVER!",
+      title: "CLAIM YOUR DAILY REWARD",
       rewardText: "Reward",
       rewardTotal: "10",
       buttonText: "Claim Quest",
@@ -41,7 +41,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
-      title: "REACHED LEVEL 10 ON DISCORD SERVER",
+      title: "FOLLOW @BachiSwap_io ON X",
       rewardText: "Reward",
       rewardTotal: "30",
       buttonText: "Claim Quest",
@@ -49,7 +49,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
-      title: "REACHED LEVEL 20 ON DISCORD SERVER",
+      title: "JOIN SERVER DISCORD",
       rewardText: "Reward",
       rewardTotal: "100",
       buttonText: "Claim Quest",
@@ -57,7 +57,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
-      title: "REACHED LEVEL 50 ON DISCORD SERVER",
+      title: "LIKE THIS TWEET ON X",
       rewardText: "Reward",
       rewardTotal: "30",
       buttonText: "Claim Quest",
@@ -65,7 +65,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
-      title: "PURCHASED 3 BOOSTERS",
+      title: "LIKE THIS TWEET ON X",
       rewardText: "Reward",
       rewardTotal: "30",
       buttonText: "Claim Quest",
@@ -73,7 +73,7 @@ const NodeQuest = () => {
       inputPlaceholder: null,
     },
     {
-      title: "PURCHASED 5 BOOSTERS",
+      title: "LIKE THIS TWEET ON X",
       rewardText: "Reward",
       rewardTotal: "100",
       buttonText: "Claim Quest",

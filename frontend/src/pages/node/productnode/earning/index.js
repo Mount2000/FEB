@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 //import component
 import { SpriteAnimator } from "react-sprite-animator";
 import earninganimation from "../../../../assets/img/animation/test.png";
+import animation from "../../../../assets/img/animation/animation-image.gif";
 import SectionContainer from "../../../../components/container";
 import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import CommonButton from "../../../../components/button/commonbutton";
@@ -624,15 +625,15 @@ const Earning = () => {
                   </Text>
                 </MainButton>
               </Box>
-              <SpriteAnimator
+              {/* <SpriteAnimator
                 sprite={earninganimation}
                 width={300}
                 height={300}
                 fps={30}
                 scale={1}
                 // shouldAnimate={true}
-              />
-              {/* <Image src={earningNode} w={{ base: "224px", md: "596px" }} /> */}
+              /> */}
+              <Image src={animation} w={{ base: "224px", md: "596px" }} />
               <Text
                 fontSize={{ base: "20px", md: "48px", "3xl": "72px" }}
                 fontWeight={700}

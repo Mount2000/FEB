@@ -107,7 +107,11 @@ const QuestBox = ({
           height="100%"
           w={"100%"}
         >
-          <Flex flexDirection={"column"} flex="1">
+          <Flex
+            flexDirection={"column"}
+            flex="1"
+            justifyContent={"space-between"}
+          >
             <Text
               py={{ base: "15px", "3xl": "24px" }}
               fontSize={{
@@ -120,7 +124,11 @@ const QuestBox = ({
             </Text>
             {rewardText && (
               <Flex alignItems={"center"} gap={{ base: "24px" }}>
-                <Text fontSize={{ "3xl": "20px" }} color={"#646464"}>
+                <Text
+                  fontSize={{ "3xl": "20px" }}
+                  color={"#646464"}
+                  fontFamily="var(--font-text-main)"
+                >
                   {rewardText}
                 </Text>
                 <MainButton
@@ -130,7 +138,9 @@ const QuestBox = ({
                   padding={"8px 16px"}
                   height={{ base: "40px" }}
                 >
-                  <Text color={"#23F600"}>{rewardTotal} TAIKO</Text>
+                  <Text color={"#23F600"} fontFamily="var(--font-text-main)">
+                    {rewardTotal} TAIKO
+                  </Text>
                 </MainButton>
               </Flex>
             )}
@@ -150,7 +160,7 @@ const QuestBox = ({
               >
                 <Box
                   position="absolute"
-                  top="-15px"
+                  top="-17px"
                   left={{ base: "20px", xl: "20px", "3xl": "50px" }}
                   width="fit-content"
                   padding="0 5px"

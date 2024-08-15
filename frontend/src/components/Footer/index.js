@@ -18,6 +18,9 @@ import { Link } from "react-router-dom";
 import MainButton from "../button/MainButton";
 
 const BachiSwapFooter = () => {
+  const openTab = (url) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
   return (
     <>
       <SectionContainer backgroundColor="var(--color-background-footer)">
@@ -162,13 +165,23 @@ const BachiSwapFooter = () => {
                   fontWeight={400}
                   fontFamily="var( --font-text-main)"
                 >
-                  <Link to="https://x.com/i/flow/login?redirect_after_login=%2FBachiSwap">
+                  <Link
+                    onClick={() =>
+                      openTab(
+                        "https://x.com/i/flow/login?redirect_after_login=%2FBachiSwap"
+                      )
+                    }
+                  >
                     <ListItem>X</ListItem>
                   </Link>
-                  <Link to="https://discord.gg/bachiswap">
+                  <Link onClick={() => openTab("https://discord.gg/bachiswap")}>
                     <ListItem>Discord</ListItem>
                   </Link>
-                  <Link to="https://www.youtube.com/@BachiSwap">
+                  <Link
+                    onClick={() =>
+                      openTab("https://www.youtube.com/@BachiSwap")
+                    }
+                  >
                     <ListItem>Youtube</ListItem>
                   </Link>
                 </UnorderedList>

@@ -105,21 +105,4 @@ input:focus {
   cursor: not-allowed;
 }
 
-/******Animation Image ******/
-.spin-container {
-  perspective: 1000px; /* Tạo hiệu ứng 3D */
-}
 
-.spinning-image {
-  
-  animation: spin 4s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}

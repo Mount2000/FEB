@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
@@ -15,8 +16,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// Environment variables
-require("dotenv").config();
 
 // Passport session setup
 passport.serializeUser((user, done) => {
@@ -33,7 +32,7 @@ passport.use(
     {
       consumerKey: process.env.TWITTER_API_KEY,
       consumerSecret: process.env.TWITTER_API_SECRET,
-      callbackURL: `${process.env.API_BASE_URL}/auth/twitter/callback`,
+      callbackURL: `${process.env.API_TWITTER_BASE_URL}/auth/twitter/callback`,
       passReqToCallback: true,
     },
     async (req, token, tokenSecret, profile, done) => {
@@ -144,7 +143,7 @@ const connectDb = () => {
   return mongoose.connect(`${process.env.MONGODB_URL}`);
 };
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT_TWWITER || 3003;
 connectDb().then(async () => {
   app.listen(PORT, () => {
     console.log(`BachiSwap app listening on port ${PORT}`);

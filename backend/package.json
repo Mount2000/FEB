@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon src/index.js",
     "discord": "nodemon discord.js",
+    "twitter": "nodemon twitter.js",
     "scan-node-manager": "nodemon src/crons/node_manager_events_collector.js"
   },
   "dependencies": {

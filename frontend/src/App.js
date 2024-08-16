@@ -13,6 +13,8 @@ import DefaultLayout from "./layouts";
 import AirDrop from "./pages/airdrop";
 import Swap from "./pages/swap";
 import "./global.css";
+import Terms from "./pages/terms";
+import PrivacyPolicy from "./pages/privacypolicy";
 
 const App = () => {
   return (
@@ -24,6 +26,8 @@ const App = () => {
           <Route path="/node" element={<Node />} />
           <Route path="/airdrop" element={<AirDrop />} />
           <Route path="/swap" element={<Swap />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </DefaultLayout>

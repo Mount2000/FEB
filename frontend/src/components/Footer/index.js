@@ -21,6 +21,9 @@ const BachiSwapFooter = () => {
   const openTab = (url) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
+  const conectLink = () => {
+    window.scrollTo(0, 0);
+  };
   return (
     <>
       <SectionContainer backgroundColor="var(--color-background-footer)">
@@ -249,8 +252,12 @@ const BachiSwapFooter = () => {
             fontFamily={"var(--font-heading-main)"}
           >
             <Text>© 2024 BACHI</Text>
-            <Text>Privacy policy</Text>
-            <Text>Terms</Text>
+            <Link to="/privacy-policy" onClick={conectLink}>
+              <Text>Privacy policy</Text>
+            </Link>
+            <Link to="/terms" onClick={conectLink}>
+              <Text>Terms</Text>
+            </Link>
           </Flex>
         </Flex>
       </SectionContainer>

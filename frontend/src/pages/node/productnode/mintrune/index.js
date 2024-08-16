@@ -146,21 +146,21 @@ const MintRune = () => {
 
   const products = [
     {
-      tierId: 1,
+      tierId: 2,
       nameproduct: "Core i5",
       image: productCoreI5,
       power: "10 GH/s",
       reward: "50.000",
     },
     {
-      tierId: 2,
+      tierId: 3,
       nameproduct: "Core i7",
       image: productCoreI7,
       power: "100 GH/s",
       reward: "100.000",
     },
     {
-      tierId: 3,
+      tierId: 4,
       nameproduct: "Core i9",
       image: productCoreI9,
       power: "1000 GH/s",

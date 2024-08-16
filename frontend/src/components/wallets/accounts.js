@@ -77,7 +77,7 @@ export function Account() {
       )}
       <MainButton
         my="12px"
-        w={{ base: "191px", md: "300px" }}
+        w={{ base: "230px", md: "300px" }}
         height={{ base: "40px", lg: "62px", "3xl": "64px" }}
         bgColor={"white"}
         onClick={() => {
@@ -99,7 +99,10 @@ export function Account() {
             Block Explorer
           </Text>
           <Box sx={{ transform: "rotate(-45deg)" }}>
-            <IoArrowForwardSharp color="black" size={isMobile ? "16px":"32px"} />
+            <IoArrowForwardSharp
+              color="black"
+              size={isMobile ? "32px" : "32px"}
+            />
           </Box>
         </Flex>
       </MainButton>
@@ -160,7 +163,7 @@ export function Account() {
             fontWeight={"500"}
             color={"#FFF"}
           >
-            Disconnect
+            Logout
           </Text>
           <Box w={"15px"}>
             <RxExit color="white" size={"20px"} />

@@ -79,8 +79,9 @@ const ProductHome = () => {
       <Flex
         position={"relative"}
         // paddingTop={{ base: "30px", "3xl": "200px" }}
-        flexDirection={{ base: "column-reverse" }}
-        alignItems={{ base: "center", lg: "normal" }}
+        flexDirection={{ base: "column-reverse", lg: "row" }}
+        alignItems={{ base: "center", lg: "center" }}
+        gap={"16px"}
       >
         <SectionContainer
           display={"flex"}
@@ -94,8 +95,8 @@ const ProductHome = () => {
           //   "3xl": "214px",
           // }}
           width={{ base: "100%", lg: "50%", "3xl": "52%" }}
-          paddingTop={{ lg: "72px", "3xl": "150px" }}
-          paddingBottom={{ lg: "72px" }}
+          // paddingTop={{ lg: "72px", "3xl": "150px" }}
+          // paddingBottom={{ lg: "72px" }}
         >
           <Text
             letterSpacing={"-1px"}
@@ -162,11 +163,11 @@ const ProductHome = () => {
           </Text>
         </SectionContainer>
         <Image
-          height={{ base: "unset", lg: "432px", xl: "530px", "3xl": "800px" }}
+          // height={{ base: "unset", lg: "432px", xl: "530px", "3xl": "800px" }}
           width={{ md: "70%", lg: "53%", "3xl": "872px" }}
-          position={{ base: "relative", lg: "absolute" }}
+          position={{ base: "relative", lg: "relative" }}
           right={{ lg: "0px" }}
-          top={{ lg: "15px", xl: "-30px", "2xl": "-10px", "3xl": "-30px" }}
+          // top={{ lg: "15px", xl: "-30px", "2xl": "-10px", "3xl": "-30px" }}
           // right={"0px"}
           // bottom={"-150px"}
           src={appProductHome}

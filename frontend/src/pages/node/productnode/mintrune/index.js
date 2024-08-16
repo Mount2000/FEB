@@ -425,15 +425,15 @@ const MintRune = () => {
                   },
                   "@media (max-width: 768px)": {
                     clipPath:
-                      "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                      "polygon(0 30px, 30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)",
                     "::before": {
-                      width: "40px",
-                      height: "40px",
+                      width: "30px",
+                      height: "30px",
                       backgroundColor: "pink.500",
                     },
                     "::after": {
-                      width: "40px",
-                      height: "40px",
+                      width: "30px",
+                      height: "30px",
                       backgroundColor: "pink.500",
                     },
                   },
@@ -466,15 +466,15 @@ const MintRune = () => {
                     },
                     "@media (max-width: 768px)": {
                       clipPath:
-                        "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                        "polygon(0 30px, 30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)",
                       "::before": {
-                        width: "40px",
-                        height: "40px",
+                        width: "30px",
+                        height: "30px",
                         backgroundColor: "pink.500",
                       },
                       "::after": {
-                        width: "40px",
-                        height: "40px",
+                        width: "30px",
+                        height: "30px",
                         backgroundColor: "pink.500",
                       },
                     },
@@ -499,7 +499,7 @@ const MintRune = () => {
                       // marginBottom={"60px"}
                     >
                       <Text
-                        fontSize={{ base: "20px", xl: "48px" }}
+                        fontSize={{ base: "20px", lg: "24px", xl: "48px" }}
                         fontWeight={700}
                         fontFamily={{
                           base: "var(--font-text-main)",
@@ -514,7 +514,12 @@ const MintRune = () => {
                       />
                       <Flex alignItems={"center"} gap={"16px"}>
                         <Text
-                          fontSize={{ base: "20px", xl: "32px" }}
+                          fontSize={{
+                            base: "20px",
+                            md: "14px",
+                            lg: "24px",
+                            xl: "32px",
+                          }}
                           fontWeight={400}
                           fontFamily={{
                             base: "var(--font-text-main)",
@@ -849,9 +854,8 @@ const MintRune = () => {
                 height={{ base: "40px", md: "70px" }}
                 backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
                 margin={{
-                  base: "40px 32px 40px 32px",
-                  md: "38px 20px 32px 20px",
-                  lg: "58px 32px 52px 32px",
+                  base: "31px 32px 32px 32px",
+                  xl: "58px 58px 44px 59px",
                 }}
                 display={"flex"}
                 alignItems={"center"}

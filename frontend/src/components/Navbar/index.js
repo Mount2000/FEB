@@ -1,5 +1,5 @@
 import { Box, Flex, Grid, GridItem, Image, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 
 //import component
@@ -12,13 +12,13 @@ import navIcon from "../../assets/img/nav-icon.png";
 import { useModal } from "../../contexts/useModal";
 import { useAccount } from "wagmi";
 import { truncateStr } from "../../utils";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import NavbarMobile from "./navbarmobile";
 import MainButton from "../button/MainButton";
 import { enumMenu } from "../../utils/contants";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useTab } from "../../contexts/useTab";
-import { base } from "viem/chains";
+
 const Navbar = () => {
   const [shownav, setShowNav] = useState(false);
   const [navActive, setNavActive] = useState("");
@@ -26,11 +26,12 @@ const Navbar = () => {
   const { setConnectWalletModalVisible } = useModal();
   const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
   const { address } = useAccount();
-  const { setFarmTab, setAirdropTask } = useTab();
+  const { setFarmTab, setAirdropTask, menuActive, setMenuActive } = useTab();
   const handleShowNav = () => {
     setShowNav(!shownav);
   };
 
+  console.log({ menuActive });
   return (
     <>
       <SectionContainer
@@ -51,7 +52,7 @@ const Navbar = () => {
             style={{ gridColumn: "span 3" }}
             onClick={() => {
               setNavActive("");
-              setNavColor("");
+              setMenuActive("");
             }}
           >
             <Flex gap={{ base: "4.64px", md: "8px" }} alignItems={"center"}>
@@ -92,13 +93,13 @@ const Navbar = () => {
                 onClick={() => {
                   if (!item.disabled) {
                     setNavActive(navActive !== item.name ? item.name : "");
-                    setNavColor(item.name);
+                    setMenuActive(item.name);
                   }
                 }}
                 style={{
                   color: item.disabled
                     ? "#B0B0B0"
-                    : navColor === item.name
+                    : menuActive === item.name
                       ? "var(--color-main)"
                       : "white",
                   position: "relative",
@@ -164,7 +165,6 @@ const Navbar = () => {
                           onClick={() => {
                             console.log({
                               a: item.name,
-                              b: enumMenu[1].name,
                               index,
                             });
                             if (item.name == enumMenu[0].name)

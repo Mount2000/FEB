@@ -5,6 +5,7 @@ const TabContext = createContext();
 export const TabProvider = ({ children }) => {
   const [farmTab, setFarmTab] = useState(0);
   const [airdropTab, setAirdropTask] = useState(0);
+  const [menuActive, setMenuActive] = useState("");
   return (
     <TabContext.Provider
       value={{
@@ -12,6 +13,8 @@ export const TabProvider = ({ children }) => {
         setFarmTab,
         airdropTab,
         setAirdropTask,
+        menuActive,
+        setMenuActive,
       }}
     >
       {children}

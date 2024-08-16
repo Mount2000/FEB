@@ -25,6 +25,8 @@ contract QuestManager is Pausable, AccessControl, Ownable {
     mapping(uint => EnumerableSet.AddressSet) private taskUsersLinks;
     mapping(address => uint) public rewardBalances;
 
+    mapping(address => mapping(uint256 => uint256)) public dailyclaims; // address => taskId => claimTime
+
     // Events
     event AddedTask(address indexed user, uint taskId, string code, uint point);
 
@@ -40,6 +42,14 @@ contract QuestManager is Pausable, AccessControl, Ownable {
         uint taskId,
         string code,
         uint point
+    );
+
+    event CompleteTaskDaily(
+        address indexed user,
+        uint taskId,
+        string code,
+        uint point,
+        uint claimTime
     );
 
     constructor(address _stakingContract) Ownable(msg.sender) {
@@ -106,6 +116,60 @@ contract QuestManager is Pausable, AccessControl, Ownable {
 
         stakingContract.updateRewardAmount(user, 0, taskInfo.point);
         emit CompleteTask(user, taskId, taskInfo.code, taskInfo.point);
+    }
+
+    function completeTaskDaily(uint8 _taskId) public whenNotPaused {
+        address user = msg.sender;
+        uint lastClaimTime = dailyclaims[user][_taskId];
+        uint claimTime = block.timestamp;
+        TaskInformation memory taskInfo = tasksInfo[_taskId];
+        require(taskInfo.point > 0, "Task does not exist");
+        require(
+            getDay(claimTime) > getDay(lastClaimTime),
+            "Task already claimed today"
+        );
+        if (
+            !isUserCompletedByTask(_taskId, user) &&
+            !isTaskCompletedByUser(user, _taskId)
+        ) {
+            userTasksLinks[user].add(_taskId);
+            taskUsersLinks[_taskId].add(user);
+        }
+        dailyclaims[user][_taskId] = claimTime;
+        rewardBalances[user] += taskInfo.point;
+
+        stakingContract.updateRewardAmount(user, 0, taskInfo.point);
+        emit CompleteTaskDaily(
+            user,
+            taskId,
+            taskInfo.code,
+            taskInfo.point,
+            claimTime
+        );
+    }
+
+    function getDay(uint timestamp) internal pure returns (uint) {
+        return timestamp / 1 days;
+    }
+
+    function getDailyClaimTime(
+        address user,
+        uint8 _taskId
+    ) public view returns (uint) {
+        return dailyclaims[user][_taskId];
+    }
+
+    function isTaskDailyCompletedByUser(
+        address user,
+        uint8 _taskId
+    ) public view returns (bool) {
+        uint lastClaimTime = dailyclaims[user][_taskId];
+        if (lastClaimTime == 0) return false;
+        if (getDay(block.timestamp) == getDay(lastClaimTime)) {
+            return true;
+        }
+
+        return false;
     }
 
     function isTaskCompletedByUser(

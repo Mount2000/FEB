@@ -184,11 +184,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 farmSpeedTaiko
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(
-            price > 0 &&
-                hashrate > 0 &&
-                farmSpeedBachi > 0 &&
-                farmSpeedTaiko > 0,
-            "Price, Hashrate and FarmSpeed must be greater than 0"
+            hashrate > 0 && farmSpeedBachi > 0 && farmSpeedTaiko > 0,
+            "Hashrate and FarmSpeed must be greater than 0"
         );
 
         nodeTierId++;
@@ -224,13 +221,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 farmSpeedTaiko
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         NodeTier memory newNode = nodeTiers[_nodeTierId];
-        require(newNode.price > 0, "Node does not exist");
+        require(newNode.farmSpeedBachi > 0, "Node tier does not exist");
         require(
-            price > 0 &&
-                hashrate > 0 &&
-                farmSpeedBachi > 0 &&
-                farmSpeedTaiko > 0,
-            "Price, Hashrate and FarmSpeed must be greater than 0"
+            hashrate > 0 && farmSpeedBachi > 0 && farmSpeedTaiko > 0,
+            "Hashrate and FarmSpeed must be greater than 0"
         );
 
         newNode.name = name;
@@ -359,7 +353,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 discountValue = 0;
         uint256 totalSales = 0;
         address caller = msg.sender;
-        require(price > 0, "Node tier does not exist");
+        require(
+            nodeTiers[_nodeTierId].farmSpeedBachi > 0,
+            "Node tier does not exist"
+        );
 
         if (
             discountCouponId != 0 &&
@@ -377,10 +374,6 @@ contract NodeManager is Pausable, AccessControl, Ownable {
                 discountCouponId
             ];
             uint256 commissionValue = (price * coupon.commissionPercent) / 100;
-            require(
-                commissionValue > 0,
-                "Commission value must be greater than 0"
-            );
             require(
                 address(this).balance >= commissionValue,
                 "Not enough balance for commission"
@@ -406,7 +399,13 @@ contract NodeManager is Pausable, AccessControl, Ownable {
             (bool sent, ) = referralsOwner.call{value: totalSales}("");
             require(sent, "Failed to send Ether");
             referrals[referralId].totalSales += totalSales;
-            emit Referral(caller, referralsOwner, referralId, totalSales, block.timestamp);
+            emit Referral(
+                caller,
+                referralsOwner,
+                referralId,
+                totalSales,
+                block.timestamp
+            );
         }
 
         string memory _code;

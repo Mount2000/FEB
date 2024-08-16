@@ -9,6 +9,7 @@ async function main() {
   let nodeManagerAddress = "0x0000000000000000000000000000000000000000";
   let stakingAddress = "0x0000000000000000000000000000000000000000";
   let questManagerAddress = "0x0000000000000000000000000000000000000000";
+  let taikoTokenAddress = "0x2029Ca1e4A5954781a271d6Fa3598bF4434969f5";
 
   // Deploy BachiToken contract
   let tokenName = "BACHI TOKEN";
@@ -42,7 +43,8 @@ async function main() {
   const nodeManager = await NodeManager.deploy(
     bachiNodeAddress,
     bachiTokenAddress,
-    stakingAddress
+    stakingAddress,
+    taikoTokenAddress
   );
   await nodeManager.waitForDeployment();
   const nodeManagerTx = await nodeManager.deploymentTransaction();
@@ -56,7 +58,8 @@ async function main() {
   const staking = await Staking.deploy(
     bachiNodeAddress,
     bachiTokenAddress,
-    nodeManagerAddress
+    nodeManagerAddress,
+    taikoTokenAddress
   );
   await staking.waitForDeployment();
   const stakingTx = await staking.deploymentTransaction();

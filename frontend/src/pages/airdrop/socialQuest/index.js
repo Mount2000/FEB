@@ -120,9 +120,10 @@ const SocialQuest = () => {
 
     if (data) {
       const currentTime = new Date();
-      const oneDayInMillis = 24 * 60 * 60 * 1000;
-      const timeDifference = currentTime - new Date(data.createdAt);
-      if (timeDifference >= oneDayInMillis) setStatus("pending");
+      const previousClaimDate = new Date(data.createdAt);
+      const currentDay = new Date(currentTime.toDateString());
+      const previousDay = new Date(previousClaimDate.toDateString());
+      if (currentDay > previousDay) setStatus("pending");
       else setStatus("success");
     }
     if (isComplete) setStatus("completed");
@@ -812,7 +813,7 @@ const SocialQuest = () => {
                     >
                       Invite Your Friend and come to AirDrop History
                     </Text>
-                    <Box mt={"12px"} fontSize={{base: "16px"}}>
+                    <Box mt={"12px"} fontSize={{ base: "16px" }}>
                       {!referralCode ? (
                         <Text>{"---"}</Text>
                       ) : (

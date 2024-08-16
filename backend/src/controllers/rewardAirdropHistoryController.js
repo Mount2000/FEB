@@ -41,9 +41,10 @@ const addRewardHistory = async (req, res) => {
     } else {
       if (task_id == 4) {
         const currentTime = new Date();
-        const oneDayInMillis = 24 * 60 * 60 * 1000;
-        const timeDifference = currentTime - new Date(found.createdAt);
-        if (timeDifference >= oneDayInMillis) {
+        const previousClaimDate = new Date(found.createdAt);
+        const currentDay = new Date(currentTime.toDateString());
+        const previousDay = new Date(previousClaimDate.toDateString());
+        if (currentDay > previousDay) {
           await RewardHistory.create(req.body)
             .then((data) => {
               if (!data) {

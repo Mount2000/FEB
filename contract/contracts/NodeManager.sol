@@ -8,10 +8,12 @@ import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract NodeManager is Pausable, AccessControl, Ownable {
     using EnumerableSet for EnumerableSet.UintSet;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    IERC20 public taikoToken;
 
     BachiNode private bachiNodeContract;
     BachiToken private tokenContract;
@@ -112,6 +114,7 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 amount,
         uint256 timestamp
     );
+    event Deposited(address indexed user, uint256 amount);
     event FundsWithdrawn(address indexed to, uint256 value);
     event GeneratedReferralCode(address indexed user, string code);
     event NodeTransferred(
@@ -123,13 +126,15 @@ contract NodeManager is Pausable, AccessControl, Ownable {
     constructor(
         address _bachiNodeContract,
         address _tokenContract,
-        address _stakingContract
+        address _stakingContract,
+        address _taikoTokenAddress
     ) Ownable(msg.sender) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
         tokenContract = BachiToken(_tokenContract);
         bachiNodeContract = BachiNode(_bachiNodeContract);
         stakingContract = Staking(_stakingContract);
+        taikoToken = IERC20(_taikoTokenAddress);
     }
 
     function pause() public onlyOwner {
@@ -184,11 +189,8 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 farmSpeedTaiko
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         require(
-            price > 0 &&
-                hashrate > 0 &&
-                farmSpeedBachi > 0 &&
-                farmSpeedTaiko > 0,
-            "Price, Hashrate and FarmSpeed must be greater than 0"
+            hashrate > 0 && farmSpeedBachi > 0 && farmSpeedTaiko > 0,
+            "Hashrate and FarmSpeed must be greater than 0"
         );
 
         nodeTierId++;
@@ -224,13 +226,10 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 farmSpeedTaiko
     ) public onlyRole(ADMIN_ROLE) whenNotPaused {
         NodeTier memory newNode = nodeTiers[_nodeTierId];
-        require(newNode.price > 0, "Node does not exist");
+        require(newNode.farmSpeedBachi > 0, "Node tier does not exist");
         require(
-            price > 0 &&
-                hashrate > 0 &&
-                farmSpeedBachi > 0 &&
-                farmSpeedTaiko > 0,
-            "Price, Hashrate and FarmSpeed must be greater than 0"
+            hashrate > 0 && farmSpeedBachi > 0 && farmSpeedTaiko > 0,
+            "Hashrate and FarmSpeed must be greater than 0"
         );
 
         newNode.name = name;
@@ -349,21 +348,48 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         uint256 referralId,
         string memory metadata,
         uint256 discountCouponId,
-        uint256 quality
-    ) public payable whenNotPaused returns (string memory) {
+        uint256 quality,
+        uint256 taikoAmount
+    ) public whenNotPaused returns (string memory) {
         require(
             quality > 0 && quality <= 10,
             "Quality must be between 1 and 10"
         );
-        uint256 price = nodeTiers[_nodeTierId].price * quality;
-        uint256 discountValue = 0;
-        uint256 totalSales = 0;
-        address caller = msg.sender;
-        require(price > 0, "Node tier does not exist");
+        require(
+            nodeTiers[_nodeTierId].farmSpeedBachi > 0,
+            "Node tier does not exist"
+        );
 
+        uint256 price = nodeTiers[_nodeTierId].price * quality;
+        uint256 discountValue = calculateDiscount(discountCouponId, price);
+
+        uint256 expectedValue = price - discountValue;
+        processTaikoTransfer(expectedValue, taikoAmount);
+
+        uint256 totalSales = handleReferral(referralId, expectedValue);
+
+        mintNodes(_nodeTierId, quality, metadata);
+
+        string memory _code = generateReferralCodeIfNeeded();
+
+        emit Sale(
+            msg.sender,
+            _nodeTierId,
+            referralId,
+            totalSales,
+            block.timestamp
+        );
+
+        return _code;
+    }
+
+    function calculateDiscount(
+        uint256 discountCouponId,
+        uint256 price
+    ) internal returns (uint256) {
         if (
             discountCouponId != 0 &&
-            discountCouponsIdUserLinks[discountCouponId] != caller
+            discountCouponsIdUserLinks[discountCouponId] != msg.sender
         ) {
             DiscountCoupon memory coupon = discountCoupons[discountCouponId];
             require(
@@ -371,46 +397,86 @@ contract NodeManager is Pausable, AccessControl, Ownable {
                 "Discount coupon does not exist"
             );
             require(coupon.status, "Discount coupon is not active");
-            discountValue = (price * coupon.discountPercent) / 100;
 
+            uint256 discountValue = (price * coupon.discountPercent) / 100;
             address discountOwner = discountCouponsIdUserLinks[
                 discountCouponId
             ];
             uint256 commissionValue = (price * coupon.commissionPercent) / 100;
-            require(
-                commissionValue > 0,
-                "Commission value must be greater than 0"
-            );
-            require(
-                address(this).balance >= commissionValue,
-                "Not enough balance for commission"
-            );
 
-            (bool commissionSent, ) = discountOwner.call{
-                value: commissionValue
-            }("");
-            require(commissionSent, "Failed to send commission Ether");
+            // Transfer Taiko token as commission
+            require(
+                taikoToken.balanceOf(address(this)) >= commissionValue,
+                "Not enough Taiko tokens for commission"
+            );
+            bool commissionSent = taikoToken.transfer(
+                discountOwner,
+                commissionValue
+            );
+            require(commissionSent, "Failed to send commission Taiko token");
+
+            return discountValue;
         }
+        return 0;
+    }
 
-        uint256 expectedValue = price - discountValue;
-        require(msg.value == expectedValue, "Insufficient funds");
+    function processTaikoTransfer(
+        uint256 expectedValue,
+        uint256 taikoAmount
+    ) internal {
+        require(taikoAmount == expectedValue, "Insufficient funds");
+        require(
+            taikoToken.allowance(msg.sender, address(this)) >= taikoAmount,
+            "Insufficient Taiko token allowance"
+        );
 
+        bool taikoTransferSuccess = taikoToken.transferFrom(
+            msg.sender,
+            address(this),
+            taikoAmount
+        );
+        require(taikoTransferSuccess, "Taiko token transfer failed");
+    }
+
+    function handleReferral(
+        uint256 referralId,
+        uint256 expectedValue
+    ) internal returns (uint256) {
         if (
             referralId > 0 &&
             referralIdUserLinks[referralId] != address(0) &&
-            referralIdUserLinks[referralId] != caller
+            referralIdUserLinks[referralId] != msg.sender
         ) {
             address referralsOwner = referralIdUserLinks[referralId];
-            totalSales = (expectedValue * referralRate) / 100;
-            require(address(this).balance >= totalSales, "Not enough balance");
-            (bool sent, ) = referralsOwner.call{value: totalSales}("");
-            require(sent, "Failed to send Ether");
+            uint256 totalSales = (expectedValue * referralRate) / 100;
+
+            // Transfer Taiko token for referral
+            require(
+                taikoToken.balanceOf(address(this)) >= totalSales,
+                "Not enough Taiko tokens for referral"
+            );
+            bool referralSent = taikoToken.transfer(referralsOwner, totalSales);
+            require(referralSent, "Failed to send referral Taiko token");
+
             referrals[referralId].totalSales += totalSales;
-            emit Referral(caller, referralsOwner, referralId, totalSales, block.timestamp);
+            emit Referral(
+                msg.sender,
+                referralsOwner,
+                referralId,
+                totalSales,
+                block.timestamp
+            );
+
+            return totalSales;
         }
+        return 0;
+    }
 
-        string memory _code;
-
+    function mintNodes(
+        uint256 _nodeTierId,
+        uint256 quality,
+        string memory metadata
+    ) internal {
         for (uint256 i = 0; i < quality; i++) {
             uint256 nodeId = bachiNodeContract.lastTokenId() + 1;
             bachiNodeContract.safeMint(
@@ -419,15 +485,17 @@ contract NodeManager is Pausable, AccessControl, Ownable {
                 metadata
             );
             nodeIdNodeTiersIdLinks[nodeId] = _nodeTierId;
-            userNodeIdLinks[caller].add(nodeId);
-            nodeIdUserLinks[nodeId] = caller;
-            stakingContract.autoStake(nodeId, caller);
+            userNodeIdLinks[msg.sender].add(nodeId);
+            nodeIdUserLinks[nodeId] = msg.sender;
+            stakingContract.autoStake(nodeId, msg.sender);
         }
+    }
 
-        if (userReferralIdLinks[caller] == 0) {
+    function generateReferralCodeIfNeeded() internal returns (string memory) {
+        if (userReferralIdLinks[msg.sender] == 0) {
             referenceId++;
             uint256 currentTimestamp = block.timestamp;
-            _code = string(
+            string memory _code = string(
                 abi.encodePacked(
                     "BachiSwap_",
                     uint256str(referenceId),
@@ -435,15 +503,14 @@ contract NodeManager is Pausable, AccessControl, Ownable {
                     uint256str(currentTimestamp)
                 )
             );
-            userReferralIdLinks[caller] = referenceId;
-            referralIdUserLinks[referenceId] = caller;
+            userReferralIdLinks[msg.sender] = referenceId;
+            referralIdUserLinks[referenceId] = msg.sender;
             referrals[referenceId].code = _code;
 
-            emit GeneratedReferralCode(caller, _code);
+            emit GeneratedReferralCode(msg.sender, _code);
+            return _code;
         }
-        emit Sale(caller, _nodeTierId, referralId, totalSales, block.timestamp);
-
-        return _code;
+        return "";
     }
 
     function getDiscountIdByIndex(
@@ -477,14 +544,27 @@ contract NodeManager is Pausable, AccessControl, Ownable {
         emit Sale(nodeOwner, _nodeTierId, 0, 0, block.timestamp);
     }
 
-    function withdraw(address payable to, uint256 value) public onlyOwner {
+    function deposit(uint256 amount) external {
+        require(amount > 0, "Deposit amount must be greater than zero");
+
+        bool success = taikoToken.transferFrom(
+            msg.sender,
+            address(this),
+            amount
+        );
+        require(success, "Failed to transfer Taiko token");
+
+        emit Deposited(msg.sender, amount);
+    }
+
+    function withdraw(address to, uint256 value) public onlyOwner {
         require(
-            address(this).balance >= value,
-            "Insufficient contract balance"
+            taikoToken.balanceOf(address(this)) >= value,
+            "Insufficient Taiko token balance"
         );
 
-        (bool sent, ) = to.call{value: value}("");
-        require(sent, "Failed to send Ether");
+        bool sent = taikoToken.transfer(to, value);
+        require(sent, "Failed to send Taiko token");
 
         emit FundsWithdrawn(to, value);
     }

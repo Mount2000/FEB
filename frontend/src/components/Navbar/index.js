@@ -26,20 +26,12 @@ const Navbar = () => {
   const { setConnectWalletModalVisible } = useModal();
   const onOpenConnectWalletModal = () => setConnectWalletModalVisible(true);
   const { address } = useAccount();
-  const { setFarmTab, setAirdropTask } = useTab();
+  const { setFarmTab, setAirdropTask, menuActive, setMenuActive } = useTab();
   const handleShowNav = () => {
     setShowNav(!shownav);
   };
-  const location = useLocation();
 
-  useEffect(() => {
-    const currentPath = location.pathname;
-    const activeItem = enumMenu.find((item) => item.path === currentPath);
-    if (activeItem) {
-      setNavColor(activeItem.name);
-    }
-  }, [location]);
-  console.log({ navColor });
+  console.log({ menuActive });
   return (
     <>
       <SectionContainer
@@ -60,7 +52,7 @@ const Navbar = () => {
             style={{ gridColumn: "span 3" }}
             onClick={() => {
               setNavActive("");
-              setNavColor("");
+              setMenuActive("");
             }}
           >
             <Flex gap={{ base: "4.64px", md: "8px" }} alignItems={"center"}>
@@ -101,14 +93,13 @@ const Navbar = () => {
                 onClick={() => {
                   if (!item.disabled) {
                     setNavActive(navActive !== item.name ? item.name : "");
-                    setNavColor(item.name);
-                    console.log({ navColor });
+                    setMenuActive(item.name);
                   }
                 }}
                 style={{
                   color: item.disabled
                     ? "#B0B0B0"
-                    : navColor === item.name
+                    : menuActive === item.name
                       ? "var(--color-main)"
                       : "white",
                   position: "relative",

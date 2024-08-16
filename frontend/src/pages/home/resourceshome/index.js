@@ -14,12 +14,13 @@ import resourcesMobile from "../../../assets/img/homepage/resources-homemobile.p
 import MainButton from "../../../components/button/MainButton";
 import { Link } from "react-router-dom";
 import { useTab } from "../../../contexts/useTab";
-
+import { enumMenu } from "../../../utils/contants";
 const ResourcesHome = () => {
-  const { setFarmTab } = useTab();
+  const { setFarmTab, setMenuActive } = useTab();
   const conectLink = () => {
     setFarmTab(1);
     window.scrollTo(0, 0);
+    setMenuActive(enumMenu[0].name);
   };
   return (
     <>

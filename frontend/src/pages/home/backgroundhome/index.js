@@ -9,12 +9,18 @@ import backgroundHome from "../../../assets/img/homepage/background-home.png";
 import { HiArrowSmRight } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { useTab } from "../../../contexts/useTab";
-
+import { enumMenu } from "../../../utils/contants";
 const BackgroundHome = () => {
-  const { setFarmTab } = useTab();
+  const { setFarmTab, setMenuActive } = useTab();
   const conectLink = () => {
     setFarmTab(0);
     window.scrollTo(0, 0);
+    setMenuActive(enumMenu[0].name);
+  };
+  const conectLinkAirdrop = () => {
+    setFarmTab(1);
+    window.scrollTo(0, 0);
+    setMenuActive(enumMenu[1].name);
   };
   return (
     <Box
@@ -126,7 +132,7 @@ const BackgroundHome = () => {
                     <Text
                       letterSpacing={"-1px"}
                       fontSize={{
-                        base: "24px",
+                        base: "20px",
                         "2xl": "36px",
                         "3xl": "40px",
                       }}
@@ -200,7 +206,7 @@ const BackgroundHome = () => {
               </CommonButton>
             </Box>
           </Link>
-          <Link to="/airdrop" onClick={() => window.scrollTo(0, 0)}>
+          <Link to="/airdrop" onClick={conectLinkAirdrop}>
             <Box
               width={"100%"}
               height={"100%"}
@@ -269,7 +275,7 @@ const BackgroundHome = () => {
                   <Flex alignItems={"center"} justifyContent={"space-between"}>
                     <Text
                       fontSize={{
-                        base: "24px",
+                        base: "20px",
                         "2xl": "36px",
                         "3xl": "40px",
                       }}

@@ -8,16 +8,17 @@ import appBanner from "../../../assets/img/homepage/app-banner.png";
 import appBannerTabnet from "../../../assets/img/homepage/banner-hometabnet.png";
 import appBannerMobile from "../../../assets/img/homepage/banner-homemobile.png";
 import MainButton from "../../../components/button/MainButton";
-
-import { Link } from "react-router-dom";
 import { enumMenu } from "../../../utils/contants";
+import { Link } from "react-router-dom";
+
 import { useTab } from "../../../contexts/useTab";
 
 const BannerHome = () => {
-  const { setFarmTab } = useTab();
+  const { setFarmTab, setMenuActive } = useTab();
   const conectLink = () => {
     setFarmTab(0);
     window.scrollTo(0, 0);
+    setMenuActive(enumMenu[0].name);
   };
   return (
     <>
@@ -36,7 +37,7 @@ const BannerHome = () => {
             sm: "97%",
             md: "80%",
             lg: "89%",
-            xl: "66%",
+            xl: "68%",
             "2xl": "62%",
             "3xl": "59%",
           }}
@@ -47,7 +48,7 @@ const BannerHome = () => {
             width={{
               base: "87%",
               sm: "86%",
-              lg: "87%",
+              lg: "89%",
               xl: "100%",
               "2xl": "90%",
               "3xl": "100%",
@@ -313,7 +314,7 @@ const BannerHome = () => {
                 width={{ lg: "237px", "3xl": "307px" }}
                 fontSize={{
                   base: "40px",
-                  md: "48px",
+                  md: "40px",
                   "2xl": "68px",
                   "3xl": "96px",
                 }}
@@ -327,7 +328,7 @@ const BannerHome = () => {
                 display={{ base: "block", lg: "none" }}
                 fontSize={{
                   base: "24px",
-                  md: "28px",
+                  md: "24px",
                   lg: "32px",
                   "3xl": "40px",
                 }}
@@ -342,7 +343,7 @@ const BannerHome = () => {
                 display={{ base: "block", lg: "none" }}
                 fontSize={{
                   base: "16px",
-                  md: "18px",
+                  md: "16px",
                   "2xl": "20px",
                   "3xl": "24px",
                 }}
@@ -473,7 +474,7 @@ const BannerHome = () => {
                 xl: "240px",
                 "3xl": "408px",
               }}
-              paddingBottom={{ base: "63px", xl: "0px" }}
+              // paddingBottom={{ base: "63px", xl: "0px" }}
             >
               <Text
                 width={{ lg: "209px", xl: "240px", "3xl": "408px" }}
@@ -503,7 +504,7 @@ const BannerHome = () => {
                 "2xl": "400px",
                 "3xl": "426px",
               }}
-              paddingBottom={{ base: "63px", xl: "0px" }}
+              // paddingBottom={{ base: "63px", xl: "0px" }}
             >
               <Text
                 width={{

@@ -39,7 +39,7 @@ const BachiSwapFooter = () => {
             flexDirection={{ base: "column", lg: "row" }}
             gap={{
               base: "32px",
-              md: "120px",
+
               lg: "90px",
               xl: "260px",
               "2xl": "120px",
@@ -47,6 +47,11 @@ const BachiSwapFooter = () => {
             alignItems={{ base: "center", sm: "flex-start" }}
           >
             <Flex
+              padding={{
+                base: "0px 16px",
+                lg: "0px",
+                xl: "0px",
+              }}
               flexDirection={"column"}
               gap={{ base: "24px", "2xl": "72px" }}
             >

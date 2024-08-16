@@ -146,7 +146,7 @@ const QuestBox = ({
             )}
           </Flex>
           <Flex
-            flexDirection={{ base: "column", md: "row", xl: "column" }}
+            flexDirection={{ base: "column", lg: "row", xl: "column" }}
             gap={{ base: "24px" }}
             w={"100%"}
           >

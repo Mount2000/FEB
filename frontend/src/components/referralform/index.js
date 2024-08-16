@@ -15,7 +15,7 @@ const ReferralCodeForm = ({ title, value, onChange, onClick, error }) => {
       >
         <Text
           position="absolute"
-          top="-20px"
+          top={{ base: "-15px" }}
           left={{ base: "20px", xl: "50px" }}
           backgroundColor="#231A2E"
           padding="0 5px"
@@ -71,11 +71,12 @@ const ReferralCodeForm = ({ title, value, onChange, onClick, error }) => {
         </Flex>
       </Box>
       <MainButton
+        padding={"0px"}
         display={{ base: "block", xl: "none" }}
         marginTop={"16px"}
         marginBottom={"32px"}
         borderRadius={"8px"}
-        height={{ base: "40px", md: "50px", xl: "70px" }}
+        height={{ base: "40px", md: "50px", xl: "48px", "3xl": "70px" }}
         width={{ base: "100%" }}
         bg="#EC4899"
         color="#FFFFFF"

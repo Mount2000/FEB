@@ -157,7 +157,7 @@ const ReferralProgram = () => {
         fontFamily={"var(--font-heading-main)"}
       >
         <Flex
-          flexDirection={{ base: "column", md: "row" }}
+          flexDirection={{ base: "column", lg: "row" }}
           alignItems={"stretch"}
           justifyContent={"space-between"}
           marginTop={{ base: "60px", xl: "108px" }}

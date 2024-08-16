@@ -96,7 +96,7 @@ const ProductNode = () => {
                     }}
                     fontSize={{
                       base: "16px",
-                      md: "24px",
+                      md: "20px",
                       "2xl": "32px",
                       "3xl": "36px",
                     }}

@@ -180,6 +180,7 @@ const BannerHome = () => {
             }}
           >
             <Flex
+              justifyContent={"space-between"}
               flexDirection={"column"}
               alignItems={{ base: "center", md: "flex-start" }}
               width={{
@@ -190,7 +191,7 @@ const BannerHome = () => {
                 "3xl": "408px",
               }}
               gap={{ base: "16px", lg: "0px" }}
-              marginBottom={{ base: "0px", md: "60px", lg: "0px" }}
+              // marginBottom={{ base: "0px", md: "60px", lg: "0px" }}
             >
               <Text
                 width={{ lg: "209px", xl: "240px", "3xl": "408px" }}

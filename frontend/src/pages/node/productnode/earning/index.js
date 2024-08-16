@@ -383,10 +383,11 @@ const Earning = () => {
           alignItems={"center"}
           paddingTop={{ base: "28px", "2xl": "108px" }}
         >
-          <Flex
+          <SimpleGrid
+            columns={{ base: 1, md: 2 }}
             w={"100%"}
             direction={{ base: "column", md: "row" }}
-            gap={{ base: "36px", md: "24px" }}
+            gap={{ base: "16px", md: "16px" }}
             paddingBottom={{ base: "40px", md: "48px" }}
           >
             <Box
@@ -416,15 +417,15 @@ const Earning = () => {
                 },
                 "@media (max-width: 768px)": {
                   clipPath:
-                    "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                    "polygon(0 30px, 30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)",
                   "::before": {
-                    width: "40px",
-                    height: "40px",
+                    width: "30px",
+                    height: "30px",
                     backgroundColor: "pink.500",
                   },
                   "::after": {
-                    width: "40px",
-                    height: "40px",
+                    width: "30px",
+                    height: "30px",
                     backgroundColor: "pink.500",
                   },
                 },
@@ -436,17 +437,22 @@ const Earning = () => {
               }}
               boxShadow={"inset 0 0 10px var(--color-main)"}
               border="0.5px solid var(--color-main)"
-              width={{
-                base: "100%",
-                sm: "100%",
-                md: "70%",
-                xl: "50%",
-                "2xl": "50%",
-              }}
+              // width={{
+              //   base: "100%",
+              //   sm: "100%",
+              //   md: "50%",
+              //   xl: "50%",
+              //   "2xl": "50%",
+              // }}
             >
-              <Flex flexDirection={"column"} gap={"24px"}>
+              <Flex
+                height={"100%"}
+                flexDirection={"column"}
+                gap={"24px"}
+                justifyContent={"space-between"}
+              >
                 <Flex
-                  alignItems={"center"}
+                  alignItems={"start"}
                   justifyContent={"space-between"}
                   gap={{ base: "15px", md: "30px" }}
                 >
@@ -454,7 +460,7 @@ const Earning = () => {
                     fontWeight={400}
                     fontFamily="var(--font-text-extra)"
                     color="var(--color-main)"
-                    fontSize={{ base: "24px", "3xl": "72px" }}
+                    fontSize={{ base: "24px", xl: "32px", "3xl": "50px" }}
                   >
                     BACHI Balance
                   </Text>
@@ -517,15 +523,15 @@ const Earning = () => {
                 },
                 "@media (max-width: 768px)": {
                   clipPath:
-                    "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                    "polygon(0 30px, 30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)",
                   "::before": {
-                    width: "40px",
-                    height: "40px",
+                    width: "30px",
+                    height: "30px",
                     backgroundColor: "pink.500",
                   },
                   "::after": {
-                    width: "40px",
-                    height: "40px",
+                    width: "30px",
+                    height: "30px",
                     backgroundColor: "pink.500",
                   },
                 },
@@ -537,22 +543,27 @@ const Earning = () => {
               }}
               border="0.5px solid var(--color-main)"
               boxShadow={"inset 0 0 10px var(--color-main)"}
-              width={{
-                base: "100%",
-                sm: "100%",
-                md: "70%",
-                xl: "50%",
-                "2xl": "50%",
-              }}
+              // width={{
+              //   base: "100%",
+              //   sm: "100%",
+              //   md: "50%",
+              //   xl: "50%",
+              //   "2xl": "50%",
+              // }}
             >
-              <Flex flexDirection={"column"} gap={"24px"}>
+              <Flex
+                height={"100%"}
+                flexDirection={"column"}
+                gap={"24px"}
+                justifyContent={"space-between"}
+              >
                 <Flex
-                  alignItems={"center"}
+                  alignItems={"start"}
                   justifyContent={"space-between"}
                   gap={{ base: "15px", "2xl": "30px" }}
                 >
                   <Text
-                    fontSize={{ base: "24px", "3xl": "72px" }}
+                    fontSize={{ base: "24px", xl: "32px", "3xl": "50px" }}
                     fontWeight={400}
                     fontFamily="var(--font-text-extra)"
                     color="var(--color-main)"
@@ -560,7 +571,7 @@ const Earning = () => {
                     TAIKO Balance
                   </Text>
                   <MainButton
-                    height={{ base: "44px", "3xl": "80px" }}
+                    height={{ base: "44px", xl: "64px", "3xl": "80px" }}
                     backgroundColor="var(--color-main)"
                     padding={{
                       base: "16px 36px",
@@ -590,7 +601,7 @@ const Earning = () => {
                 </Text>
               </Flex>
             </Box>
-          </Flex>
+          </SimpleGrid>
 
           <SimpleGrid
             columns={{ base: 1, md: 2, "2xl": 4 }}
@@ -636,15 +647,15 @@ const Earning = () => {
                   },
                   "@media (max-width: 768px)": {
                     clipPath:
-                      "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                      "polygon(0 30px, 30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)",
                     "::before": {
-                      width: "40px",
-                      height: "40px",
+                      width: "30px",
+                      height: "30px",
                       backgroundColor: "pink.500",
                     },
                     "::after": {
-                      width: "40px",
-                      height: "40px",
+                      width: "30px",
+                      height: "30px",
                       backgroundColor: "pink.500",
                     },
                   },
@@ -678,15 +689,15 @@ const Earning = () => {
                     },
                     "@media (max-width: 768px)": {
                       clipPath:
-                        "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                        "polygon(0 30px, 30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)",
                       "::before": {
-                        width: "40px",
-                        height: "40px",
+                        width: "30px",
+                        height: "30px",
                         backgroundColor: "pink.500",
                       },
                       "::after": {
-                        width: "40px",
-                        height: "40px",
+                        width: "30px",
+                        height: "30px",
                         backgroundColor: "pink.500",
                       },
                     },

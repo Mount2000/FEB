@@ -2,9 +2,17 @@ import React, { useEffect, useState } from "react";
 //import component
 import { SpriteAnimator } from "react-sprite-animator";
 import earninganimation from "../../../../assets/img/animation/test.png";
-import animation from "../../../../assets/img/animation/animation-image.gif";
+import animation from "../../../../assets/img/animation/image-animation.gif";
 import SectionContainer from "../../../../components/container";
-import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Image,
+  SimpleGrid,
+  Text,
+} from "@chakra-ui/react";
 import CommonButton from "../../../../components/button/commonbutton";
 //import image
 import earningNode from "../../../../assets/img/node/earning-node.png";
@@ -38,7 +46,20 @@ import { parseGwei, parseEther, parseUnits } from "viem";
 import MainButton from "../../../../components/button/MainButton";
 
 import { clientAPI } from "../../../../api/client";
-
+import productCoreI5 from "../../../../assets/img/node/product-corei5.png";
+import productCoreI7 from "../../../../assets/img/node/product-corei7.png";
+import productCoreI9 from "../../../../assets/img/node/product-corei9.png";
+import iconPower from "../../../../assets/img/node/icon-node-power.png";
+import { useDispatch } from "react-redux";
+import {
+  selectBillNode,
+  setCaller,
+  setMessage,
+  setNodeId,
+  setPrice,
+  setQty,
+} from "../../../../store/slices/billNodeSlice";
+import { base } from "viem/chains";
 const stakingContract = {
   address: staking_contract.CONTRACT_ADDRESS,
   abi: staking_contract.CONTRACT_ABI,
@@ -319,6 +340,41 @@ const Earning = () => {
     }
     return status;
   };
+  /****Node free ******/
+  const dispatch = useDispatch();
+  const products = [
+    {
+      tierId: 0,
+      nameproduct: "Free Mint",
+      power: null,
+    },
+    {
+      tierId: 1,
+      nameproduct: "Core i5",
+      image: productCoreI5,
+      power: "10 GH/s",
+      reward: "50.000",
+    },
+    {
+      tierId: 2,
+      nameproduct: "Core i7",
+      image: productCoreI7,
+      power: "100 GH/s",
+      reward: "100.000",
+    },
+    {
+      tierId: 3,
+      nameproduct: "Core i9",
+      image: productCoreI9,
+      power: "1000 GH/s",
+      reward: "150.000",
+    },
+  ];
+  const [selectProduct, setselectProduct] = useState(products[0]);
+  const handleProductSelect = (products) => {
+    setselectProduct(products);
+    dispatch(setNodeId(products.tierId));
+  };
   return (
     <>
       <SectionContainer padding={"0px"}>
@@ -403,7 +459,7 @@ const Earning = () => {
                     BACHI Balance
                   </Text>
                   <MainButton
-                    height={{ base: "44px", "3xl": "80px" }}
+                    height={{ base: "44px", xl: "64px", "3xl": "80px" }}
                     backgroundColor="var(--color-main)"
                     padding={{
                       base: "16px 36px",
@@ -535,6 +591,207 @@ const Earning = () => {
               </Flex>
             </Box>
           </Flex>
+
+          <SimpleGrid
+            columns={{ base: 1, md: 2, "2xl": 4 }}
+            width={"100%"}
+            gap={{ base: "16px" }}
+            flexDirection={{ base: "column", md: "row" }}
+            paddingBottom={{ base: "24px", xl: "48px", "3xl": "64px" }}
+            alignItems={"stretch"}
+          >
+            {products.map((products) => (
+              <Box
+                flex={"1"}
+                key={products.tierId}
+                width={"100%"}
+                onClick={() => handleProductSelect(products)}
+                sx={{
+                  backdropFilter: "blur(10px) !important",
+                  backgroundColor:
+                    selectProduct?.tierId === products.tierId
+                      ? "var(--color-main)"
+                      : "transparent",
+                  clipPath:
+                    "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                  "::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "20px",
+                    height: "20px",
+                    backgroundColor: "pink.500",
+                    clipPath: "polygon(0 100%, 100% 0, 0 0)",
+                  },
+                  "::after": {
+                    content: '""',
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    width: "20px",
+                    height: "20px",
+                    backgroundColor: "pink.500",
+                    clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
+                  },
+                  "@media (max-width: 768px)": {
+                    clipPath:
+                      "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                    "::before": {
+                      width: "40px",
+                      height: "40px",
+                      backgroundColor: "pink.500",
+                    },
+                    "::after": {
+                      width: "40px",
+                      height: "40px",
+                      backgroundColor: "pink.500",
+                    },
+                  },
+                }}
+              >
+                <Box
+                  height={"100%"}
+                  sx={{
+                    backdropFilter: "blur(10px) !important",
+                    clipPath:
+                      "polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)",
+                    "::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "20px",
+                      height: "20px",
+                      backgroundColor: "pink.500",
+                      clipPath: "polygon(0 100%, 100% 0, 0 0)",
+                    },
+                    "::after": {
+                      content: '""',
+                      position: "absolute",
+                      bottom: 0,
+                      right: 0,
+                      width: "20px",
+                      height: "20px",
+                      backgroundColor: "pink.500",
+                      clipPath: "polygon(100% 100%, 100% 0, 0 100%)",
+                    },
+                    "@media (max-width: 768px)": {
+                      clipPath:
+                        "polygon(0 40px, 40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%)",
+                      "::before": {
+                        width: "40px",
+                        height: "40px",
+                        backgroundColor: "pink.500",
+                      },
+                      "::after": {
+                        width: "40px",
+                        height: "40px",
+                        backgroundColor: "pink.500",
+                      },
+                    },
+                  }}
+                  backgroundColor={"rgba(27, 27, 27, 0.20)"}
+                  boxShadow={"inset 0 0 10px var(--color-main)"}
+                  border="0.5px solid var(--color-main)"
+                  position="relative"
+                  zIndex="10"
+                >
+                  <Flex
+                    height={"100%"}
+                    flexDirection={"column"}
+                    alignItems={"center"}
+                    padding={{
+                      base: "16px 36px",
+                      "3xl": "24px 40px 32px 40px",
+                    }}
+                    justifyContent={"space-between"}
+                    gap={{ base: "16px" }}
+                  >
+                    <Flex
+                      width={"100%"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                    >
+                      <Flex
+                        justifyContent={"space-around"}
+                        height={"100%"}
+                        width={"100%"}
+                        flexDirection={"column"}
+                        alignItems={{
+                          base: "start",
+                        }}
+                        gap={{ base: "10px", "3xl": "24px" }}
+                      >
+                        <Text
+                          fontSize={{
+                            base: "32px",
+                            "2xl": "30px",
+                            "3xl": "48px",
+                          }}
+                          fontWeight={700}
+                          fontFamily={{
+                            base: "var(--font-text-main)",
+                            md: "var(--font-heading)",
+                          }}
+                        >
+                          {products.nameproduct}
+                        </Text>
+                        <Flex alignItems={"center"} gap={"16px"}>
+                          <Text
+                            letterSpacing={"-1px"}
+                            fontSize={{
+                              base: "24px",
+                              "2xl": "18px",
+                              "3xl": "30px",
+                            }}
+                            fontWeight={400}
+                            fontFamily={{
+                              base: "var(--font-text-main)",
+                              md: "var(--font-heading)",
+                            }}
+                          >
+                            {products.power}
+                          </Text>
+                          {products?.power && (
+                            <Image
+                              src={iconPower}
+                              paddingTop={"5px"}
+                              height={{ base: "25px" }}
+                            />
+                          )}
+                        </Flex>
+                      </Flex>
+                      <Image
+                        src={products.image}
+                        height={{
+                          base: "96px",
+                          md: "100px",
+                          lg: "96px",
+                          xl: "120px",
+                          "2xl": "88px",
+                          "3xl": "128px",
+                        }}
+                      />
+                    </Flex>
+                    <MainButton
+                      height={{ base: "", lg: "40px", "3xl": "56px" }}
+                      width={"100%"}
+                      backgroundColor="var(--color-main)"
+                      color="#FFF"
+                    >
+                      <Text
+                        fontFamily="var(--font-text-main)"
+                        fontSize={{ base: "", lg: "16px" }}
+                      >
+                        Start Earning
+                      </Text>
+                    </MainButton>
+                  </Flex>
+                </Box>
+              </Box>
+            ))}
+          </SimpleGrid>
           <Box
             border="0.5px solid #FCDDEC"
             width={{

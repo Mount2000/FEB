@@ -1,5 +1,5 @@
 import { Box, Flex, Grid, GridItem, Image, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 
 //import component
@@ -12,13 +12,13 @@ import navIcon from "../../assets/img/nav-icon.png";
 import { useModal } from "../../contexts/useModal";
 import { useAccount } from "wagmi";
 import { truncateStr } from "../../utils";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import NavbarMobile from "./navbarmobile";
 import MainButton from "../button/MainButton";
 import { enumMenu } from "../../utils/contants";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useTab } from "../../contexts/useTab";
-import { base } from "viem/chains";
+
 const Navbar = () => {
   const [shownav, setShowNav] = useState(false);
   const [navActive, setNavActive] = useState("");
@@ -30,7 +30,16 @@ const Navbar = () => {
   const handleShowNav = () => {
     setShowNav(!shownav);
   };
+  const location = useLocation();
 
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const activeItem = enumMenu.find((item) => item.path === currentPath);
+    if (activeItem) {
+      setNavColor(activeItem.name);
+    }
+  }, [location]);
+  console.log({ navColor });
   return (
     <>
       <SectionContainer
@@ -93,6 +102,7 @@ const Navbar = () => {
                   if (!item.disabled) {
                     setNavActive(navActive !== item.name ? item.name : "");
                     setNavColor(item.name);
+                    console.log({ navColor });
                   }
                 }}
                 style={{
@@ -164,7 +174,6 @@ const Navbar = () => {
                           onClick={() => {
                             console.log({
                               a: item.name,
-                              b: enumMenu[1].name,
                               index,
                             });
                             if (item.name == enumMenu[0].name)

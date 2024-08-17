@@ -7,7 +7,6 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract BachiToken is ERC20, ERC20Burnable, ERC20Pausable, AccessControl, Ownable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");

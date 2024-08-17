@@ -19,6 +19,7 @@ import CommonButton from "../../../../components/button/commonbutton";
 import earningNode from "../../../../assets/img/node/earning-node.png";
 import staking_contract from "../../../../utils/contracts/staking_contract";
 import node_manager_contract from "../../../../utils/contracts/node_manager_contract";
+import taiko_token_contract from "../../../../utils/contracts/taiko_token_contract";
 import { useAccount, useReadContract } from "wagmi";
 import {
   getBalance,
@@ -39,7 +40,7 @@ import {
   formatTokenBalance,
 } from "../../../../utils";
 import MessageBox from "../../../../components/message/messageBox";
-import { FAIURE, PENDING } from "../../../../utils/mesages";
+import { ERROR, FAIURE, PENDING, SUCCESS } from "../../../../utils/mesages";
 import { getUserIpAddress } from "../../../../utils";
 import { useModal } from "../../../../contexts/useModal";
 import { taikoHeklaClient } from "../../../../components/wallets/viemConfig";
@@ -62,14 +63,23 @@ import {
 } from "../../../../store/slices/billNodeSlice";
 import { base } from "viem/chains";
 import { useTab } from "../../../../contexts/useTab";
+import toast from "react-hot-toast";
+
 const stakingContract = {
   address: staking_contract.CONTRACT_ADDRESS,
   abi: staking_contract.CONTRACT_ABI,
 };
+
 const nodeManagerContract = {
   address: node_manager_contract.CONTRACT_ADDRESS,
   abi: node_manager_contract.CONTRACT_ABI,
 };
+
+const taikoTokenContract = {
+  address: taiko_token_contract.CONTRACT_ADDRESS,
+  abi: taiko_token_contract.CONTRACT_ABI,
+};
+
 const Earning = () => {
   const [tab, setTab] = useState(0);
   const [taikoAmount, setTaikoAmount] = useState(0);
@@ -346,26 +356,26 @@ const Earning = () => {
   const dispatch = useDispatch();
   const products = [
     {
-      tierId: 0,
+      tierId: 1,
       nameproduct: "Free Mint",
       power: null,
     },
     {
-      tierId: 1,
+      tierId: 2,
       nameproduct: "Core i5",
       image: productCoreI5,
       power: "10 GH/s",
       reward: "50.000",
     },
     {
-      tierId: 2,
+      tierId: 3,
       nameproduct: "Core i7",
       image: productCoreI7,
       power: "100 GH/s",
       reward: "100.000",
     },
     {
-      tierId: 3,
+      tierId: 4,
       nameproduct: "Core i9",
       image: productCoreI9,
       power: "1000 GH/s",
@@ -376,16 +386,408 @@ const Earning = () => {
   const [selectProduct, setselectProduct] = useState(products[0]);
   const handleProductSelect = (products) => {
     setselectProduct(products);
-    dispatch(setNodeId(products.tierId));
-    if (products.tierId !== 0) {
-      handleOpenTab();
-    }
+    // dispatch(setNodeId(products.tierId));
   };
 
   const handleOpenTab = () => {
     setFarmTab(1);
     window.scrollTo(0, 0);
     setMenuActive(enumMenu[0].name);
+  };
+
+  /***********PayNode*************/
+  const handlePayNow = async () => {
+    setDisabled(true);
+    let price = 0;
+    if (!address) {
+      setMessage("You not connected wallet");
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+
+    const balance = await getBalance(config, {
+      address: address,
+    });
+
+    const priceValue = parseUnits(String(price), chainDecimal);
+
+    /***Get IP user ***/
+    const ipAddress = await getUserIpAddress();
+    const IPBlocked = await clientAPI(
+      "get",
+      `/api/transaction/check-ip?ip=${ipAddress}`
+    );
+    const isBlocked = IPBlocked?.blocked;
+
+    // handle approve
+    const txApproveObj = {
+      ...taikoTokenContract,
+      functionName: "approve",
+      args: [nodeManagerContract.address, priceValue],
+    };
+
+    // handle transaction
+    const txObj = {
+      ...nodeManagerContract,
+      functionName: "multiBuyNode",
+      args: [1, 0, "metadata", 0, 1, priceValue],
+    };
+
+    const [gasPrice, gasLimit] = await Promise.all([
+      getGasPrice(config),
+      taikoHeklaClient.estimateContractGas({
+        ...txApproveObj,
+        account: address,
+      }),
+    ]);
+
+    const gasFeeToEther = Number(gasLimit * gasPrice) / 10 ** chainDecimal;
+
+    if (Number(balance.formatted) < gasFeeToEther) {
+      setMessage(ERROR.notBalance);
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+    setMessage(PENDING.txAwait);
+    setIsLoading(true);
+    setStatus(null);
+
+    if (isBlocked) {
+      setMessage(FAIURE.ipBlocked);
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+    try {
+      const approveHash = await writeContract(config, {
+        ...txApproveObj,
+      });
+
+      if (approveHash) {
+        console.log({ approveHash });
+        const status = await getTransactionStatus(config, approveHash);
+        await clientAPI("post", "/api/transaction/create-transaction", {
+          caller: address,
+          chainId: chainId,
+          hash: approveHash,
+          type: "Approve",
+          ipAddress: ipAddress,
+          status: status,
+        });
+        const result = await waitForTransactionReceipt(config, {
+          hash: approveHash,
+        });
+
+        if (result?.status == "success") {
+          const status = await getTransactionStatus(config, approveHash);
+          await clientAPI("post", "/api/transaction/update-transaction", {
+            hash: approveHash,
+            status: status,
+          });
+          toast.success("Approved successfully");
+
+          const [gasPrice, gasLimit] = await Promise.all([
+            getGasPrice(config),
+            taikoHeklaClient.estimateContractGas({
+              ...txObj,
+              account: address,
+            }),
+          ]);
+
+          const gasFeeToEther =
+            Number(gasLimit * gasPrice) / 10 ** chainDecimal;
+
+          if (Number(balance.formatted) < gasFeeToEther) {
+            setMessage(ERROR.notBalance);
+            setStatus("failure");
+            setIsLoading(true);
+            setDisabled(false);
+            return;
+          }
+
+          const hash = await writeContract(config, {
+            ...txObj,
+          });
+
+          if (hash) {
+            setTxHash(hash);
+            console.log({ hash });
+            const status = await getTransactionStatus(config, hash);
+            await clientAPI("post", "/api/transaction/create-transaction", {
+              caller: address,
+              chainId: chainId,
+              hash: hash,
+              type: "Buy node",
+              ipAddress: ipAddress,
+              status: status,
+            });
+
+            const result = await waitForTransactionReceipt(config, {
+              hash: hash,
+            });
+
+            if (result?.status == "success") {
+              const status = await getTransactionStatus(config, hash);
+              await clientAPI("post", "/api/transaction/update-transaction", {
+                hash: hash,
+                status: status,
+              });
+              setMessage(SUCCESS.txBuySuccess);
+              setStatus("success");
+              setIsLoading(true);
+              setDisabled(false);
+              return;
+            } else {
+              const status = await getTransactionStatus(config, hash);
+              await clientAPI("post", "/api/transaction/update-transaction", {
+                hash: hash,
+                status: status,
+              });
+              setMessage(FAIURE.txFalure);
+              setStatus("failure");
+              setIsLoading(true);
+              setDisabled(false);
+              return;
+            }
+          }
+        } else {
+          setMessage(FAIURE.txFalure);
+          setStatus("failure approved");
+          setIsLoading(true);
+          setDisabled(false);
+          return;
+        }
+      }
+    } catch (e) {
+      console.log(e);
+      setMessage(FAIURE.txFalure);
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+  };
+
+  const withdrawBachiBalance = async () => {
+    if (!address) {
+      setMessage("You not connected wallet");
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+
+    if (Number(bachiClaimedAmount) == 0) {
+      setMessage("Not bachi reward");
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+
+    const balance = await getBalance(config, {
+      address: address,
+    });
+
+    const ipAddress = await getUserIpAddress();
+
+    // handle transaction
+    const txObj = {
+      ...stakingContract,
+      functionName: "withdrawBachiReward",
+    };
+
+    const [gasPrice, gasLimit] = await Promise.all([
+      getGasPrice(config),
+      taikoHeklaClient.estimateContractGas({
+        ...txObj,
+        account: address,
+      }),
+    ]);
+
+    const gasFeeToEther = Number(gasLimit * gasPrice) / 10 ** chainDecimal;
+
+    if (Number(balance.formatted) < gasFeeToEther) {
+      setMessage(ERROR.notBalance);
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+    setMessage(PENDING.txAwait);
+    setIsLoading(true);
+    setStatus(null);
+
+    try {
+      const approveHash = await writeContract(config, {
+        ...txObj,
+      });
+
+      if (approveHash) {
+        console.log({ approveHash });
+        const status = await getTransactionStatus(config, approveHash);
+        await clientAPI("post", "/api/transaction/create-transaction", {
+          caller: address,
+          chainId: chainId,
+          hash: approveHash,
+          type: "Withdraw Bachi",
+          ipAddress: ipAddress,
+          status: status,
+        });
+        const result = await waitForTransactionReceipt(config, {
+          hash: approveHash,
+        });
+
+        if (result?.status == "success") {
+          const status = await getTransactionStatus(config, approveHash);
+          await clientAPI("post", "/api/transaction/update-transaction", {
+            hash: approveHash,
+            status: status,
+          });
+          setMessage("Claim successful");
+          setStatus("success");
+          setIsLoading(true);
+          setDisabled(false);
+          await getClaimedAmount();
+          return;
+        } else {
+          setMessage(FAIURE.txFalure);
+          setStatus("failure withdraw");
+          setIsLoading(true);
+          setDisabled(false);
+          return;
+        }
+      }
+    } catch (e) {
+      console.log(e);
+      setMessage(FAIURE.txFalure);
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+  };
+
+  const withdrawTaikoBalance = async () => {
+    if (!address) {
+      setMessage("You not connected wallet");
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+
+    if (Number(taikoClaimedAmount) == 0) {
+      setMessage("Not taiko reward");
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+
+    const contractBalance = await getBalance(config, {
+      address: stakingContract.address,
+      token: taikoTokenContract.address,
+    });
+    const stakingTaikoBalance = parseUnits(
+      contractBalance.formatted,
+      chainDecimal
+    );
+
+    if (Number(stakingTaikoBalance) < Number(taikoClaimedAmount)) {
+      setMessage("Not enough balance");
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+
+    const balance = await getBalance(config, {
+      address: address,
+    });
+
+    const ipAddress = await getUserIpAddress();
+
+    // handle transaction
+    const txObj = {
+      ...stakingContract,
+      functionName: "withdrawTaikoReward",
+    };
+
+    const [gasPrice, gasLimit] = await Promise.all([
+      getGasPrice(config),
+      taikoHeklaClient.estimateContractGas({
+        ...txObj,
+        account: address,
+      }),
+    ]);
+
+    const gasFeeToEther = Number(gasLimit * gasPrice) / 10 ** chainDecimal;
+
+    if (Number(balance.formatted) < gasFeeToEther) {
+      setMessage(ERROR.notBalance);
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+    setMessage(PENDING.txAwait);
+    setIsLoading(true);
+    setStatus(null);
+
+    try {
+      const approveHash = await writeContract(config, {
+        ...txObj,
+      });
+
+      if (approveHash) {
+        console.log({ approveHash });
+        const status = await getTransactionStatus(config, approveHash);
+        await clientAPI("post", "/api/transaction/create-transaction", {
+          caller: address,
+          chainId: chainId,
+          hash: approveHash,
+          type: "Withdraw Taiko",
+          ipAddress: ipAddress,
+          status: status,
+        });
+        const result = await waitForTransactionReceipt(config, {
+          hash: approveHash,
+        });
+
+        if (result?.status == "success") {
+          const status = await getTransactionStatus(config, approveHash);
+          await clientAPI("post", "/api/transaction/update-transaction", {
+            hash: approveHash,
+            status: status,
+          });
+          setMessage("Claim successful");
+          setStatus("success");
+          setIsLoading(true);
+          setDisabled(false);
+          await getClaimedAmount();
+          return;
+        } else {
+          setMessage(FAIURE.txFalure);
+          setStatus("failure withdraw");
+          setIsLoading(true);
+          setDisabled(false);
+          return;
+        }
+      }
+    } catch (e) {
+      console.log(e);
+      setMessage(FAIURE.txFalure);
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
   };
 
   return (
@@ -473,13 +875,15 @@ const Earning = () => {
                   </Text>
                   <MainButton
                     height={{ base: "44px", xl: "64px", "3xl": "80px" }}
-                    backgroundColor="var(--color-main)"
+                    backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
+                    isDisabled={disabled}
                     padding={{
                       base: "16px 36px",
                       xl: "16px 36px 16px 36px",
                     }}
                     color="white"
                     borderRadius={"8px !important"}
+                    onClick={() => withdrawBachiBalance()}
                   >
                     <Text
                       fontSize={{ base: "18px", "2xl": "24px", "3xl": "32px" }}
@@ -574,13 +978,15 @@ const Earning = () => {
                   </Text>
                   <MainButton
                     height={{ base: "44px", xl: "64px", "3xl": "80px" }}
-                    backgroundColor="var(--color-main)"
+                    backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
+                    isDisabled={disabled}
                     padding={{
                       base: "16px 36px",
                       xl: "16px 36px 16px 36px",
                     }}
                     color="white"
                     borderRadius={"8px !important"}
+                    onClick={() => withdrawTaikoBalance()}
                   >
                     <Text
                       fontSize={{ base: "18px", "2xl": "24px", "3xl": "32px" }}
@@ -789,12 +1195,17 @@ const Earning = () => {
                     </Flex>
                     <MainButton
                       onClick={(e) => {
-                        e.stopPropagation(); // Ngăn chặn sự kiện onClick của box ngoài
-                        handleOpenTab();
+                        e.stopPropagation();
+                        if (products.tierId == 1) {
+                          handlePayNow();
+                        } else handleOpenTab();
                       }}
                       height={{ base: "", lg: "40px", "3xl": "56px" }}
                       width={"100%"}
-                      backgroundColor="var(--color-main)"
+                      backgroundColor={
+                        disabled ? "#B51F66" : "var(--color-main)"
+                      }
+                      isDisabled={disabled}
                       color="#FFF"
                     >
                       <Text
@@ -957,13 +1368,13 @@ const Earning = () => {
                   </Flex>
                 </MainButton>
                 <MainButton
-                  backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
                   width={"50%"}
                   display={"flex"}
                   justifyContent={"center"}
                   padding="16px 36px"
                   height={{ base: "44px", lg: "54px", "3xl": "88px" }}
                   onClick={address ? handleClaim : onOpenConnectWalletModal}
+                  backgroundColor={disabled ? "#B51F66" : "var(--color-main)"}
                   isDisabled={disabled}
                 >
                   <Text

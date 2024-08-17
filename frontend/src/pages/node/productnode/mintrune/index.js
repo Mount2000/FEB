@@ -428,6 +428,7 @@ const MintRune = () => {
           setPaymentStatus("failure approved");
           setIsLoading(true);
           setDisabled(false);
+          return;
         }
       }
     } catch (e) {

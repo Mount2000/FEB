@@ -3,13 +3,15 @@ const { ethers } = require("hardhat");
 async function main() {
   const [deployer] = await ethers.getSigners();
   console.log("Deployer:", deployer.address);
+  let initialBalance = await deployer.provider.getBalance(deployer.address);
+  console.log("Initial ETH balance:", Number(initialBalance), "ETH");
 
   let bachiTokenAddress = "0x0000000000000000000000000000000000000000";
   let bachiNodeAddress = "0x0000000000000000000000000000000000000000";
   let nodeManagerAddress = "0x0000000000000000000000000000000000000000";
   let stakingAddress = "0x0000000000000000000000000000000000000000";
   let questManagerAddress = "0x0000000000000000000000000000000000000000";
-  let taikoTokenAddress = "0x2029Ca1e4A5954781a271d6Fa3598bF4434969f5";
+  let taikoTokenAddress = "0xa960d72F83A8A163412520A778b437AC5211A501";
 
   // Deploy BachiToken contract
   let tokenName = "BACHI TOKEN";
@@ -80,12 +82,19 @@ async function main() {
 
   /********************** CONTRACT ADDRESS **************************/
 
+  let currentBalance = await deployer.provider.getBalance(deployer.address);
+  console.log("Current ETH balance:", Number(currentBalance), "ETH");
+
+  console.log({
+    fee: (Number(initialBalance) - Number(currentBalance)) / 10 ** 18,
+  });
+
   console.log({
     bachiTokenAddress,
     bachiNodeAddress,
     nodeManagerAddress,
     stakingAddress,
-    questManagerAddress
+    questManagerAddress,
   });
 }
 

@@ -137,19 +137,32 @@ const Terms = () => {
           ))}
         </Flex>
       </SectionContainer>
-      {/* <SectionContainer
+      <SectionContainer
         padding={{ base: "0px 47px 0px 47px", "3xl": "0px 188px 0px 188px" }}
-        backgroundImage={`url(${termsbackgrounddown})`}
-        backgroundSize={{ base: "100% 100%", "3xl": "100%" }}
-        backgroundRepeat={"no-repeat"}
-        height={{ base: "205px" }}
-      ></SectionContainer> */}
+        height={{ base: "205px", lg: "429px", "3xl": "569px" }}
+        position={"relative"}
+      >
+        <Image
+          width={"100%"}
+          height={{
+            base: "430px",
+            md: "630px",
+            lg: "830px",
+            xl: "930px",
+            "3xl": "1030px",
+          }}
+          src={termsbackgrounddown}
+          position={"absolute"}
+          left={0}
+          top={{ base: "-180px", md: "-340px", xl: "-380px" }}
+        />
+      </SectionContainer>
 
       <SectionContainer
         padding={{
-          base: "205px 47px 76px 47px",
-          lg: "429px 112px 100px 112px",
-          "3xl": "569px 188px 146px 188px ",
+          base: "0px 47px 76px 47px",
+          lg: "0px 112px 100px 112px",
+          "3xl": "0px 188px 146px 188px ",
         }}
       >
         <Flex flexDirection={"column"} gap={{ base: "32px", "3xl": "40px" }}>

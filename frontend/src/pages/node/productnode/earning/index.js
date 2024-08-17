@@ -421,13 +421,6 @@ const Earning = () => {
     );
     const isBlocked = IPBlocked?.blocked;
 
-    // handle approve
-    const txApproveObj = {
-      ...taikoTokenContract,
-      functionName: "approve",
-      args: [nodeManagerContract.address, priceValue],
-    };
-
     // handle transaction
     const txObj = {
       ...nodeManagerContract,
@@ -438,7 +431,7 @@ const Earning = () => {
     const [gasPrice, gasLimit] = await Promise.all([
       getGasPrice(config),
       taikoHeklaClient.estimateContractGas({
-        ...txApproveObj,
+        ...txObj,
         account: address,
       }),
     ]);
@@ -464,100 +457,46 @@ const Earning = () => {
       return;
     }
     try {
-      const approveHash = await writeContract(config, {
-        ...txApproveObj,
+      const hash = await writeContract(config, {
+        ...txObj,
       });
 
-      if (approveHash) {
-        console.log({ approveHash });
-        const status = await getTransactionStatus(config, approveHash);
+      if (hash) {
+        setTxHash(hash);
+        console.log({ hash });
+        const status = await getTransactionStatus(config, hash);
         await clientAPI("post", "/api/transaction/create-transaction", {
           caller: address,
           chainId: chainId,
-          hash: approveHash,
-          type: "Approve",
+          hash: hash,
+          type: "Buy node",
           ipAddress: ipAddress,
           status: status,
         });
+
         const result = await waitForTransactionReceipt(config, {
-          hash: approveHash,
+          hash: hash,
         });
 
         if (result?.status == "success") {
-          const status = await getTransactionStatus(config, approveHash);
+          const status = await getTransactionStatus(config, hash);
           await clientAPI("post", "/api/transaction/update-transaction", {
-            hash: approveHash,
+            hash: hash,
             status: status,
           });
-          toast.success("Approved successfully");
-
-          const [gasPrice, gasLimit] = await Promise.all([
-            getGasPrice(config),
-            taikoHeklaClient.estimateContractGas({
-              ...txObj,
-              account: address,
-            }),
-          ]);
-
-          const gasFeeToEther =
-            Number(gasLimit * gasPrice) / 10 ** chainDecimal;
-
-          if (Number(balance.formatted) < gasFeeToEther) {
-            setMessage(ERROR.notBalance);
-            setStatus("failure");
-            setIsLoading(true);
-            setDisabled(false);
-            return;
-          }
-
-          const hash = await writeContract(config, {
-            ...txObj,
-          });
-
-          if (hash) {
-            setTxHash(hash);
-            console.log({ hash });
-            const status = await getTransactionStatus(config, hash);
-            await clientAPI("post", "/api/transaction/create-transaction", {
-              caller: address,
-              chainId: chainId,
-              hash: hash,
-              type: "Buy node",
-              ipAddress: ipAddress,
-              status: status,
-            });
-
-            const result = await waitForTransactionReceipt(config, {
-              hash: hash,
-            });
-
-            if (result?.status == "success") {
-              const status = await getTransactionStatus(config, hash);
-              await clientAPI("post", "/api/transaction/update-transaction", {
-                hash: hash,
-                status: status,
-              });
-              setMessage(SUCCESS.txBuySuccess);
-              setStatus("success");
-              setIsLoading(true);
-              setDisabled(false);
-              return;
-            } else {
-              const status = await getTransactionStatus(config, hash);
-              await clientAPI("post", "/api/transaction/update-transaction", {
-                hash: hash,
-                status: status,
-              });
-              setMessage(FAIURE.txFalure);
-              setStatus("failure");
-              setIsLoading(true);
-              setDisabled(false);
-              return;
-            }
-          }
+          setMessage(SUCCESS.txBuySuccess);
+          setStatus("success");
+          setIsLoading(true);
+          setDisabled(false);
+          return;
         } else {
+          const status = await getTransactionStatus(config, hash);
+          await clientAPI("post", "/api/transaction/update-transaction", {
+            hash: hash,
+            status: status,
+          });
           setMessage(FAIURE.txFalure);
-          setStatus("failure approved");
+          setStatus("failure");
           setIsLoading(true);
           setDisabled(false);
           return;

@@ -1,9 +1,13 @@
-const CHAINS = [
-  {
+const CHAINS = {
+  testnet: {
     chainId: 167009,
     rpcUrls: "https://rpc.hekla.taiko.xyz",
   },
-];
+  mainnet: {
+    chainId: 1,
+    rpcUrls: "https://mainnet.infura.io/v3",
+  },
+};
 
 const STATUS = {
   FAILED: "FAILED",

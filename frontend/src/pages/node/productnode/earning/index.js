@@ -4,6 +4,7 @@ import { SpriteAnimator } from "react-sprite-animator";
 import earninganimation from "../../../../assets/img/animation/test.png";
 import animation from "../../../../assets/img/animation/image-animation.gif";
 import SectionContainer from "../../../../components/container";
+import { enumMenu } from "../../../../utils/contants";
 import {
   Box,
   Button,
@@ -60,6 +61,7 @@ import {
   setQty,
 } from "../../../../store/slices/billNodeSlice";
 import { base } from "viem/chains";
+import { useTab } from "../../../../contexts/useTab";
 const stakingContract = {
   address: staking_contract.CONTRACT_ADDRESS,
   abi: staking_contract.CONTRACT_ABI,
@@ -370,12 +372,22 @@ const Earning = () => {
       reward: "150.000",
     },
   ];
+  const { setFarmTab, setMenuActive } = useTab();
   const [selectProduct, setselectProduct] = useState(products[0]);
   const handleProductSelect = (products) => {
     setselectProduct(products);
     dispatch(setNodeId(products.tierId));
+    if (products.tierId !== 0) {
+      handleOpenTab();
+    }
   };
-  
+
+  const handleOpenTab = () => {
+    setFarmTab(1);
+    window.scrollTo(0, 0);
+    setMenuActive(enumMenu[0].name);
+  };
+
   return (
     <>
       <SectionContainer padding={"0px"}>
@@ -776,6 +788,10 @@ const Earning = () => {
                       />
                     </Flex>
                     <MainButton
+                      onClick={(e) => {
+                        e.stopPropagation(); // Ngăn chặn sự kiện onClick của box ngoài
+                        handleOpenTab();
+                      }}
                       height={{ base: "", lg: "40px", "3xl": "56px" }}
                       width={"100%"}
                       backgroundColor="var(--color-main)"

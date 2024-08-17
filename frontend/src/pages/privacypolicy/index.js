@@ -12,11 +12,21 @@ const PrivacyPolicy = () => {
     },
     {
       title: "Information We Collect",
-      info: "Bachiswap provides a trading platform that enables users to exchange cryptocurrencies. We do not guarantee the continuous or uninterrupted availability of the service.",
+      info: "Personal Information: We may collect personal information when you create an account, including your name, email address, phone number, IP address, and identity verification information",
+      info1:
+        "Transaction Information: We collect information about your transactions on the platform, such as the types of cryptocurrencies, quantities, prices, and transaction times.",
+      info2:
+        "Device Information: We may collect information about the device you use to access our platform, including the operating system, browser, and IP address.",
     },
     {
       title: "How We Use Your Information",
-      info: "We do not share your personal information with any third parties, except as required by law or to protect our rights and property.",
+      info: "Providing Services: We use your personal information to verify your identity, create an account, process transactions, and provide customer support.",
+      info1:
+        "Securing Your Account: We use your personal information to protect your account and prevent fraudulent activity.",
+      info2:
+        "Improving Services: We use information about your transactions to analyze and improve our services.",
+      info3:
+        "Compliance with Laws: We may use your information to comply with legal and regulatory requirements.",
     },
     {
       title: "Sharing of Information",
@@ -96,7 +106,7 @@ const PrivacyPolicy = () => {
           "3xl": "0px 188px 0px 188px",
         }}
       >
-        <Flex
+        {/* <Flex
           flexDirection={"column"}
           gap={{ base: "40px", "3xl": "80px" }}
           paddingTop={"10px"}
@@ -126,21 +136,140 @@ const PrivacyPolicy = () => {
               </Text>
             </Flex>
           ))}
+        </Flex> */}
+        <Flex
+          flexDirection={"column"}
+          gap={{ base: "40px", "3xl": "80px" }}
+          paddingTop={"10px"}
+        >
+          {terms.map((item, index) => (
+            <React.Fragment key={index}>
+              {index === 1 || index === 2 ? (
+                <Flex
+                  flexDirection={"column"}
+                  gap={{ base: "40px", "3xl": "80px" }}
+                >
+                  <Flex flexDirection={"column"} gap={"16px"}>
+                    <Text
+                      fontSize={{
+                        base: "20px",
+                        lg: "24px",
+                        xl: "28px",
+                        "3xl": "32px",
+                      }}
+                      fontFamily="var(--font-text-main)"
+                      lineHeight={{ "3xl": "40px" }}
+                      letterSpacing={"-1px"}
+                    >
+                      {item.title}
+                    </Text>
+                    <List spacing={2} styleType="disc">
+                      {item.info && (
+                        <ListItem marginBottom={"16px"} marginLeft={"30px"}>
+                          <Text
+                            fontSize={{
+                              base: "16px",
+                              lg: "20px",
+                              "3xl": "24px",
+                            }}
+                            fontFamily="var(--font-text-main)"
+                            lineHeight={{ "3xl": "32px" }}
+                            letterSpacing={"-1px"}
+                          >
+                            {item.info}
+                          </Text>
+                        </ListItem>
+                      )}
+                      {item.info1 && (
+                        <ListItem marginBottom={"16px"} marginLeft={"30px"}>
+                          <Text
+                            fontSize={{
+                              base: "16px",
+                              lg: "20px",
+                              "3xl": "24px",
+                            }}
+                            fontFamily="var(--font-text-main)"
+                            lineHeight={{ "3xl": "32px" }}
+                            letterSpacing={"-1px"}
+                          >
+                            {item.info1}
+                          </Text>
+                        </ListItem>
+                      )}
+                      {item.info2 && (
+                        <ListItem marginBottom={"16px"} marginLeft={"30px"}>
+                          <Text
+                            fontSize={{
+                              base: "16px",
+                              lg: "20px",
+                              "3xl": "24px",
+                            }}
+                            fontFamily="var(--font-text-main)"
+                            lineHeight={{ "3xl": "32px" }}
+                            letterSpacing={"-1px"}
+                          >
+                            {item.info2}
+                          </Text>
+                        </ListItem>
+                      )}
+                    </List>
+                  </Flex>
+                </Flex>
+              ) : (
+                <Flex flexDirection={"column"} gap={"16px"}>
+                  <Text
+                    fontSize={{
+                      base: "20px",
+                      lg: "24px",
+                      xl: "28px",
+                      "3xl": "32px",
+                    }}
+                    fontFamily="var(--font-text-main)"
+                    letterSpacing={"-1px"}
+                    lineHeight={{ "3xl": "40px" }}
+                  >
+                    {item.title}
+                  </Text>
+                  <Text
+                    fontSize={{ base: "16px", lg: "20px", "3xl": "24px" }}
+                    fontFamily="var(--font-text-main)"
+                    letterSpacing={"-1px"}
+                    lineHeight={{ base: "28px" }}
+                  >
+                    {item.info}
+                  </Text>
+                </Flex>
+              )}
+            </React.Fragment>
+          ))}
         </Flex>
       </SectionContainer>
-      {/* <SectionContainer
+      <SectionContainer
         padding={{ base: "0px 47px 0px 47px", "3xl": "0px 188px 0px 188px" }}
-        backgroundImage={`url(${termsbackgrounddown})`}
-        backgroundSize={{ base: "100% 100%", "3xl": "100%" }}
-        backgroundRepeat={"no-repeat"}
-        height={{ base: "205px" }}
-      ></SectionContainer> */}
+        height={{ base: "205px", lg: "429px", "3xl": "569px" }}
+        position={"relative"}
+      >
+        <Image
+          width={"100%"}
+          height={{
+            base: "430px",
+            md: "630px",
+            lg: "830px",
+            xl: "930px",
+            "3xl": "1030px",
+          }}
+          src={termsbackgrounddown}
+          position={"absolute"}
+          left={0}
+          top={{ base: "-180px", md: "-340px", xl: "-380px" }}
+        />
+      </SectionContainer>
 
       <SectionContainer
         padding={{
-          base: "205px 47px 76px 47px",
-          lg: "429px 112px 100px 112px",
-          "3xl": "569px 188px 146px 188px ",
+          base: "0px 47px 76px 47px",
+          lg: "0px 112px 100px 112px",
+          "3xl": "0px 188px 146px 188px ",
         }}
       >
         <Flex flexDirection={"column"} gap={{ base: "32px", "3xl": "40px" }}>

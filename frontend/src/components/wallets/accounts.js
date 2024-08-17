@@ -21,6 +21,7 @@ import { useReadContract, useWriteContract } from "wagmi";
 import MainButton from "../button/MainButton";
 import { base } from "viem/chains";
 import useScreenWidth from "../../hooks/useScreenWidth";
+import taiko_token_contract from "../../utils/contracts/taiko_token_contract";
 
 export function Account() {
   const { address } = useAccount();
@@ -43,6 +44,19 @@ export function Account() {
     const { value } = event?.target;
     await switchChain(config, { chainId: Number(value) });
   };
+
+  const taikoTokenContract = {
+    address: taiko_token_contract.CONTRACT_ADDRESS,
+    abi: taiko_token_contract.CONTRACT_ABI,
+  };
+
+  const { data: taikoBalance } = useBalance({
+    address: address,
+    token: taikoTokenContract.address,
+  });
+
+  console.log({ taikoBalance });
+
   const isMobile = useScreenWidth(476);
   return (
     <Flex
@@ -73,7 +87,7 @@ export function Account() {
         <Text
           fontSize={{ base: "16px", lg: "24px" }}
           color={"var(--color-main)"}
-        >{`${formatTokenBalance(balance?.formatted)} ${balance?.symbol}`}</Text>
+        >{`${formatTokenBalance(taikoBalance?.formatted)} ${taikoBalance?.symbol}`}</Text>
       )}
       <MainButton
         my="12px"

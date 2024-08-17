@@ -13,6 +13,7 @@ import productCoreI9 from "../../../../assets/img/node/product-corei9.png";
 import iconNode from "../../../../assets/img/node/icon-node.png";
 import iconPower from "../../../../assets/img/node/icon-node-power.png";
 import node_manager_contract from "../../../../utils/contracts/node_manager_contract";
+import taiko_token_contract from "../../../../utils/contracts/taiko_token_contract";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { config } from "../../../../components/wallets/config";
 import {
@@ -76,6 +77,10 @@ const MintRune = () => {
   const nodeManagerContract = {
     address: node_manager_contract.CONTRACT_ADDRESS,
     abi: node_manager_contract.CONTRACT_ABI,
+  };
+  const taikoTokenContract = {
+    address: taiko_token_contract.CONTRACT_ADDRESS,
+    abi: taiko_token_contract.CONTRACT_ABI,
   };
   const { data: nodeData } = useReadContract({
     ...nodeManagerContract,
@@ -257,6 +262,11 @@ const MintRune = () => {
       address: address,
     });
 
+    const taikoBalance = await getBalance(config, {
+      address: address,
+      token: taikoTokenContract.address,
+    });
+
     const priceValue = parseUnits(String(price), chainDecimal);
 
     /***Get IP user ***/
@@ -267,6 +277,14 @@ const MintRune = () => {
     );
     const isBlocked = IPBlocked?.blocked;
 
+    // handle approve
+    const txApproveObj = {
+      ...taikoTokenContract,
+      functionName: "approve",
+      args: [nodeManagerContract.address, priceValue],
+    };
+
+    // handle transaction
     const txObj = {
       ...nodeManagerContract,
       functionName: "multiBuyNode",
@@ -276,21 +294,21 @@ const MintRune = () => {
         "metadata",
         discountCouponIdId,
         billNode?.qty,
+        priceValue,
       ],
-      value: priceValue,
     };
 
     const [gasPrice, gasLimit] = await Promise.all([
       getGasPrice(config),
       taikoHeklaClient.estimateContractGas({
-        ...txObj,
+        ...txApproveObj,
         account: address,
       }),
     ]);
 
     const gasFeeToEther = Number(gasLimit * gasPrice) / 10 ** chainDecimal;
 
-    if (Number(balance.formatted) < price + gasFeeToEther) {
+    if (Number(balance.formatted) < gasFeeToEther) {
       dispatch(setMessage(ERROR.notBalance));
       setPaymentStatus("failure");
       setIsLoading(true);
@@ -309,51 +327,107 @@ const MintRune = () => {
       return;
     }
     try {
-      const hash = await writeContract(config, {
-        ...txObj,
+      const approveHash = await writeContract(config, {
+        ...txApproveObj,
       });
 
-      if (hash) {
-        setTxHash(hash);
-        console.log({ hash });
-        const status = await getTransactionStatus(config, hash);
+      if (approveHash) {
+        console.log({ approveHash });
+        const status = await getTransactionStatus(config, approveHash);
         await clientAPI("post", "/api/transaction/create-transaction", {
           caller: address,
           chainId: chainId,
-          hash: hash,
-          type: "Buy node",
+          hash: approveHash,
+          type: "Approve",
           ipAddress: ipAddress,
           status: status,
         });
-
         const result = await waitForTransactionReceipt(config, {
-          hash: hash,
+          hash: approveHash,
         });
 
         if (result?.status == "success") {
-          const status = await getTransactionStatus(config, hash);
+          const status = await getTransactionStatus(config, approveHash);
           await clientAPI("post", "/api/transaction/update-transaction", {
-            hash: hash,
+            hash: approveHash,
             status: status,
           });
-          const code = await getUserReferral(address);
-          setReferralCode(code);
-          dispatch(setMessage(SUCCESS.txBuySuccess));
-          setPaymentStatus("success");
-          setIsLoading(true);
-          setDisabled(false);
-          return;
+          toast.success("Approved successfully");
+
+          const [gasPrice, gasLimit] = await Promise.all([
+            getGasPrice(config),
+            taikoHeklaClient.estimateContractGas({
+              ...txObj,
+              account: address,
+            }),
+          ]);
+
+          const gasFeeToEther =
+            Number(gasLimit * gasPrice) / 10 ** chainDecimal;
+
+          if (
+            Number(balance.formatted) < gasFeeToEther ||
+            Number(taikoBalance.formatted) < Number(price)
+          ) {
+            dispatch(setMessage(ERROR.notBalance));
+            setPaymentStatus("failure");
+            setIsLoading(true);
+            setDisabled(false);
+            return;
+          }
+
+          const hash = await writeContract(config, {
+            ...txObj,
+          });
+
+          if (hash) {
+            setTxHash(hash);
+            console.log({ hash });
+            const status = await getTransactionStatus(config, hash);
+            await clientAPI("post", "/api/transaction/create-transaction", {
+              caller: address,
+              chainId: chainId,
+              hash: hash,
+              type: "Buy node",
+              ipAddress: ipAddress,
+              status: status,
+            });
+
+            const result = await waitForTransactionReceipt(config, {
+              hash: hash,
+            });
+
+            if (result?.status == "success") {
+              const status = await getTransactionStatus(config, hash);
+              await clientAPI("post", "/api/transaction/update-transaction", {
+                hash: hash,
+                status: status,
+              });
+              const code = await getUserReferral(address);
+              setReferralCode(code);
+              dispatch(setMessage(SUCCESS.txBuySuccess));
+              setPaymentStatus("success");
+              setIsLoading(true);
+              setDisabled(false);
+              return;
+            } else {
+              const status = await getTransactionStatus(config, hash);
+              await clientAPI("post", "/api/transaction/update-transaction", {
+                hash: hash,
+                status: status,
+              });
+              dispatch(setMessage(FAIURE.txFalure));
+              setPaymentStatus("failure");
+              setIsLoading(true);
+              setDisabled(false);
+              return;
+            }
+          }
         } else {
-          const status = await getTransactionStatus(config, hash);
-          await clientAPI("post", "/api/transaction/update-transaction", {
-            hash: hash,
-            status: status,
-          });
           dispatch(setMessage(FAIURE.txFalure));
-          setPaymentStatus("failure");
+          setPaymentStatus("failure approved");
           setIsLoading(true);
           setDisabled(false);
-          return;
         }
       }
     } catch (e) {
@@ -389,7 +463,7 @@ const MintRune = () => {
           paddingTop={{ base: "48px", xl: "87px" }}
         >
           <Flex gap={"48px"} flexDirection={{ base: "column", md: "row" }}>
-            {products.map((products) => (
+            {products.map((products, index) => (
               <Box
                 key={products.tierId}
                 width={"100%"}

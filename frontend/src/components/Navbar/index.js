@@ -31,7 +31,6 @@ const Navbar = () => {
     setShowNav(!shownav);
   };
 
-  console.log({ menuActive });
   return (
     <>
       <SectionContainer

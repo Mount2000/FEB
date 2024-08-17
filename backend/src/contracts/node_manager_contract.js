@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const contract = {
   testnet: {
-    CONTRACT_ADDRESS: "0xa0A99766c3B3Fd8393c59e3780172dAc8609b2b7",
+    CONTRACT_ADDRESS: "0x471b2f1346E3dDCF450574ECa38374046A31dB55",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -19,6 +19,11 @@ const contract = {
           {
             internalType: "address",
             name: "_stakingContract",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "_taikoTokenAddress",
             type: "address",
           },
         ],
@@ -180,6 +185,25 @@ const contract = {
           },
         ],
         name: "AddedNode",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "Deposited",
         type: "event",
       },
       {
@@ -669,6 +693,19 @@ const contract = {
         inputs: [
           {
             internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "deposit",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
             name: "",
             type: "uint256",
           },
@@ -960,6 +997,11 @@ const contract = {
             name: "quality",
             type: "uint256",
           },
+          {
+            internalType: "uint256",
+            name: "taikoAmount",
+            type: "uint256",
+          },
         ],
         name: "multiBuyNode",
         outputs: [
@@ -969,7 +1011,7 @@ const contract = {
             type: "string",
           },
         ],
-        stateMutability: "payable",
+        stateMutability: "nonpayable",
         type: "function",
       },
       {
@@ -1284,6 +1326,19 @@ const contract = {
         type: "function",
       },
       {
+        inputs: [],
+        name: "taikoToken",
+        outputs: [
+          {
+            internalType: "contract IERC20",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
         inputs: [
           {
             internalType: "address",
@@ -1401,7 +1456,7 @@ const contract = {
       {
         inputs: [
           {
-            internalType: "address payable",
+            internalType: "address",
             name: "to",
             type: "address",
           },
@@ -1419,7 +1474,7 @@ const contract = {
     ],
   },
   mainnet: {
-    CONTRACT_ADDRESS: "0xa0A99766c3B3Fd8393c59e3780172dAc8609b2b7",
+    CONTRACT_ADDRESS: "0x471b2f1346E3dDCF450574ECa38374046A31dB55",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -1436,6 +1491,11 @@ const contract = {
           {
             internalType: "address",
             name: "_stakingContract",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "_taikoTokenAddress",
             type: "address",
           },
         ],
@@ -1597,6 +1657,25 @@ const contract = {
           },
         ],
         name: "AddedNode",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "Deposited",
         type: "event",
       },
       {
@@ -2086,6 +2165,19 @@ const contract = {
         inputs: [
           {
             internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "deposit",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
             name: "",
             type: "uint256",
           },
@@ -2377,6 +2469,11 @@ const contract = {
             name: "quality",
             type: "uint256",
           },
+          {
+            internalType: "uint256",
+            name: "taikoAmount",
+            type: "uint256",
+          },
         ],
         name: "multiBuyNode",
         outputs: [
@@ -2386,7 +2483,7 @@ const contract = {
             type: "string",
           },
         ],
-        stateMutability: "payable",
+        stateMutability: "nonpayable",
         type: "function",
       },
       {
@@ -2701,6 +2798,19 @@ const contract = {
         type: "function",
       },
       {
+        inputs: [],
+        name: "taikoToken",
+        outputs: [
+          {
+            internalType: "contract IERC20",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
         inputs: [
           {
             internalType: "address",
@@ -2818,7 +2928,7 @@ const contract = {
       {
         inputs: [
           {
-            internalType: "address payable",
+            internalType: "address",
             name: "to",
             type: "address",
           },

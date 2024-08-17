@@ -1,6 +1,6 @@
 const contract = {
   testnet: {
-    CONTRACT_ADDRESS: "0x37fEf42A3D1d3183020BBa5665B29e18e3bd60B2",
+    CONTRACT_ADDRESS: "0x6dE84E501DA7a3cE7aC5e9F88EBE0100d229C758",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -136,6 +136,28 @@ const contract = {
         type: "error",
       },
       {
+        inputs: [
+          {
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+        ],
+        name: "OwnableInvalidOwner",
+        type: "error",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "account",
+            type: "address",
+          },
+        ],
+        name: "OwnableUnauthorizedAccount",
+        type: "error",
+      },
+      {
         anonymous: false,
         inputs: [
           {
@@ -158,6 +180,25 @@ const contract = {
           },
         ],
         name: "Approval",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "previousOwner",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "OwnershipTransferred",
         type: "event",
       },
       {
@@ -530,6 +571,19 @@ const contract = {
       },
       {
         inputs: [],
+        name: "owner",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
         name: "pause",
         outputs: [],
         stateMutability: "nonpayable",
@@ -546,6 +600,13 @@ const contract = {
           },
         ],
         stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "renounceOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
         type: "function",
       },
       {
@@ -679,6 +740,19 @@ const contract = {
             type: "bool",
           },
         ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "transferOwnership",
+        outputs: [],
         stateMutability: "nonpayable",
         type: "function",
       },
@@ -692,7 +766,7 @@ const contract = {
     ],
   },
   mainnet: {
-    CONTRACT_ADDRESS: "0x37fEf42A3D1d3183020BBa5665B29e18e3bd60B2",
+    CONTRACT_ADDRESS: "0x6dE84E501DA7a3cE7aC5e9F88EBE0100d229C758",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -828,6 +902,28 @@ const contract = {
         type: "error",
       },
       {
+        inputs: [
+          {
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+        ],
+        name: "OwnableInvalidOwner",
+        type: "error",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "account",
+            type: "address",
+          },
+        ],
+        name: "OwnableUnauthorizedAccount",
+        type: "error",
+      },
+      {
         anonymous: false,
         inputs: [
           {
@@ -850,6 +946,25 @@ const contract = {
           },
         ],
         name: "Approval",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "previousOwner",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "OwnershipTransferred",
         type: "event",
       },
       {
@@ -1222,6 +1337,19 @@ const contract = {
       },
       {
         inputs: [],
+        name: "owner",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
         name: "pause",
         outputs: [],
         stateMutability: "nonpayable",
@@ -1238,6 +1366,13 @@ const contract = {
           },
         ],
         stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "renounceOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
         type: "function",
       },
       {
@@ -1371,6 +1506,19 @@ const contract = {
             type: "bool",
           },
         ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "transferOwnership",
+        outputs: [],
         stateMutability: "nonpayable",
         type: "function",
       },

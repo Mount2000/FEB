@@ -1,6 +1,6 @@
 const contract = {
   testnet: {
-    CONTRACT_ADDRESS: "0x8aB034068fb799BA19B1Fb0503929bBbEB73E407",
+    CONTRACT_ADDRESS: "0x793B80819Feb586d097A937a90F38387C56Faf18",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -17,6 +17,11 @@ const contract = {
           {
             internalType: "address",
             name: "_nodeManagerContract",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "_taikoTokenAddress",
             type: "address",
           },
         ],
@@ -569,10 +574,16 @@ const contract = {
         type: "function",
       },
       {
-        inputs: [],
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
         name: "deposit",
         outputs: [],
-        stateMutability: "payable",
+        stateMutability: "nonpayable",
         type: "function",
       },
       {
@@ -1117,6 +1128,38 @@ const contract = {
         type: "function",
       },
       {
+        inputs: [],
+        name: "taikoToken",
+        outputs: [
+          {
+            internalType: "contract IERC20",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "account",
+            type: "address",
+          },
+        ],
+        name: "tokenBalance",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
         inputs: [
           {
             internalType: "address",
@@ -1158,12 +1201,12 @@ const contract = {
           },
           {
             internalType: "uint256",
-            name: "taikoRewardAmount",
+            name: "bachiRewardAmount",
             type: "uint256",
           },
           {
             internalType: "uint256",
-            name: "bachiRewardAmount",
+            name: "taikoRewardAmount",
             type: "uint256",
           },
         ],
@@ -1175,7 +1218,7 @@ const contract = {
       {
         inputs: [
           {
-            internalType: "address payable",
+            internalType: "address",
             name: "to",
             type: "address",
           },
@@ -1207,7 +1250,7 @@ const contract = {
     ],
   },
   mainnet: {
-    CONTRACT_ADDRESS: "0x8aB034068fb799BA19B1Fb0503929bBbEB73E407",
+    CONTRACT_ADDRESS: "0x793B80819Feb586d097A937a90F38387C56Faf18",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -1224,6 +1267,11 @@ const contract = {
           {
             internalType: "address",
             name: "_nodeManagerContract",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "_taikoTokenAddress",
             type: "address",
           },
         ],
@@ -1776,10 +1824,16 @@ const contract = {
         type: "function",
       },
       {
-        inputs: [],
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
         name: "deposit",
         outputs: [],
-        stateMutability: "payable",
+        stateMutability: "nonpayable",
         type: "function",
       },
       {
@@ -2324,6 +2378,38 @@ const contract = {
         type: "function",
       },
       {
+        inputs: [],
+        name: "taikoToken",
+        outputs: [
+          {
+            internalType: "contract IERC20",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "account",
+            type: "address",
+          },
+        ],
+        name: "tokenBalance",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
         inputs: [
           {
             internalType: "address",
@@ -2365,12 +2451,12 @@ const contract = {
           },
           {
             internalType: "uint256",
-            name: "taikoRewardAmount",
+            name: "bachiRewardAmount",
             type: "uint256",
           },
           {
             internalType: "uint256",
-            name: "bachiRewardAmount",
+            name: "taikoRewardAmount",
             type: "uint256",
           },
         ],
@@ -2382,7 +2468,7 @@ const contract = {
       {
         inputs: [
           {
-            internalType: "address payable",
+            internalType: "address",
             name: "to",
             type: "address",
           },

@@ -9,7 +9,7 @@ async function main() {
   // Approve Taiko Token
   const TaikoToken = await ethers.getContractAt("IERC20", taikoTokenAddress);
   const amountToApprove = 100000; 
-  const spenderAddress = "0x488F347535F0f4BFBe3579BC3D283fB861eCAD54"; 
+  const spenderAddress = "0x471b2f1346E3dDCF450574ECa38374046A31dB55"; 
 
   console.log(`Approving ${spenderAddress} to spend ${amountToApprove.toString()} Taiko tokens`);
   const tx = await TaikoToken.approve(spenderAddress, amountToApprove);

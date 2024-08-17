@@ -255,8 +255,21 @@ const MintRune = () => {
     ]);
 
     const discountPercent = discountinfo[1];
+    const commissionPercent = discountinfo[3];
     if (discountPercent > 0 && ownerDiscount !== address) {
       price = price - (price * discountPercent) / 100;
+      const contractBalance = await getBalance(config, {
+        address: nodeManagerContract.address,
+        token: taikoTokenContract.address,
+      });
+      const commissionValue = (price * commissionPercent) / 100;
+      if (Number(contractBalance.formatted) < Number(commissionValue)) {
+        dispatch(setMessage("Not enough balance"));
+        setPaymentStatus("failure");
+        setIsLoading(true);
+        setDisabled(false);
+        return;
+      }
     }
     const balance = await getBalance(config, {
       address: address,

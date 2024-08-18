@@ -14,9 +14,7 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         uint requestTime;
     }
     mapping(address => uint) public stakeBalances;
-    mapping(address => bool) public isStaker;
-    mapping(address => UnstakeRequest) public unstakeRequests; // store time user request unstake
-    mapping(address => uint) public rewardBalance;
+    mapping(address => UnstakeRequest []) public unstakeRequests; // store request unstake is pending
     mapping(address => bool) public isClaimed; // User only can claim once per cycle, true if user claimed in current cycle
     uint public rewardPool;
     uint public totalStaked;
@@ -75,11 +73,10 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         rewardRate = rate;
     }
 
-    function award(address user) public onlyRole(ADMIN_ROLE){
-        require(rewardRate > 0, "Do not set reward rate");
-        require(awardStarted, "Awarding is not allowd yet");
-        require(isStaker[user], "User is not staker");
-        rewardBalance[msg.sender] += stakeBalances[msg.sender] * rewardRate;
+    function setIsClaimed(address user) public onlyOwner{
+        require(!awardStarted, "award is started");
+        require(isClaimed[user], "User did not claim");
+        isClaimed[user] = false;
     }
 
     function stake(uint _amount) public whenNotPaused{
@@ -87,58 +84,65 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         BachiToken.transferFrom(msg.sender, address(this), _amount);
         stakeBalances[msg.sender] += _amount;
         totalStaked += _amount;
-        isStaker[msg.sender] = true;
         emit Stake(msg.sender, _amount);
     }
 
     function requestUnstake(uint _amount) public whenNotPaused{
         require(!isLocked, "Request unstacking is not allowed yet");
-        require(isStaker[msg.sender], "You did not stake yet");
         require(_amount <= stakeBalances[msg.sender], "Insufficient staking balance");
-        unstakeRequests[msg.sender] = UnstakeRequest(_amount, block.timestamp);
+        unstakeRequests[msg.sender].push(UnstakeRequest(_amount, block.timestamp));
         emit RequestUnstake(msg.sender, _amount, block.timestamp);
     }
 
     function cancelRequestUnstake() public{
-        require(unstakeRequests[msg.sender].amount != 0, "You did not request unstacking yet");
-        delete(unstakeRequests[msg.sender]);
+        require(unstakeRequests[msg.sender].length != 0, "You did not request unstacking yet");
+        deleteFirstRequest(msg.sender);
         emit CancelRequestUnstake(msg.sender);
     }
 
-    function unstake(uint _amount) public whenNotPaused{
+    function unstake() public whenNotPaused{
+        uint _amount = unstakeRequests[msg.sender][0].amount;
         require(!isLocked, "Unstacking is not allowed yet");
-        require(_amount <= unstakeRequests[msg.sender].amount, "Insufficient unstake balance");
-        require(unstakeRequests[msg.sender].requestTime + limitUnstakeTime >= block.timestamp, "Unstaking is not allowed yet");
+        require(unstakeRequests[msg.sender].length != 0, "You did not request unstacking yet");
+        require(unstakeRequests[msg.sender][0].requestTime + limitUnstakeTime >= block.timestamp, "Unstaking is not allowed yet");
         BachiToken.transferFrom(address(this), msg.sender, _amount);
         totalStaked -= _amount;
         stakeBalances[msg.sender] -= _amount;
-        if(stakeBalances[msg.sender] == 0){
-            isStaker[msg.sender] = false;
-        }
-        unstakeRequests[msg.sender].amount -= _amount;
-        isStaker[msg.sender] = false;
+        deleteFirstRequest(msg.sender);
         emit Unstake(msg.sender, _amount);
     }
 
-    function claimReward(uint amount) public whenNotPaused{
+    function claimReward(address user) public whenNotPaused onlyRole(ADMIN_ROLE){
+        uint reward = stakeBalances[user] * rewardRate;
+        require(awardStarted, "award is not started");
+        require(reward != 0,"User is not staker");
         require(isLocked, "Claiming reward is not allowed yet");
-        require(amount <= rewardBalance[msg.sender], "Insufficient reward balance");
-        require(!isClaimed[msg.sender], "You already claimed");
-        require(amount <= rewardPool, "Do not have enought reward in pool");
-        rewardBalance[msg.sender] -= amount;
-        rewardPool -= amount;
-        TaikoToken.transferFrom(address(this), msg.sender, amount);
-        isClaimed[msg.sender] = true;
-        emit ClaimReward(msg.sender, amount);
+        require(!isClaimed[user], "User already claimed");
+        require(reward <= rewardPool, "Do not have enought reward in pool");
+        rewardPool -= reward;
+        TaikoToken.transferFrom(address(this), user, reward);
+        isClaimed[user] = true;
+        emit ClaimReward(user, reward);
     }
 
     function addRewardPool(uint amount) public onlyOwner{
+        require(TaikoToken.balanceOf(msg.sender) >= amount, "Insufficient balance");
         TaikoToken.transferFrom(msg.sender, address(this), amount);
         rewardPool += amount;
     }
 
-    function withdrawReward(uint amount) public onlyOwner{
+    function withdrawRewardPool(uint amount) public onlyOwner{
         require(rewardPool >= amount,"Do not have enought reward in pool");
         TaikoToken.transferFrom(address(this), msg.sender, amount);
     }
+
+    function deleteFirstRequest(address user) internal {
+        uint requestLength = unstakeRequests[user].length;
+        for (uint i = 0; i < requestLength - 1; i++){
+            unstakeRequests[user][i] = unstakeRequests[user][i+1];
+        }
+        unstakeRequests[user].pop();
+{
+
+}    }
 }

@@ -15,9 +15,14 @@ contract QuestManager is Pausable, AccessControl, Ownable {
     Staking public stakingContract;
 
     uint8 public taskId;
+    enum RewardType {
+        bachi,
+        taiko
+    }
     struct TaskInformation {
         string code;
         uint point;
+        RewardType rewardType;
     }
 
     mapping(uint8 => TaskInformation) public tasksInfo;
@@ -28,13 +33,20 @@ contract QuestManager is Pausable, AccessControl, Ownable {
     mapping(address => mapping(uint256 => uint256)) public dailyclaims; // address => taskId => claimTime
 
     // Events
-    event AddedTask(address indexed user, uint taskId, string code, uint point);
+    event AddedTask(
+        address indexed user,
+        uint taskId,
+        string code,
+        uint point,
+        RewardType rewardType
+    );
 
     event UpdatedTask(
         address indexed user,
         uint taskId,
         string code,
-        uint point
+        uint point,
+        RewardType rewardType
     );
 
     event CompleteTask(
@@ -74,22 +86,28 @@ contract QuestManager is Pausable, AccessControl, Ownable {
 
     function addTask(
         string memory code,
-        uint point
+        uint point,
+        RewardType rewardType
     ) public whenNotPaused onlyRole(ADMIN_ROLE) {
         require(point > 0, "Point must be greater than 0");
         require(bytes(code).length > 0, "Code name must not be empty");
 
         taskId++;
-        TaskInformation memory newTask = TaskInformation(code, point);
+        TaskInformation memory newTask = TaskInformation(
+            code,
+            point,
+            rewardType
+        );
         tasksInfo[taskId] = newTask;
 
-        emit AddedTask(msg.sender, taskId, code, point);
+        emit AddedTask(msg.sender, taskId, code, point, rewardType);
     }
 
     function updateTask(
         uint8 _taskId,
         string memory code,
-        uint point
+        uint point,
+        RewardType rewardType
     ) public whenNotPaused onlyRole(ADMIN_ROLE) {
         require(tasksInfo[_taskId].point > 0, "Task does not exist");
         require(point > 0, "Point must be greater than 0");
@@ -97,8 +115,9 @@ contract QuestManager is Pausable, AccessControl, Ownable {
 
         tasksInfo[_taskId].code = code;
         tasksInfo[_taskId].point = point;
+        tasksInfo[_taskId].rewardType = rewardType;
 
-        emit UpdatedTask(msg.sender, taskId, code, point);
+        emit UpdatedTask(msg.sender, taskId, code, point, rewardType);
     }
 
     function completeTask(uint8 _taskId) public whenNotPaused {
@@ -114,7 +133,11 @@ contract QuestManager is Pausable, AccessControl, Ownable {
         taskUsersLinks[_taskId].add(user);
         rewardBalances[user] += taskInfo.point;
 
-        stakingContract.updateRewardAmount(user, 0, taskInfo.point);
+        if (taskInfo.rewardType == RewardType.bachi) {
+            stakingContract.updateRewardAmount(user, taskInfo.point, 0);
+        } else if (taskInfo.rewardType == RewardType.taiko) {
+            stakingContract.updateRewardAmount(user, 0, taskInfo.point);
+        }
         emit CompleteTask(user, taskId, taskInfo.code, taskInfo.point);
     }
 
@@ -138,7 +161,12 @@ contract QuestManager is Pausable, AccessControl, Ownable {
         dailyclaims[user][_taskId] = claimTime;
         rewardBalances[user] += taskInfo.point;
 
-        stakingContract.updateRewardAmount(user, 0, taskInfo.point);
+        if (taskInfo.rewardType == RewardType.bachi) {
+            stakingContract.updateRewardAmount(user, taskInfo.point, 0);
+        } else if (taskInfo.rewardType == RewardType.taiko) {
+            stakingContract.updateRewardAmount(user, 0, taskInfo.point);
+        }
+
         emit CompleteTaskDaily(
             user,
             taskId,

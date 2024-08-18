@@ -80,7 +80,10 @@ const BannerHome = () => {
             fontFamily="var(--font-heading)"
             letterSpacing={"-1px"}
           >
-            Swap everything on TAIKO
+            Swap everything on{" "}
+            <Text as="span" backgroundColor="var(--color-main)">
+              TAIKO
+            </Text>
           </Text>
           <Text
             fontSize={{ base: "16px", md: "24px" }}
@@ -96,10 +99,17 @@ const BannerHome = () => {
             lineHeight={{ base: "24px", md: "32px" }}
             width={{ lg: "95%", "2xl": "98%", "3xl": "85%" }}
           >
-            Welcome to BachiSwap, the ultimate AMM DEX. Including Layer 1 and
-            Layer 2 solutions, as well as both EVM and non-EVM environments.
-            With BachiSwap, effortlessly swap any token and transfer your assets
-            across different networks with ease
+            Welcome to{" "}
+            <Text as="span" color="var(--color-main)">
+              BachiSwap
+            </Text>
+            , the ultimate AMM DEX. Including Layer 1 and Layer 2 solutions, as
+            well as both EVM and non-EVM environments. With{" "}
+            <Text as="span" color="var(--color-main)">
+              BachiSwap
+            </Text>
+            , effortlessly swap any token and transfer your assets across
+            different networks with ease
           </Text>
           <Link to={"/node"} onClick={conectLink}>
             <MainButton
@@ -130,7 +140,7 @@ const BannerHome = () => {
           src={appBanner}
           position={"absolute"}
           right={"0px"}
-          top={{ base: "-90px", xl: "-130px", "3xl": "-180px" }}
+          top={{ base: "-90px", xl: "-100px" }}
           width={{ base: "1000px", "3xl": "1200px" }}
         />
         <Image
@@ -173,10 +183,6 @@ const BannerHome = () => {
             gap={{
               base: "64px",
               md: "10px",
-              lg: "100px",
-              xl: "170px",
-              "2xl": "200px",
-              "3xl": "227px",
             }}
           >
             <Flex
@@ -186,15 +192,21 @@ const BannerHome = () => {
               width={{
                 base: "100%",
                 md: "49%",
-                lg: "209px",
-                xl: "240px",
+                lg: "230px",
+                xl: "260px",
+                "2xl": "290px",
                 "3xl": "408px",
               }}
               gap={{ base: "16px", lg: "0px" }}
               // marginBottom={{ base: "0px", md: "60px", lg: "0px" }}
             >
               <Text
-                width={{ lg: "209px", xl: "240px", "3xl": "408px" }}
+                width={{
+                  lg: "230px",
+                  xl: "260px",
+                  "2xl": "290px",
+                  "3xl": "408px",
+                }}
                 fontSize={{
                   base: "40px",
                   lg: "48px",
@@ -243,20 +255,20 @@ const BannerHome = () => {
               width={{
                 base: "100%",
                 md: "49%",
-                lg: "245px",
-                xl: "285px",
+                lg: "290px",
+                xl: "330px",
                 "2xl": "400px",
-                "3xl": "426px",
+                "3xl": "443px",
               }}
               gap={{ base: "16px", lg: "0px" }}
             >
               <Text
                 textAlign={{ base: "start", lg: "center" }}
                 width={{
-                  lg: "245px",
-                  xl: "285px",
+                  lg: "290px",
+                  xl: "330px",
                   "2xl": "400px",
-                  "3xl": "426px",
+                  "3xl": "443px",
                 }}
                 fontSize={{
                   base: "40px",
@@ -306,16 +318,17 @@ const BannerHome = () => {
                 base: "100%",
                 md: "49%",
                 lg: "237px",
-
+                "2xl": "252px",
                 "3xl": "307px",
               }}
               gap={{ base: "16px", lg: "0px" }}
             >
               <Text
-                width={{ lg: "237px", "3xl": "307px" }}
+                width={{ lg: "237px", "2xl": "252px", "3xl": "307px" }}
                 fontSize={{
                   base: "40px",
-                  md: "40px",
+                  lg: "48px",
+
                   "2xl": "68px",
                   "3xl": "96px",
                 }}
@@ -367,10 +380,6 @@ const BannerHome = () => {
             }}
             gap={{
               md: "5px",
-              lg: "100px",
-              xl: "170px",
-              "2xl": "200px",
-              "3xl": "227px",
             }}
           >
             <Flex
@@ -379,18 +388,26 @@ const BannerHome = () => {
               width={{
                 base: "100%",
                 md: "49%",
-                lg: "209px",
-                xl: "240px",
+                lg: "230px",
+                xl: "260px",
+                "2xl": "290px",
                 "3xl": "408px",
               }}
             >
               <Text
-                width={{ lg: "209px", xl: "240px", "3xl": "408px" }}
+                width={{
+                  lg: "230px",
+                  xl: "260px",
+                  "2xl": "290px",
+                  "3xl": "408px",
+                }}
                 fontSize={{
                   base: "24px",
                   md: "28px",
-                  xl: "32px",
-                  "3xl": "40px",
+                  lg: "16px",
+                  xl: "18px",
+                  "2xl": "20px",
+                  "3xl": "24px",
                 }}
                 fontWeight={"400"}
                 lineHeight={"normal"}
@@ -405,24 +422,26 @@ const BannerHome = () => {
               width={{
                 base: "100%",
                 md: "49%",
-                lg: "245px",
-                xl: "285px",
+                lg: "290px",
+                xl: "330px",
                 "2xl": "400px",
-                "3xl": "426px",
+                "3xl": "443px",
               }}
             >
               <Text
                 width={{
-                  lg: "245px",
-                  xl: "285px",
+                  lg: "290px",
+                  xl: "330px",
                   "2xl": "400px",
-                  "3xl": "426px",
+                  "3xl": "443px",
                 }}
                 fontSize={{
                   base: "24px",
                   md: "28px",
-                  xl: "32px",
-                  "3xl": "40px",
+                  lg: "16px",
+                  xl: "18px",
+                  "2xl": "20px",
+                  "3xl": "24px",
                 }}
                 lineHeight={"normal"}
                 fontFamily="var(--font-text-extra)"
@@ -435,15 +454,23 @@ const BannerHome = () => {
             <Flex
               flexDirection={"column"}
               alignItems={{ base: "center", md: "flex-start" }}
-              width={{ base: "100%", md: "49%", lg: "237px", "3xl": "307px" }}
+              width={{
+                base: "100%",
+                md: "49%",
+                lg: "237px",
+                "2xl": "252px",
+                "3xl": "307px",
+              }}
             >
               <Text
-                width={{ lg: "237px", "3xl": "307px" }}
+                width={{ lg: "237px", "2xl": "252px", "3xl": "307px" }}
                 fontSize={{
                   base: "24px",
                   md: "28px",
-                  xl: "32px",
-                  "3xl": "40px",
+                  lg: "16px",
+                  xl: "18px",
+                  "2xl": "20px",
+                  "3xl": "24px",
                 }}
                 lineHeight={"normal"}
                 fontFamily="var(--font-text-extra)"
@@ -459,10 +486,6 @@ const BannerHome = () => {
             justifyContent={"space-between"}
             gap={{
               md: "5px",
-              lg: "100px",
-              xl: "170px",
-              "2xl": "200px",
-              "3xl": "227px",
             }}
           >
             <Flex
@@ -471,20 +494,26 @@ const BannerHome = () => {
               width={{
                 base: "100%",
                 md: "49%",
-                lg: "209px",
-                xl: "240px",
+                lg: "230px",
+                xl: "260px",
+                "2xl": "290px",
                 "3xl": "408px",
               }}
               // paddingBottom={{ base: "63px", xl: "0px" }}
             >
               <Text
-                width={{ lg: "209px", xl: "240px", "3xl": "408px" }}
+                width={{
+                  lg: "230px",
+                  xl: "260px",
+                  "2xl": "290px",
+                  "3xl": "408px",
+                }}
                 fontSize={{
                   base: "16px",
                   md: "18px",
-                  lg: "20px",
-                  xl: "22px",
-                  "3xl": "24px",
+                  lg: "14px",
+                  xl: "16px",
+                  "3xl": "20px",
                 }}
                 fontWeight={"400"}
                 lineHeight={"normal"}
@@ -500,26 +529,26 @@ const BannerHome = () => {
               width={{
                 base: "100%",
                 md: "49%",
-                lg: "245px",
+                lg: "290px",
                 xl: "285px",
                 "2xl": "400px",
-                "3xl": "426px",
+                "3xl": "443px",
               }}
               // paddingBottom={{ base: "63px", xl: "0px" }}
             >
               <Text
                 width={{
-                  lg: "245px",
-                  xl: "285px",
+                  lg: "290px",
+                  xl: "330px",
                   "2xl": "400px",
-                  "3xl": "426px",
+                  "3xl": "443px",
                 }}
                 fontSize={{
                   base: "16px",
                   md: "18px",
-                  lg: "20px",
-                  xl: "22px",
-                  "3xl": "24px",
+                  lg: "14px",
+                  xl: "16px",
+                  "3xl": "20px",
                 }}
                 fontWeight={"400"}
                 lineHeight={"normal"}
@@ -532,16 +561,22 @@ const BannerHome = () => {
             <Flex
               flexDirection={"column"}
               alignItems={{ base: "center", md: "flex-start" }}
-              width={{ base: "100%", md: "49%", lg: "237px", "3xl": "307px" }}
+              width={{
+                base: "100%",
+                md: "49%",
+                lg: "237px",
+                "2xl": "252px",
+                "3xl": "307px",
+              }}
             >
               <Text
-                width={{ lg: "237px" }}
+                width={{ lg: "237px", "2xl": "252px" }}
                 fontSize={{
                   base: "16px",
                   md: "18px",
-                  lg: "20px",
-                  xl: "22px",
-                  "3xl": "24px",
+                  lg: "14px",
+                  xl: "16px",
+                  "3xl": "20px",
                 }}
                 lineHeight={"normal"}
                 fontFamily="var(--font-text-main)"

@@ -1,6 +1,6 @@
 const contract = {
   testnet: {
-    CONTRACT_ADDRESS: "0x1933F2a57298A9f7E6fb5b0e182B47a3aff203dc",
+    CONTRACT_ADDRESS: "0x12db998af01a394d2D6928fC8667ce3188245caf",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -93,6 +93,12 @@ const contract = {
             name: "point",
             type: "uint256",
           },
+          {
+            indexed: false,
+            internalType: "enum QuestManager.RewardType",
+            name: "rewardType",
+            type: "uint8",
+          },
         ],
         name: "AddedTask",
         type: "event",
@@ -126,6 +132,43 @@ const contract = {
           },
         ],
         name: "CompleteTask",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "taskId",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "string",
+            name: "code",
+            type: "string",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "point",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "claimTime",
+            type: "uint256",
+          },
+        ],
+        name: "CompleteTaskDaily",
         type: "event",
       },
       {
@@ -275,6 +318,12 @@ const contract = {
             name: "point",
             type: "uint256",
           },
+          {
+            indexed: false,
+            internalType: "enum QuestManager.RewardType",
+            name: "rewardType",
+            type: "uint8",
+          },
         ],
         name: "UpdatedTask",
         type: "event",
@@ -336,6 +385,11 @@ const contract = {
             name: "point",
             type: "uint256",
           },
+          {
+            internalType: "enum QuestManager.RewardType",
+            name: "rewardType",
+            type: "uint8",
+          },
         ],
         name: "addTask",
         outputs: [],
@@ -353,6 +407,67 @@ const contract = {
         name: "completeTask",
         outputs: [],
         stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint8",
+            name: "_taskId",
+            type: "uint8",
+          },
+        ],
+        name: "completeTaskDaily",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        name: "dailyclaims",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            internalType: "uint8",
+            name: "_taskId",
+            type: "uint8",
+          },
+        ],
+        name: "getDailyClaimTime",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
         type: "function",
       },
       {
@@ -478,6 +593,30 @@ const contract = {
           },
         ],
         name: "isTaskCompletedByUser",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            internalType: "uint8",
+            name: "_taskId",
+            type: "uint8",
+          },
+        ],
+        name: "isTaskDailyCompletedByUser",
         outputs: [
           {
             internalType: "bool",
@@ -685,6 +824,11 @@ const contract = {
             name: "point",
             type: "uint256",
           },
+          {
+            internalType: "enum QuestManager.RewardType",
+            name: "rewardType",
+            type: "uint8",
+          },
         ],
         stateMutability: "view",
         type: "function",
@@ -744,6 +888,11 @@ const contract = {
             internalType: "uint256",
             name: "point",
             type: "uint256",
+          },
+          {
+            internalType: "enum QuestManager.RewardType",
+            name: "rewardType",
+            type: "uint8",
           },
         ],
         name: "updateTask",
@@ -754,7 +903,7 @@ const contract = {
     ],
   },
   mainnet: {
-    CONTRACT_ADDRESS: "0x1933F2a57298A9f7E6fb5b0e182B47a3aff203dc",
+    CONTRACT_ADDRESS: "0x12db998af01a394d2D6928fC8667ce3188245caf",
     CONTRACT_ABI: [
       {
         inputs: [
@@ -847,6 +996,12 @@ const contract = {
             name: "point",
             type: "uint256",
           },
+          {
+            indexed: false,
+            internalType: "enum QuestManager.RewardType",
+            name: "rewardType",
+            type: "uint8",
+          },
         ],
         name: "AddedTask",
         type: "event",
@@ -880,6 +1035,43 @@ const contract = {
           },
         ],
         name: "CompleteTask",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "taskId",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "string",
+            name: "code",
+            type: "string",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "point",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "claimTime",
+            type: "uint256",
+          },
+        ],
+        name: "CompleteTaskDaily",
         type: "event",
       },
       {
@@ -1029,6 +1221,12 @@ const contract = {
             name: "point",
             type: "uint256",
           },
+          {
+            indexed: false,
+            internalType: "enum QuestManager.RewardType",
+            name: "rewardType",
+            type: "uint8",
+          },
         ],
         name: "UpdatedTask",
         type: "event",
@@ -1090,6 +1288,11 @@ const contract = {
             name: "point",
             type: "uint256",
           },
+          {
+            internalType: "enum QuestManager.RewardType",
+            name: "rewardType",
+            type: "uint8",
+          },
         ],
         name: "addTask",
         outputs: [],
@@ -1107,6 +1310,67 @@ const contract = {
         name: "completeTask",
         outputs: [],
         stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint8",
+            name: "_taskId",
+            type: "uint8",
+          },
+        ],
+        name: "completeTaskDaily",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        name: "dailyclaims",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            internalType: "uint8",
+            name: "_taskId",
+            type: "uint8",
+          },
+        ],
+        name: "getDailyClaimTime",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
         type: "function",
       },
       {
@@ -1232,6 +1496,30 @@ const contract = {
           },
         ],
         name: "isTaskCompletedByUser",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            internalType: "uint8",
+            name: "_taskId",
+            type: "uint8",
+          },
+        ],
+        name: "isTaskDailyCompletedByUser",
         outputs: [
           {
             internalType: "bool",
@@ -1439,6 +1727,11 @@ const contract = {
             name: "point",
             type: "uint256",
           },
+          {
+            internalType: "enum QuestManager.RewardType",
+            name: "rewardType",
+            type: "uint8",
+          },
         ],
         stateMutability: "view",
         type: "function",
@@ -1498,6 +1791,11 @@ const contract = {
             internalType: "uint256",
             name: "point",
             type: "uint256",
+          },
+          {
+            internalType: "enum QuestManager.RewardType",
+            name: "rewardType",
+            type: "uint8",
           },
         ],
         name: "updateTask",

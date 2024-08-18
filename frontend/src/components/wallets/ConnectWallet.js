@@ -17,6 +17,7 @@ import { useModal } from "../../contexts/useModal";
 import CloseButton from "../button/CloseButton";
 import { IoCloseSharp } from "react-icons/io5";
 import EllipseIcon from "../../assets/img/node/ellipse-2.png";
+import appLogo from "../../assets/img/app-logo.png";
 
 function ConnectWallet() {
   const { isConnected } = useAccount();
@@ -80,13 +81,13 @@ export default function ConnectWalletModal() {
               <Box w={"100%"} h={"100px"} mx={"auto"} position={"relative"}>
                 <Box
                   position={"absolute"}
-                  top={{ base: "25px", lg: "-24px" }}
+                  top={{ base: "0px", lg: "-2px" }}
                   left={"50%"}
                   transform={"translateX(-50%)"}
                 >
                   <Image
-                    width={{ base: "40px", lg: "80px", "3xl": "82px" }}
-                    src={EllipseIcon}
+                    width={{ base: "130px", lg: "150px", "3xl": "200px" }}
+                    src={appLogo}
                     alt=""
                   />
                 </Box>

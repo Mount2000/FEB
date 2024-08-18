@@ -9,10 +9,12 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
     using EnumerableSet for EnumerableSet.UintSet;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    IERC20 public taikoToken;
 
     BachiNode public bachiNodeContract;
     BachiToken private tokenContract;
@@ -91,13 +93,15 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
     constructor(
         address _bachiNodeContract,
         address _tokenContract,
-        address _nodeManagerContract
+        address _nodeManagerContract,
+        address _taikoTokenAddress
     ) Ownable(msg.sender) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
         tokenContract = BachiToken(_tokenContract);
         bachiNodeContract = BachiNode(_bachiNodeContract);
         nodeManagerContract = NodeManager(_nodeManagerContract);
+        taikoToken = IERC20(_taikoTokenAddress);
     }
 
     modifier onlyNftOwner(uint256 _nodeId) {
@@ -396,17 +400,21 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
     function withdrawBachiReward() public whenNotPaused {
         uint256 amount = rewardClaimedInfors[msg.sender].bachiRewardAmount;
         tokenContract.mint(msg.sender, amount);
+        rewardClaimedInfors[msg.sender].bachiRewardAmount -= amount; 
         emit WithDrawReward(msg.sender, RewardType.Bachi, amount);
     }
 
     function withdrawTaikoReward() public whenNotPaused {
-        uint256 amount = rewardClaimedInfors[msg.sender].bachiRewardAmount;
+        uint256 amount = rewardClaimedInfors[msg.sender].taikoRewardAmount;
         require(
-            address(this).balance >= amount,
-            "Insufficient contract balance"
+            taikoToken.balanceOf(address(this)) >= amount,
+            "Insufficient Taiko token balance"
         );
-        (bool sent, ) = msg.sender.call{value: amount}("");
-        require(sent, "Failed to send Ether");
+
+        bool sent = taikoToken.transfer(msg.sender, amount);
+        rewardClaimedInfors[msg.sender].taikoRewardAmount -= amount; 
+        require(sent, "Failed to send Taiko token");
+
         emit WithDrawReward(msg.sender, RewardType.Taiko, amount);
     }
 
@@ -485,21 +493,32 @@ contract Staking is Pausable, AccessControl, Ownable, IERC721Receiver {
         return this.onERC721Received.selector;
     }
 
-    function deposit() external payable {
-        require(msg.value > 0, "Deposit amount must be greater than zero");
+    function deposit(uint256 amount) external {
+        require(amount > 0, "Deposit amount must be greater than zero");
 
-        emit Deposited(msg.sender, msg.value);
+        bool success = taikoToken.transferFrom(
+            msg.sender,
+            address(this),
+            amount
+        );
+        require(success, "Failed to transfer Taiko token");
+
+        emit Deposited(msg.sender, amount);
     }
 
-    function withdraw(address payable to, uint256 value) public onlyOwner {
+    function withdraw(address to, uint256 value) public onlyOwner {
         require(
-            address(this).balance >= value,
-            "Insufficient contract balance"
+            taikoToken.balanceOf(address(this)) >= value,
+            "Insufficient Taiko token balance"
         );
 
-        (bool sent, ) = to.call{value: value}("");
-        require(sent, "Failed to send Ether");
+        bool sent = taikoToken.transfer(to, value);
+        require(sent, "Failed to send Taiko token");
 
         emit FundsWithdrawn(to, value);
+    }
+
+    function tokenBalance(address account) public view returns (uint256) {
+        return taikoToken.balanceOf(account);
     }
 }

@@ -21,6 +21,7 @@ import { useReadContract, useWriteContract } from "wagmi";
 import MainButton from "../button/MainButton";
 import { base } from "viem/chains";
 import useScreenWidth from "../../hooks/useScreenWidth";
+import taiko_token_contract from "../../utils/contracts/taiko_token_contract";
 
 export function Account() {
   const { address } = useAccount();
@@ -43,6 +44,19 @@ export function Account() {
     const { value } = event?.target;
     await switchChain(config, { chainId: Number(value) });
   };
+
+  const taikoTokenContract = {
+    address: taiko_token_contract.CONTRACT_ADDRESS,
+    abi: taiko_token_contract.CONTRACT_ABI,
+  };
+
+  const { data: taikoBalance } = useBalance({
+    address: address,
+    token: taikoTokenContract.address,
+  });
+
+  console.log({ taikoBalance });
+
   const isMobile = useScreenWidth(476);
   return (
     <Flex
@@ -73,11 +87,11 @@ export function Account() {
         <Text
           fontSize={{ base: "16px", lg: "24px" }}
           color={"var(--color-main)"}
-        >{`${formatTokenBalance(balance?.formatted)} ${balance?.symbol}`}</Text>
+        >{`${formatTokenBalance(taikoBalance?.formatted)} ${taikoBalance?.symbol}`}</Text>
       )}
       <MainButton
         my="12px"
-        w={{ base: "191px", md: "300px" }}
+        w={{ base: "230px", md: "300px" }}
         height={{ base: "40px", lg: "62px", "3xl": "64px" }}
         bgColor={"white"}
         onClick={() => {
@@ -99,7 +113,10 @@ export function Account() {
             Block Explorer
           </Text>
           <Box sx={{ transform: "rotate(-45deg)" }}>
-            <IoArrowForwardSharp color="black" size={isMobile ? "16px":"32px"} />
+            <IoArrowForwardSharp
+              color="black"
+              size={isMobile ? "32px" : "32px"}
+            />
           </Box>
         </Flex>
       </MainButton>
@@ -160,7 +177,7 @@ export function Account() {
             fontWeight={"500"}
             color={"#FFF"}
           >
-            Disconnect
+            Logout
           </Text>
           <Box w={"15px"}>
             <RxExit color="white" size={"20px"} />

@@ -118,7 +118,7 @@ const processEvent = async (eventName, eventValues) => {
 };
 
 connectDb().then(async () => {
-  provider = new ethers.JsonRpcProvider(CHAINS[0].rpcUrls);
+  provider = new ethers.JsonRpcProvider(CHAINS[process.env.NODE_ENV].rpcUrls);
 
   nodeManagerContract = new ethers.Contract(
     node_manager_contract.CONTRACT_ADDRESS,

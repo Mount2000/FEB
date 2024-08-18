@@ -114,7 +114,7 @@ const SocialQuest = () => {
 
     const isComplete = await readContract(config, {
       ...questManagerContract,
-      functionName: "isTaskCompletedByUser",
+      functionName: "isTaskDailyCompletedByUser",
       args: [address, task_id],
     });
 
@@ -156,6 +156,103 @@ const SocialQuest = () => {
     const txObj = {
       ...questManagerContract,
       functionName: "completeTask",
+      args: [task_id],
+    };
+
+    const [gasPrice, gasLimit] = await Promise.all([
+      getGasPrice(config),
+      taikoHeklaClient.estimateContractGas({
+        ...txObj,
+        account: address,
+      }),
+    ]);
+
+    const gasFeeToEther = Number(gasLimit * gasPrice) / 10 ** chainDecimal;
+
+    if (Number(balance.formatted) < gasFeeToEther) {
+      setMessage("Not enough balance");
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+
+    setMessage(PENDING.txAwait);
+    setStatus(null);
+    setIsLoading(true);
+    try {
+      const hash = await writeContract(config, {
+        ...txObj,
+      });
+      if (hash) {
+        console.log({ hash });
+        setTxHash(hash);
+        const status = await getTransactionStatus(config, hash);
+        await clientAPI("post", "/api/transaction/create-transaction", {
+          caller: address,
+          chainId: chainId,
+          hash: hash,
+          type: `Complete Task ${task_id}`,
+          ipAddress: ipAddress,
+          status: status,
+        });
+        const result = await waitForTransactionReceipt(config, {
+          hash: hash,
+        });
+        if (result?.status == "success") {
+          const status = await getTransactionStatus(config, hash);
+          await clientAPI("post", "/api/transaction/update-transaction", {
+            hash: hash,
+            status: status,
+          });
+          setMessage("Claim successful");
+          setStatus("success");
+          setIsLoading(true);
+          setDisabled(false);
+          await getStatusTask(task_id, setStatustx);
+          // setStatus(task_id, "completed");
+          return;
+        } else {
+          const status = await getTransactionStatus(config, hash);
+          await clientAPI("post", "/api/transaction/update-transaction", {
+            hash: hash,
+            status: status,
+          });
+          setMessage(FAIURE.txFalure);
+          setStatus("failure");
+          setIsLoading(true);
+          setDisabled(false);
+          return;
+        }
+      }
+    } catch (e) {
+      console.log(e);
+      setMessage(FAIURE.txFalure);
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+  };
+
+  const completeTask4 = async (task_id, setStatustx) => {
+    setDisabled(true);
+    if (!address) {
+      setMessage("You not connected wallet");
+      setStatus("failure");
+      setIsLoading(true);
+      setDisabled(false);
+      return;
+    }
+
+    const balance = await getBalance(config, {
+      address: address,
+    });
+
+    const ipAddress = await getUserIpAddress();
+    const txObj = {
+      ...questManagerContract,
+      functionName: "completeTaskDaily",
       args: [task_id],
     };
 
@@ -422,7 +519,7 @@ const SocialQuest = () => {
       buttonText: "Do Quest",
       onClick: () => console.log("Daily Reward Clicked"),
       handleTask: () => handleSuccessTask4(4, setTask4Status),
-      completeTask: () => completeTask(4, setTask4Status),
+      completeTask: () => completeTask4(4, setTask4Status),
       inputPlaceholder: null,
       task_id: 4,
       status: task4Status,

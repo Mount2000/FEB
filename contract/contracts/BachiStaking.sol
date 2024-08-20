@@ -18,7 +18,6 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
     mapping(address => bool) public isClaimed; // User only can claim once per cycle, true if user claimed in current cycle
     uint public rewardPool;
     uint public totalStaked;
-    uint public rewardRate; // reward/stakeBalance
     uint public limitUnstakeTime; // the delay time to unstake after request unstake
     bool public isLocked; // allow stake and unstake when locked is false and allow claim when locked is true
     bool public awardStarted;
@@ -68,10 +67,6 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
     function setLimitUnstakeTime(uint _limitUnstakeTime) public onlyOwner{
         limitUnstakeTime = _limitUnstakeTime;
     }
-    
-    function setRewardRate(uint rate) public onlyOwner{
-        rewardRate = rate;
-    }
 
     function setIsClaimed(address user) public onlyOwner{
         require(!awardStarted, "award is started");
@@ -113,7 +108,7 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
     }
 
     function claimReward(address user) public whenNotPaused onlyRole(ADMIN_ROLE){
-        uint reward = stakeBalances[user] * rewardRate;
+        uint reward = rewardPool * stakeBalances[user] / totalStaked ;
         require(awardStarted, "award is not started");
         require(reward != 0,"User is not staker");
         require(isLocked, "Claiming reward is not allowed yet");

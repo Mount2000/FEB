@@ -93,7 +93,7 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         emit RequestUnstake(msg.sender, _amount, block.timestamp);
     }
 
-    function cancelRequestUnstake(uint requestId) public{
+    function cancelRequestUnstake(uint requestId) public whenNotPaused onlyNotLoked{
         deleteRequest(msg.sender, requestId);
         emit CancelRequestUnstake(msg.sender);
     }

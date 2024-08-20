@@ -89,11 +89,16 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
 
     function requestUnstake(uint _amount) public whenNotPaused onlyNotLoked{
         require(_amount <= stakeBalances[msg.sender], "Insufficient staking balance");
+        totalStaked -= _amount;
+        stakeBalances[msg.sender] -= _amount;
         unstakeRequests[msg.sender].push(UnstakeRequest(_amount, block.timestamp));
         emit RequestUnstake(msg.sender, _amount, block.timestamp);
     }
 
     function cancelRequestUnstake(uint requestId) public whenNotPaused onlyNotLoked{
+        uint _amount = unstakeRequests[msg.sender][requestId].amount;
+        totalStaked += _amount;
+        stakeBalances[msg.sender] += _amount;
         deleteRequest(msg.sender, requestId);
         emit CancelRequestUnstake(msg.sender);
     }
@@ -102,8 +107,6 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         uint _amount = unstakeRequests[msg.sender][requestId].amount;
         require(unstakeRequests[msg.sender][requestId].requestTime + limitUnstakeTime >= block.timestamp, "Unstaking is not allowed yet");
         BachiToken.transferFrom(address(this), msg.sender, _amount);
-        totalStaked -= _amount;
-        stakeBalances[msg.sender] -= _amount;
         deleteRequest(msg.sender, requestId);
         emit Unstake(msg.sender, _amount);
     }

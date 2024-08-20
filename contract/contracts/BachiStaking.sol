@@ -81,6 +81,7 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
     }
 
     function stake(uint _amount) public whenNotPaused onlyNotLoked{
+        require(BachiToken.balanceOf(msg.sender) >= _amount, "Insufficient balance");
         BachiToken.transferFrom(msg.sender, address(this), _amount);
         stakeBalances[msg.sender] += _amount;
         totalStaked += _amount;

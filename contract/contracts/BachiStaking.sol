@@ -28,6 +28,16 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
     event Unstake(address indexed user, uint amount);
     event ClaimReward(address indexed user, uint amount);
 
+    modifier onlyLoked(){
+        require(isLocked, "Contract is not locked");
+        _;
+    }
+
+    modifier onlyNotLoked(){
+        require(!isLocked, "Contract is locked");
+        _;
+    }
+
     constructor(uint _limitUnstakeTime, IERC20 _BachiToken, IERC20 _TaikoToken){
         limitUnstakeTime = _limitUnstakeTime;
         BachiToken = _BachiToken;
@@ -70,16 +80,14 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         isClaimed[user] = false;
     }
 
-    function stake(uint _amount) public whenNotPaused{
-        require(!isLocked, "Stacking is not allowed yet");
+    function stake(uint _amount) public whenNotPaused onlyNotLoked{
         BachiToken.transferFrom(msg.sender, address(this), _amount);
         stakeBalances[msg.sender] += _amount;
         totalStaked += _amount;
         emit Stake(msg.sender, _amount);
     }
 
-    function requestUnstake(uint _amount) public whenNotPaused{
-        require(!isLocked, "Request unstacking is not allowed yet");
+    function requestUnstake(uint _amount) public whenNotPaused onlyNotLoked{
         require(_amount <= stakeBalances[msg.sender], "Insufficient staking balance");
         unstakeRequests[msg.sender].push(UnstakeRequest(_amount, block.timestamp));
         emit RequestUnstake(msg.sender, _amount, block.timestamp);
@@ -91,9 +99,8 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         emit CancelRequestUnstake(msg.sender);
     }
 
-    function unstake() public whenNotPaused{
+    function unstake() public whenNotPaused onlyNotLoked{
         uint _amount = unstakeRequests[msg.sender][0].amount;
-        require(!isLocked, "Unstacking is not allowed yet");
         require(unstakeRequests[msg.sender].length != 0, "You did not request unstacking yet");
         require(unstakeRequests[msg.sender][0].requestTime + limitUnstakeTime >= block.timestamp, "Unstaking is not allowed yet");
         BachiToken.transferFrom(address(this), msg.sender, _amount);
@@ -103,11 +110,10 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         emit Unstake(msg.sender, _amount);
     }
 
-    function claimReward(address user) public whenNotPaused onlyRole(ADMIN_ROLE){
+    function claimReward(address user) public whenNotPaused onlyRole(ADMIN_ROLE) onlyLoked{
         uint reward = rewardPool * stakeBalances[user] / totalStaked ;
         require(awardStarted, "award is not started");
         require(reward != 0,"User is not staker");
-        require(isLocked, "Claiming reward is not allowed yet");
         require(!isClaimed[user], "User already claimed");
         require(reward <= rewardPool, "Do not have enought reward in pool");
         rewardPool -= reward;
@@ -133,7 +139,5 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
             unstakeRequests[user][i] = unstakeRequests[user][i+1];
         }
         unstakeRequests[user].pop();
-{
-
-}    }
+    }
 }

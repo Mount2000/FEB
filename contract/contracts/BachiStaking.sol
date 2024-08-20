@@ -36,10 +36,6 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         _grantRole(ADMIN_ROLE, msg.sender);
     }
 
-    function setAdminRole(address admin) public onlyOwner{
-        _grantRole(ADMIN_ROLE, admin);
-    }
-
     function setBachiToken(IERC20 _BachiToken) public onlyOwner{
         BachiToken = _BachiToken;
     }

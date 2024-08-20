@@ -93,20 +93,18 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         emit RequestUnstake(msg.sender, _amount, block.timestamp);
     }
 
-    function cancelRequestUnstake() public{
-        require(unstakeRequests[msg.sender].length != 0, "You did not request unstacking yet");
-        deleteFirstRequest(msg.sender);
+    function cancelRequestUnstake(uint requestId) public{
+        deleteRequest(msg.sender, requestId);
         emit CancelRequestUnstake(msg.sender);
     }
 
-    function unstake() public whenNotPaused onlyNotLoked{
-        uint _amount = unstakeRequests[msg.sender][0].amount;
-        require(unstakeRequests[msg.sender].length != 0, "You did not request unstacking yet");
-        require(unstakeRequests[msg.sender][0].requestTime + limitUnstakeTime >= block.timestamp, "Unstaking is not allowed yet");
+    function unstake(uint requestId) public whenNotPaused onlyNotLoked{
+        uint _amount = unstakeRequests[msg.sender][requestId].amount;
+        require(unstakeRequests[msg.sender][requestId].requestTime + limitUnstakeTime >= block.timestamp, "Unstaking is not allowed yet");
         BachiToken.transferFrom(address(this), msg.sender, _amount);
         totalStaked -= _amount;
         stakeBalances[msg.sender] -= _amount;
-        deleteFirstRequest(msg.sender);
+        deleteRequest(msg.sender, requestId);
         emit Unstake(msg.sender, _amount);
     }
 
@@ -133,9 +131,10 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         TaikoToken.transferFrom(address(this), msg.sender, amount);
     }
 
-    function deleteFirstRequest(address user) internal {
+    function deleteRequest(address user, uint requestId) internal {
         uint requestLength = unstakeRequests[user].length;
-        for (uint i = 0; i < requestLength - 1; i++){
+        require(unstakeRequests[user].length > requestId, "Not exist request ID");
+        for (uint i = requestId; i < requestLength - 1; i++){
             unstakeRequests[user][i] = unstakeRequests[user][i+1];
         }
         unstakeRequests[user].pop();

@@ -22,11 +22,11 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
     bool public isLocked; // allow stake and unstake when locked is false and allow claim when locked is true
     bool public awardStarted;
 
-    event Stake(address indexed user, uint amount);
+    event Stake(address indexed user, uint amount, uint timeStake);
     event RequestUnstake(address indexed user, uint amount, uint timeRequest);
-    event CancelRequestUnstake(address indexed user);
-    event Unstake(address indexed user, uint amount);
-    event ClaimReward(address indexed user, uint amount);
+    event CancelRequestUnstake(address indexed user, uint amount, uint timeCancel);
+    event Unstake(address indexed user, uint amount, uint timeUnstake);
+    event ClaimReward(address indexed user, uint amount, uint timeClaim);
 
     modifier onlyLoked(){
         require(isLocked, "Contract is not locked");
@@ -82,10 +82,11 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
 
     function stake(uint _amount) public whenNotPaused onlyNotLoked{
         require(BachiToken.balanceOf(msg.sender) >= _amount, "Insufficient balance");
+        require(BachiToken.allowance(msg.sender, address(this)) >= _amount, "Insufficient allowance");
         BachiToken.transferFrom(msg.sender, address(this), _amount);
         stakeBalances[msg.sender] += _amount;
         totalStaked += _amount;
-        emit Stake(msg.sender, _amount);
+        emit Stake(msg.sender, _amount, block.timestamp);
     }
 
     function requestUnstake(uint _amount) public whenNotPaused onlyNotLoked{
@@ -101,7 +102,7 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         totalStaked += _amount;
         stakeBalances[msg.sender] += _amount;
         deleteRequest(msg.sender, requestId);
-        emit CancelRequestUnstake(msg.sender);
+        emit CancelRequestUnstake(msg.sender, _amount, block.timestamp);
     }
 
     function unstake(uint requestId) public whenNotPaused onlyNotLoked{
@@ -109,7 +110,7 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         require(unstakeRequests[msg.sender][requestId].requestTime + limitUnstakeTime >= block.timestamp, "Unstaking is not allowed yet");
         BachiToken.transferFrom(address(this), msg.sender, _amount);
         deleteRequest(msg.sender, requestId);
-        emit Unstake(msg.sender, _amount);
+        emit Unstake(msg.sender, _amount, block.timestamp);
     }
 
     function claimReward(address user) public whenNotPaused onlyRole(ADMIN_ROLE) onlyLoked{
@@ -121,10 +122,11 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
         rewardPool -= reward;
         TaikoToken.transferFrom(address(this), user, reward);
         isClaimed[user] = true;
-        emit ClaimReward(user, reward);
+        emit ClaimReward(user, reward, block.timestamp);
     }
 
     function addRewardPool(uint amount) public onlyOwner{
+        require(TaikoToken.allowance(msg.sender, address(this)) >= amount, "Insufficient allowance");
         require(TaikoToken.balanceOf(msg.sender) >= amount, "Insufficient balance");
         TaikoToken.transferFrom(msg.sender, address(this), amount);
         rewardPool += amount;

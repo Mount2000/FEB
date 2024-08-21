@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const db = require("../models/index.js");
 const { bachi_staking_contract } = require("../contracts/bachi_staking_contract.js");
-const contants = require("../utils/contants.js");
+const {CHAINS} = require("../utils/contants.js");
 
 const ScannedBlocks = db.scannedBlocks;
 const BachiStakingHistory = db.bachiStakingHistory
@@ -111,8 +111,7 @@ const processEvent = async (eventName, eventValues) => {
 };
 
 connectDb().then(async () => {
-  provider = new ethers.JsonRpcProvider(CHAINS[process.env.NODE_ENV].rpcUrls);
-
+  provider = new ethers.JsonRpcProvider(CHAINS[process.env.NODE_ENV].rpcUrls)
   bachiStakingContract = new ethers.Contract(
     bachi_staking_contract.CONTRACT_ADDRESS,
     bachi_staking_contract.CONTRACT_ABI,

@@ -140,9 +140,7 @@ contract BachiStaking is Pausable, Ownable(msg.sender), AccessControl{
     function deleteRequest(address user, uint requestId) internal {
         uint requestLength = unstakeRequests[user].length;
         require(unstakeRequests[user].length > requestId, "Not exist request ID");
-        for (uint i = requestId; i < requestLength - 1; i++){
-            unstakeRequests[user][i] = unstakeRequests[user][i+1];
-        }
+        (unstakeRequests[user][requestId] , unstakeRequests[user][requestLength - 1]) = (unstakeRequests[user][requestLength - 1] , unstakeRequests[user][requestId]); 
         unstakeRequests[user].pop();
     }
 }
